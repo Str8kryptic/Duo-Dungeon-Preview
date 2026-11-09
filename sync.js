@@ -1,6 +1,6 @@
 (function(){
 "use strict";
-// Step-log reader retained for future import flows. No fold/session counting.
+// Daily step-log reader retained for future import flows.
 window.DUO_SYNC={
   readStepLog:function(file){
     return new Promise(function(resolve,reject){
