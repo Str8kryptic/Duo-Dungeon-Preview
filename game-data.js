@@ -3,7 +3,7 @@ const achievements = [
   {at:1000,name:"FIRST FOOTFALL",msg:"The dungeon has detected forward motion. A promising development.",coins:50,xp:50},
   {at:5000,name:"MILE MARKER",msg:"Five thousand steps. The goblins are pretending not to be impressed.",coins:150,xp:100},
   {at:10000,name:"THE DAILY DESCENT",msg:"Ten thousand steps. Your legs have entered the chat.",coins:300,xp:200},
-  {at:25000,name:"ROAD WARRIOR",msg:"A quarter of a hundred thousand steps. Please hydrate, champion.",coins:500,xp:350},
+  {at:25000,name:"ROAD WARRIOR",msg:"Twenty-five thousand steps. The goblins have started measuring your shadow. Please hydrate, champion.",coins:500,xp:350},
   {at:50000,name:"THE LONG MARCH",msg:"Fifty thousand steps. The dungeon has ordered better shoes.",coins:1000,xp:750},
   {at:100000,name:"PATHFINDER",msg:"One hundred thousand steps. The map is beginning to fear you.",coins:2000,xp:1500},
   {at:250000,name:"THE WANDERING LEGEND",msg:"A quarter million steps. Your footprints have their own fan club.",coins:5000,xp:3500},
@@ -18,10 +18,10 @@ const dailyAchievements = [
   {at:20000,name:"IRON SOLES",msg:"Twenty thousand steps. The dungeon recommends a comfortable chair.",coins:500,xp:400}
 ];
 const itemAIComments = {
- sword:"The blade hums like a hinge that has finally found purpose. Try not to swing it at your furniture.",
+ sword:"The blade hums with the confidence of a weapon that has never once paid rent. Try not to swing it at your furniture.",
  axe:"A goblin artisan made this from premium bad ideas. The edge is sharp; your strategy remains questionable.",
  dagger:"Tiny, dramatic, and wildly overconfident. Much like the person holding it.",
- doomblade:"It remembers every 100 steps. It refuses to discuss the incident in the laundry room.",
+ doomblade:"It remembers every 100 steps. It refuses to discuss the incident with the laundry goblin.",
  helmet:"A crown fit for someone who has mistaken confidence for a safety feature.",
  armor:"The goblin stitching is surprisingly sturdy. The smell is a separate side quest.",
  cloak:"It conceals your silhouette and, mercifully, some of your decisions.",
@@ -35,7 +35,7 @@ const itemAIComments = {
  title3:"The title is impressive. I have updated the org chart so the dungeon knows who to blame.",
  potion:"A volatile little confidence boost. Follow the timer; do not challenge the bottle.",
  greed:"The goblins have bottled their worst financial instincts. You are welcome.",
- wisdom:"A concentrated lesson in doing more with every 100 steps. Finally, studying pays.",
+ wisdom:"A concentrated lesson in getting more from every 100 steps. Finally, studying pays. Barely.",
  fortune:"Fortune smiles briefly. Do not make it weird.",
  blood:"Potent, dramatic, and absolutely not approved by the dungeon wellness committee.",
  scholar:"A scholarly brew for ambitious minds and questionable reading habits.",
@@ -48,7 +48,7 @@ const itemAIComments = {
 const shopItems = [
 {id:"identity_random",name:"Crawler Number Reassignment",type:"identity",rarity:"Epic",price:15000,emoji:"◇",desc:"A sanctioned identity reroll. Cost: 10 Hinge Dust + 5 Mimic Shards."},
 {id:"identity_custom",name:"Bespoke Crawler Number License",type:"identity",rarity:"Mythic",price:50000,emoji:"◇",desc:"Cost: 50 Hinge Dust + 25 Mimic Shards + 10 Dragon Scales. Choose a six-digit Crawler Number."},
-{id:"sword",name:"Legendary Trail Slayer",type:"weapon",rarity:"Legendary",price:8500,emoji:"⚔️",set:"Royal",effects:{xp:.10},desc:"Forged from the tears of broken hinges. +10% XP per 100 steps."},
+{id:"sword",name:"Legendary Trail Slayer",type:"weapon",rarity:"Legendary",price:8500,emoji:"⚔️",set:"Royal",effects:{xp:.10},desc:"Forged from the tears of overworked goblins. +10% XP per 100 steps."},
 {id:"axe",name:"Goblin Cleaver",type:"weapon",rarity:"Rare",price:1400,emoji:"🪓",set:"Goblin",effects:{coins:.15},desc:"For chopping questionable decisions. +15% coins per 100 steps."},
 {id:"dagger",name:"Pocket Knife of Regret",type:"weapon",rarity:"Common",price:300,emoji:"🗡️",effects:{xp:.03},desc:"Small weapon. Massive disappointment. +3% XP per 100 steps."},
 {id:"doomblade",name:"Blade of Endless March",type:"weapon",rarity:"Epic",price:4200,emoji:"🔥",set:"Royal",effects:{xp:.10,coins:.05},desc:"The blade has seen things. +10% XP and +5% coins per 100 steps."},
@@ -61,7 +61,7 @@ const shopItems = [
 {id:"cat",name:"Murderous Dungeon Cat",type:"companion",rarity:"Rare",price:1900,emoji:"🐈‍⬛",effects:{coins:.10},desc:"Judges you silently. +10% coins per 100 steps."},
 {id:"demon",name:"Tiny Apocalypse Demon",type:"companion",rarity:"Legendary",price:10500,emoji:"😈",effects:{xp:.15},desc:"Your personal agent of chaos. +15% XP per 100 steps."},
 {id:"title1",name:"Professional Disaster",type:"title",rarity:"Rare",price:1200,emoji:"🏆",desc:"A title you probably deserve."},
-{id:"title2",name:"Lord of the Hinges",type:"title",rarity:"Epic",price:4200,emoji:"👑",desc:"Your kingdom is made of phones."},
+{id:"title2",name:"Lord of the Long March",type:"title",rarity:"Epic",price:4200,emoji:"👑",desc:"Your kingdom is made of questionable decisions and unpaid goblin invoices."},
 {id:"title3",name:"Supreme Crawler",type:"title",rarity:"Legendary",price:12500,emoji:"💀",desc:"The AI fears your existence."},
 {id:"potion",name:"Potion of Mild Competence",type:"potion",rarity:"Common",price:300,emoji:"🧪",potion:{kind:"timed",minutes:10,effect:{xp:.10}},desc:"A questionable boost. +10% XP for 10 minutes."},
 {id:"greed",name:"Potion of Greed",type:"potion",rarity:"Rare",price:700,emoji:"🧪",potion:{kind:"timed",minutes:30,effect:{coins:.50}},desc:"+50% coins for 30 minutes."},
@@ -80,19 +80,19 @@ const shopItems = [
 {id:"phoenix",name:"Phoenix Tears",type:"potion",rarity:"Mythic",price:3500,emoji:"🔥",potion:{kind:"achievement",charges:1,effect:{achievement:1}},desc:"Doubles the next daily achievement reward."}
 ];
 const relicCatalog=[
-{id:"hinge_relic",name:"Relic of the First Footstep",rarity:"Common",emoji:"🜁",desc:"A fossilized hinge fragment. +1% XP forever.",effects:{xp:.01}},
+{id:"hinge_relic",name:"Relic of the First Footstep",rarity:"Common",emoji:"🜁",desc:"A fossilized fragment from the First Footstep. +1% XP forever.",effects:{xp:.01}},
 {id:"mimic_eye",name:"Mimic's Glass Eye",rarity:"Rare",emoji:"👁️",desc:"It watches your wallet. +1% rare-find chance.",effects:{rare:.01}},
 {id:"gilded_tooth",name:"Gilded Goblin Tooth",rarity:"Rare",emoji:"🦷",desc:"A tiny monument to poor dental choices. +1% coins forever.",effects:{coins:.01}},
 {id:"dragon_scale_relic",name:"Cinderheart Scale",rarity:"Epic",emoji:"🐉",desc:"Still warm. +2% XP forever.",effects:{xp:.02}},
 {id:"royal_seal",name:"Seal of the Lost King",rarity:"Epic",emoji:"👑",desc:"A royal stamp of approval. +2% coins forever.",effects:{coins:.02}},
-{id:"void_shard",name:"Shard of the Unsteping Void",rarity:"Legendary",emoji:"🔮",desc:"Reality has a crease now. +2% coins, XP and rare finds.",effects:{coins:.02,xp:.02,rare:.02}}
+{id:"void_shard",name:"Shard of the Unsteping Void",rarity:"Legendary",emoji:"🔮",desc:"Reality has a dent now. +2% coins, XP and rare finds.",effects:{coins:.02,xp:.02,rare:.02}}
 ];
 
 Object.assign(itemAIComments,{
   sword:"The blade hums with the confidence of a weapon that has never once had to pay rent. +10% XP. Try not to sharpen your furniture.",
   axe:"A goblin chieftain lost this in a very one-sided negotiation. It smells like victory and damp onions. +15% coins.",
   dagger:"A little blade with a big personality. It has already judged your grip and found it wanting. +3% XP.",
-  doomblade:"The runes rearrange themselves whenever you blink. The last owner steped reality. You just step a phone. +10% XP and +5% coins.",
+  doomblade:"The runes rearrange themselves whenever you blink. The last owner challenged reality. You just challenged a flight of stairs. +10% XP and +5% coins.",
   helmet:"A crown forged for the sort of ruler who declares war on a charging cable. +10% coins. Royalty has never looked so nervous.",
   armor:"Goblin-forged plates, stitched during a thunderstorm by someone who insists they are a professional. +5% coins and XP.",
   cloak:"The shadows cling to this cloak like unpaid debts. It hides your outline and improves your odds of finding something interesting. +10% XP and +5% rare finds.",
