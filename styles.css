@@ -509,3 +509,7 @@ body{background:radial-gradient(ellipse at 50% -12%,#483052 0%,#1b1324 34%,#0c09
 .step-meter i{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,#8e65b4,#f1cc82);box-shadow:0 0 10px #b88bdb;transition:width .3s ease}
 .step-sync-status{margin:10px 0;padding:8px 9px;border-left:2px solid #d5b275;background:#17111f;color:#d7c6dc;font-size:8px}
 .manual-note{margin:9px 0 0;color:#9f91ab;font-size:8px;line-height:1.5}
+
+/* Quick Apple Health sync directly beneath the home coin and XP stats */
+.home-health-quick{display:grid;grid-template-columns:1fr;gap:5px;margin-top:9px}.home-health-quick .action{width:100%;min-height:40px;letter-spacing:1px;font-size:9px}.home-health-quick small{color:#b9afc3;text-align:center;font-size:8px;font-weight:800;letter-spacing:.5px}
+@media(max-width:430px){.rpg-home{gap:10px}.home-hero{padding-top:12px}}
