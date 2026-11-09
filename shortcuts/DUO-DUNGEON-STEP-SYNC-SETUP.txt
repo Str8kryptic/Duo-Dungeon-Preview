@@ -22,7 +22,7 @@ Create these actions in Apple Shortcuts, in this order:
 
 4. TEXT
    Enter this URL, replacing the bracketed placeholders with Shortcuts Magic Variables:
-   https://duodungeon.com/?duoSteps=[SUM]&duoDate=[DATE]
+   https://str8kryptic.github.io/Duo-Dungeon-Preview/?duoSteps=[SUM]&duoDate=[DATE]
    [SUM] = result from Calculate Statistics
    [DATE] = result from Format Date
 
@@ -42,3 +42,7 @@ IMPORTANT
 
 NOTE
 Apple Shortcuts action labels can vary slightly by iOS version. This is an action-by-action setup guide, not an installable Apple-signed .shortcut package. An iCloud install link can be added after the Shortcut is created and shared from the Shortcuts app.
+
+
+DEV TESTING NOTE
+Use the Preview URL above while testing. Once the update is approved and promoted to the live site, change only the domain/path in the Text action to https://duodungeon.com/.
