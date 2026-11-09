@@ -1,0 +1,88 @@
+// Exact catalog, relics, milestone rewards, and item-specific AI descriptions extracted from the recovered Scriptable source.
+const achievements = [
+  {at:1,name:"WELCOME, IDIOT",msg:"Humanity weeps.",coins:25,xp:25},
+  {at:10,name:"AMATEUR CRAWLER",msg:"Groundbreaking stupidity.",coins:50,xp:50},
+  {at:25,name:"COMPULSIVE FUMBLER",msg:"Your hinge has filed a complaint.",coins:100,xp:100},
+  {at:50,name:"THE FOLDING MENACE",msg:"Your phone deserves hazard pay.",coins:250,xp:250},
+  ...["CENTURY OF BAD DECISIONS","HINGE ENTHUSIAST","PROFESSIONAL MENACE","GOBLIN BEHAVIOR","PHONE ABUSE: LEGENDARY","DUNGEON REGULAR","CERTIFIED LUNATIC","THE HINGE WHISPERER","UNHINGED CRAWLER","GOD OF THE HINGE","AI'S WORST NIGHTMARE","FOLDING ROYALTY","THE DUNGEON'S PROBLEM","LEGENDARY IDIOT","HINGE DESTROYER","BEYOND REDEMPTION","THE UNFOLDABLE","DUNGEON OVERLORD","THE AI HAS GIVEN UP","SUPREME FOLDING DEITY"].map((name,i)=>({at:(i+1)*100,name,msg:"Your hinge has witnessed unspeakable things.",coins:(i+1)*100,xp:(i+1)*250}))
+];
+const dailyAchievements = [
+  {at:1,name:"FIRST BLOOD",msg:"The addiction begins.",coins:10,xp:10},
+  {at:5,name:"GETTING COMFORTABLE",msg:"You're settling in.",coins:25,xp:25},
+  {at:10,name:"FOLDING GOBLIN",msg:"What is wrong with you?",coins:50,xp:50},
+  {at:15,name:"THE AI IS CONCERNED",msg:"I need a vacation.",coins:100,xp:100},
+  {at:20,name:"CERTIFIED ADDICT",msg:"Seek the light, crawler.",coins:150,xp:150},
+  {at:25,name:"UNHINGED BEHAVIOR",msg:"This is getting embarrassing.",coins:250,xp:250},
+  {at:30,name:"DUNGEON PSYCHO",msg:"YOUR HINGE HAS RIGHTS!",coins:500,xp:500}
+];
+const itemAIComments = {
+ sword:"The blade hums like a hinge that has finally found purpose. Try not to swing it at your furniture.",
+ axe:"A goblin artisan made this from premium bad ideas. The edge is sharp; your strategy remains questionable.",
+ dagger:"Tiny, dramatic, and wildly overconfident. Much like the person holding it.",
+ doomblade:"It remembers every fold. It refuses to discuss the incident in the laundry room.",
+ helmet:"A crown fit for someone who has mistaken confidence for a safety feature.",
+ armor:"The goblin stitching is surprisingly sturdy. The smell is a separate side quest.",
+ cloak:"It conceals your silhouette and, mercifully, some of your decisions.",
+ cap:"Minimal protection, maximum optimism. I admire the delusion.",
+ goblin:"Your new associate has sticky fingers and a questionable employment history. Keep snacks secured.",
+ dragon:"A pocket-sized catastrophe with excellent attendance and terrible table manners.",
+ cat:"It has accepted the position. You have not been approved as its owner.",
+ demon:"A tiny apocalypse with a performance review scheduled for your enemies.",
+ title1:"A prestigious label for a crawler who has made several avoidable choices.",
+ title2:"Your realm is small, your hinges are mighty, and your subjects are mostly dust.",
+ title3:"The title is impressive. The AI's expectations remain carefully managed.",
+ potion:"A volatile little confidence boost. Follow the timer; do not challenge the bottle.",
+ greed:"The goblins have bottled their worst financial instincts. You are welcome.",
+ wisdom:"A concentrated lesson in doing more with every fold. Finally, studying pays.",
+ fortune:"Fortune smiles briefly. Do not make it weird.",
+ blood:"Potent, dramatic, and absolutely not approved by the dungeon wellness committee.",
+ scholar:"A scholarly brew for ambitious minds and questionable reading habits.",
+ mimicelixir:"The bottle is pretending to be a better bottle. It is still useful.",
+ dragonbreath:"A warm, suspicious vapor. The dragon denies responsibility.",
+ goblingreed:"The goblins have bottled their worst financial instincts. You are welcome.",
+ nectar:"Your companion will adore this. Your coin purse will need a moment.",
+ phoenix:"One glorious second chance, bottled. Try not to waste it on something silly."
+};
+const shopItems = [
+{id:"identity_random",name:"Crawler Number Reassignment",type:"identity",rarity:"Epic",price:15000,emoji:"◇",desc:"A sanctioned identity reroll. Cost: 10 Hinge Dust + 5 Mimic Shards."},
+{id:"identity_custom",name:"Bespoke Crawler Number License",type:"identity",rarity:"Mythic",price:50000,emoji:"◇",desc:"Cost: 50 Hinge Dust + 25 Mimic Shards + 10 Dragon Scales. Choose a six-digit Crawler Number."},
+{id:"sword",name:"Legendary Hinge Slayer",type:"weapon",rarity:"Legendary",price:8500,emoji:"⚔️",set:"Royal",effects:{xp:.10},desc:"Forged from the tears of broken hinges. +10% XP per fold."},
+{id:"axe",name:"Goblin Cleaver",type:"weapon",rarity:"Rare",price:1400,emoji:"🪓",set:"Goblin",effects:{coins:.15},desc:"For chopping questionable decisions. +15% coins per fold."},
+{id:"dagger",name:"Pocket Knife of Regret",type:"weapon",rarity:"Common",price:300,emoji:"🗡️",effects:{xp:.03},desc:"Small weapon. Massive disappointment. +3% XP per fold."},
+{id:"doomblade",name:"Blade of Eternal Folding",type:"weapon",rarity:"Epic",price:4200,emoji:"🔥",set:"Royal",effects:{xp:.10,coins:.05},desc:"The blade has seen things. +10% XP and +5% coins per fold."},
+{id:"helmet",name:"Crown of Questionable Decisions",type:"armor",rarity:"Legendary",price:7800,emoji:"👑",set:"Royal",effects:{coins:.10},desc:"Protects absolutely nothing important. +10% coins per fold."},
+{id:"armor",name:"Goblin Dungeon Armor",type:"armor",rarity:"Rare",price:1500,emoji:"🛡️",set:"Goblin",effects:{coins:.05,xp:.05},desc:"Fashionable. Probably uncomfortable. +5% coins and XP per fold."},
+{id:"cloak",name:"Cloak of Bad Decisions",type:"armor",rarity:"Epic",price:3800,emoji:"🧥",effects:{xp:.10,rare:.05},desc:"Hides your terrible choices. +10% XP and +5% rare finds."},
+{id:"cap",name:"Helmet of Mild Competence",type:"armor",rarity:"Common",price:400,emoji:"⛑️",effects:{coins:.02},desc:"It is a helmet. Congratulations. +2% coins per fold."},
+{id:"goblin",name:"Annoying Dungeon Goblin",type:"companion",rarity:"Common",price:650,emoji:"👺",effects:{coins:.05},desc:"Steals snacks and questions your life. +5% coins per fold."},
+{id:"dragon",name:"Pocket Dungeon Dragon",type:"companion",rarity:"Epic",price:4800,emoji:"🐉",effects:{xp:.10},desc:"Breathes fire and makes terrible decisions. +10% XP per fold."},
+{id:"cat",name:"Murderous Dungeon Cat",type:"companion",rarity:"Rare",price:1900,emoji:"🐈‍⬛",effects:{coins:.10},desc:"Judges you silently. +10% coins per fold."},
+{id:"demon",name:"Tiny Apocalypse Demon",type:"companion",rarity:"Legendary",price:10500,emoji:"😈",effects:{xp:.15},desc:"Your personal agent of chaos. +15% XP per fold."},
+{id:"title1",name:"Professional Disaster",type:"title",rarity:"Rare",price:1200,emoji:"🏆",desc:"A title you probably deserve."},
+{id:"title2",name:"Lord of the Hinges",type:"title",rarity:"Epic",price:4200,emoji:"👑",desc:"Your kingdom is made of phones."},
+{id:"title3",name:"Supreme Crawler",type:"title",rarity:"Legendary",price:12500,emoji:"💀",desc:"The AI fears your existence."},
+{id:"potion",name:"Potion of Mild Competence",type:"potion",rarity:"Common",price:300,emoji:"🧪",potion:{kind:"timed",minutes:10,effect:{xp:.10}},desc:"A questionable boost. +10% XP for 10 minutes."},
+{id:"greed",name:"Potion of Greed",type:"potion",rarity:"Rare",price:700,emoji:"🧪",potion:{kind:"timed",minutes:30,effect:{coins:.50}},desc:"+50% coins for 30 minutes."},
+{id:"wisdom",name:"Elixir of Wisdom",type:"potion",rarity:"Rare",price:700,emoji:"🔵",potion:{kind:"timed",minutes:30,effect:{xp:.50}},desc:"+50% XP for 30 minutes."},
+{id:"luck",name:"Liquid Luck",type:"potion",rarity:"Epic",price:1100,emoji:"🟣",potion:{kind:"timed",minutes:20,effect:{rare:.25}},desc:"+25% rare-find chance for 20 minutes."},
+{id:"berserker",name:"Berserker Brew",type:"potion",rarity:"Legendary",price:1900,emoji:"🔥",potion:{kind:"timed",minutes:15,effect:{coins:.25,xp:.25}},desc:"+25% coins and XP for 15 minutes."},
+{id:"liquidgold",name:"Liquid Gold",type:"potion",rarity:"Uncommon",price:500,emoji:"🟡",potion:{kind:"fold",folds:25,effect:{coins:.25}},desc:"+25% coins for 25 folds."},
+{id:"experience",name:"Elixir of Experience",type:"potion",rarity:"Rare",price:850,emoji:"🔷",potion:{kind:"fold",folds:50,effect:{xp:.50}},desc:"+50% XP for 50 folds."},
+{id:"fortune",name:"Fortune's Favor",type:"potion",rarity:"Rare",price:850,emoji:"🍀",potion:{kind:"fold",folds:40,effect:{rare:.25}},desc:"+25% rare-find chance for 40 folds."},
+{id:"blood",name:"Berserker's Blood",type:"potion",rarity:"Legendary",price:2200,emoji:"🩸",potion:{kind:"fold",folds:20,effect:{coins:1}},desc:"+100% coins for 20 folds."},
+{id:"scholar",name:"Scholar's Brew",type:"potion",rarity:"Epic",price:1200,emoji:"📘",potion:{kind:"fold",folds:100,effect:{xp:.30}},desc:"+30% XP for 100 folds."},
+{id:"mimicelixir",name:"Mimic's Elixir",type:"potion",rarity:"Epic",price:1200,emoji:"🟪",potion:{kind:"fold",folds:75,effect:{rare:.15}},desc:"+15% rare-find chance for 75 folds."},
+{id:"dragonbreath",name:"Dragon's Breath",type:"potion",rarity:"Legendary",price:1900,emoji:"🐉",potion:{kind:"fold",folds:30,effect:{xp:.50}},desc:"+50% XP for 30 folds."},
+{id:"goblingreed",name:"Goblin's Greed",type:"potion",rarity:"Epic",price:1400,emoji:"💰",potion:{kind:"fold",folds:60,effect:{coins:.40}},desc:"+40% coins for 60 folds."},
+{id:"nectar",name:"Companion Nectar",type:"potion",rarity:"Epic",price:1100,emoji:"🐾",potion:{kind:"fold",folds:50,effect:{companionXP:1}},desc:"Double companion XP for 50 folds."},
+{id:"phoenix",name:"Phoenix Tears",type:"potion",rarity:"Mythic",price:3500,emoji:"🔥",potion:{kind:"achievement",charges:1,effect:{achievement:1}},desc:"Doubles the next daily achievement reward."}
+];
+const relicCatalog=[
+{id:"hinge_relic",name:"Relic of the First Fold",rarity:"Common",emoji:"🜁",desc:"A fossilized hinge fragment. +1% XP forever.",effects:{xp:.01}},
+{id:"mimic_eye",name:"Mimic's Glass Eye",rarity:"Rare",emoji:"👁️",desc:"It watches your wallet. +1% rare-find chance.",effects:{rare:.01}},
+{id:"gilded_tooth",name:"Gilded Goblin Tooth",rarity:"Rare",emoji:"🦷",desc:"A tiny monument to poor dental choices. +1% coins forever.",effects:{coins:.01}},
+{id:"dragon_scale_relic",name:"Cinderheart Scale",rarity:"Epic",emoji:"🐉",desc:"Still warm. +2% XP forever.",effects:{xp:.02}},
+{id:"royal_seal",name:"Seal of the Lost King",rarity:"Epic",emoji:"👑",desc:"A royal stamp of approval. +2% coins forever.",effects:{coins:.02}},
+{id:"void_shard",name:"Shard of the Unfolding Void",rarity:"Legendary",emoji:"🔮",desc:"Reality has a crease now. +2% coins, XP and rare finds.",effects:{coins:.02,xp:.02,rare:.02}}
+];
+window.DUO_DATA={achievements,dailyAchievements,itemAIComments,shopItems,relicCatalog};
