@@ -1,0 +1,46 @@
+(function(){
+"use strict";
+var DEV_HOST="str8kryptic.github.io",DEV_PATH="/Duo-Dungeon-Preview",ADMIN_ID="14515572-ab11-432e-adc6-bb24c53c5277";
+if(location.hostname!==DEV_HOST||!location.pathname.startsWith(DEV_PATH))return;
+var auth=window.DUO_AUTH;if(!auth||!auth.ready)return;
+auth.ready.then(function(){
+ if(!auth.user||auth.user.id!==ADMIN_ID)return;
+ var nav=document.querySelector(".main-nav"),root=document.getElementById("app");if(!nav||!root)return;
+ var tab=document.createElement("button");tab.type="button";tab.id="dev-tools-tab";tab.innerHTML='⚙<small>DEV TOOLS</small>';nav.appendChild(tab);
+ var users=[],summary={},loading=false,errorText="",filter="all",search="",selectedId="",generatedAt=null;
+ function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+ function date(v){if(!v)return "Never";var d=new Date(v);return isNaN(d.getTime())?"Unknown":d.toLocaleString(undefined,{year:"numeric",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}
+ function ago(v){if(!v)return "Never signed in";var ms=Date.now()-new Date(v).getTime();if(!isFinite(ms))return "Unknown";var m=Math.max(0,Math.floor(ms/60000));if(m<1)return "Just now";if(m<60)return m+"m ago";var h=Math.floor(m/60);if(h<24)return h+"h ago";var d=Math.floor(h/24);if(d<30)return d+"d ago";var mo=Math.floor(d/30);return mo<12?mo+"mo ago":Math.floor(mo/12)+"y ago"}
+ function days(v){return v?((Date.now()-new Date(v).getTime())/86400000):Infinity}
+ function status(u){if(!u.lastSignInAt)return ["NEVER SIGNED IN","dev-status-muted"];if(days(u.lastSignInAt)<=7)return ["ACTIVE · 7D","dev-status-good"];if(days(u.lastSignInAt)<=30)return ["RECENT · 30D","dev-status-warn"];return ["DORMANT","dev-status-muted"]}
+ function card(label,value,sub){return '<article class="dev-stat"><span>'+esc(label)+'</span><strong>'+esc(value)+'</strong><small>'+esc(sub||"")+'</small></article>'}
+ function filtered(){var q=search.trim().toLowerCase();return users.filter(function(u){var ok=filter==="all"||(filter==="active7"&&days(u.lastSignInAt)<=7)||(filter==="active30"&&days(u.lastSignInAt)<=30)||(filter==="never"&&!u.lastSignInAt)||(filter==="unconfirmed"&&!u.emailConfirmedAt)||(filter==="nosave"&&!u.hasSave);var hay=[u.email,u.displayName,u.crawlerNumber,u.id].join(" ").toLowerCase();return ok&&(!q||hay.indexOf(q)>=0)})}
+ function detail(u){return '<tr class="dev-detail-row"><td colspan="5"><div class="dev-detail-grid">'+
+ '<div><small>ACCOUNT ID</small><b>'+esc(u.id)+'</b></div><div><small>EMAIL CONFIRMED</small><b>'+(u.emailConfirmedAt?"Yes · "+esc(date(u.emailConfirmedAt)):"No")+'</b></div>'+
+ '<div><small>LAST SUCCESSFUL LOGIN</small><b>'+esc(date(u.lastSignInAt))+'</b></div><div><small>ACCOUNT CREATED</small><b>'+esc(date(u.createdAt))+'</b></div>'+
+ '<div><small>LAST SAVE</small><b>'+esc(date(u.saveUpdatedAt))+'</b></div><div><small>PROFILE UPDATED</small><b>'+esc(date(u.profileUpdatedAt))+'</b></div>'+
+ '<div><small>LIFETIME STEPS</small><b>'+Number(u.stepLifetime||0).toLocaleString()+'</b></div><div><small>STEPS TODAY</small><b>'+Number(u.stepsToday||0).toLocaleString()+'</b></div>'+
+ '<div><small>XP / COINS</small><b>'+Number(u.xp||0).toLocaleString()+' XP · '+Number(u.coins||0).toLocaleString()+' coins</b></div>'+
+ '<div><small>BAG / TITLE</small><b>'+Number(u.bagCount||0)+' items · '+esc(u.title||"No title")+'</b></div></div></td></tr>'}
+ function table(){var rows=filtered();if(!rows.length)return '<div class="dev-empty">No crawlers match that filter. The dungeon is suspiciously quiet.</div>';
+ return '<div class="dev-table-scroll"><table class="dev-table"><thead><tr><th>CRAWLER</th><th>ACCOUNT</th><th>LAST LOGIN</th><th>ACCOUNT STATUS</th><th>SAVE</th></tr></thead><tbody>'+
+ rows.map(function(u){var st=status(u),open=selectedId===u.id;return '<tr class="dev-user-row '+(open?"selected":"")+'" data-dev-user="'+esc(u.id)+'"><td><b>#'+esc(u.crawlerNumber||"—")+'</b><small>'+esc(u.displayName||"Unnamed crawler")+'</small></td><td><b>'+esc(u.email||"No email")+'</b><small>'+esc(u.id.slice(0,8))+'…</small></td><td><b>'+esc(ago(u.lastSignInAt))+'</b><small>'+esc(date(u.lastSignInAt))+'</small></td><td><span class="dev-status '+st[1]+'">'+st[0]+'</span><small>'+(u.emailConfirmedAt?"Email confirmed":"Email not confirmed")+'</small></td><td><b class="'+(u.hasSave?"dev-save-ok":"dev-save-missing")+'">'+(u.hasSave?"SAVE FOUND":"NO SAVE")+'</b><small>'+(u.saveUpdatedAt?esc(ago(u.saveUpdatedAt)):"No save recorded")+'</small></td></tr>'+(open?detail(u):"")}).join("")+
+ '</tbody></table></div><p class="dev-table-foot">Showing '+rows.length+' of '+users.length+' accounts · Select a row for diagnostics</p>'}
+ function render(){root.innerHTML='<section class="dev-dashboard"><div class="dev-heading"><div><div class="eyebrow">BUILD SIDE · PRIVATE ACCESS</div><h1>Developer Console</h1><p>Account activity, crawler health and save diagnostics. Read-only, because one wrong click is how villains are made.</p></div><span class="dev-only-tag">DEV BUILD ONLY</span></div>'+
+ '<div class="dev-stats">'+card("TOTAL ACCOUNTS",summary.totalUsers||users.length,"Registered accounts")+card("ACTIVE · 7 DAYS",summary.active7Days||0,"Successful sign-ins")+card("ACTIVE · 30 DAYS",summary.active30Days||0,"Successful sign-ins")+card("NEVER SIGNED IN",summary.neverSignedIn||0,"No recorded login")+card("UNCONFIRMED",summary.unconfirmed||0,"Email confirmation pending")+card("MISSING SAVES",summary.missingSaves||0,"Accounts without a game save")+'</div>'+
+ '<div class="dev-section-head"><div><h2>Player directory</h2><p>Last login means last successful authentication, not live online presence.</p></div><button id="dev-refresh" class="dev-refresh" '+(loading?"disabled":"")+'>'+(loading?"REFRESHING…":"↻ REFRESH DATA")+'</button></div>'+
+ '<div class="dev-toolbar"><input id="dev-search" type="search" placeholder="Search email, crawler name, number or ID…" value="'+esc(search)+'"><select id="dev-filter"><option value="all">All accounts</option><option value="active7">Active · 7 days</option><option value="active30">Active · 30 days</option><option value="never">Never signed in</option><option value="unconfirmed">Email unconfirmed</option><option value="nosave">Missing save</option></select></div>'+
+ (errorText?'<div class="dev-error">'+esc(errorText)+'</div>':"")+(loading&&!users.length?'<div class="dev-loading">Opening the registrar’s ledger…</div>':table())+
+ '<div class="dev-footnote"><b>Developer-only data:</b> this panel is loaded only by the Preview repository, and the server separately checks your signed-in account before returning anything. No player records can be edited here.'+(generatedAt?'<span>Last refreshed '+esc(date(generatedAt))+'</span>':"")+'</div></section>';
+ var refresh=root.querySelector("#dev-refresh");if(refresh)refresh.addEventListener("click",load);
+ var input=root.querySelector("#dev-search");if(input)input.addEventListener("input",function(){search=this.value;var pos=this.selectionStart;render();var next=root.querySelector("#dev-search");next.focus();next.setSelectionRange(pos,pos)});
+ var select=root.querySelector("#dev-filter");if(select){select.value=filter;select.addEventListener("change",function(){filter=this.value;render()})}
+ var tbody=root.querySelector("tbody");if(tbody)tbody.addEventListener("click",function(e){var row=e.target.closest("[data-dev-user]");if(!row)return;selectedId=selectedId===row.dataset.devUser?"":row.dataset.devUser;render()})
+ }
+ async function load(){if(loading)return;loading=true;errorText="";render();try{var result=await auth.developerDashboard();if(result.error)throw result.error;var payload=result.data||{};users=Array.isArray(payload.users)?payload.users:[];summary=payload.summary||{};generatedAt=payload.generatedAt||new Date().toISOString();if(selectedId&&!users.some(function(u){return u.id===selectedId}))selectedId=""}catch(err){errorText=err&&err.message?err.message:"Could not load developer data."}finally{loading=false;render()}}
+ function open(){tab.classList.add("active");render();if(!generatedAt&&!loading)load()}
+ function close(){tab.classList.remove("active")}
+ tab.addEventListener("click",open);
+ document.addEventListener("click",function(e){if(e.target.closest("[data-page]"))close()},true);
+});
+})();
