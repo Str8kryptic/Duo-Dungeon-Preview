@@ -535,3 +535,8 @@ body{background:radial-gradient(ellipse at 50% -12%,#483052 0%,#1b1324 34%,#0c09
 .account-feedback{font-size:10px;line-height:1.5;margin:8px 0 0}
 .account-signout{width:100%;margin-top:5px;background:#38212a;border:1px solid #87505a;color:#ffd4cc;padding:11px;border-radius:9px;font-size:10px;font-weight:900}
 #account-dialog button:disabled{opacity:.55}
+
+/* Account dialog fallback for browsers without native modal support. */
+body.account-fallback-active::before{content:"";position:fixed;inset:0;z-index:1000;background:#07050bcc;backdrop-filter:blur(4px)}
+#account-dialog.account-fallback-open{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1001;margin:0;width:min(94vw,460px);max-height:88dvh;overflow:auto}
+.account-button{position:relative;z-index:2;cursor:pointer;touch-action:manipulation}
