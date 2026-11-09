@@ -513,3 +513,6 @@ body{background:radial-gradient(ellipse at 50% -12%,#483052 0%,#1b1324 34%,#0c09
 /* Quick Apple Health sync directly beneath the home coin and XP stats */
 .home-health-quick{display:grid;grid-template-columns:1fr;gap:5px;margin-top:9px}.home-health-quick .action{width:100%;min-height:40px;letter-spacing:1px;font-size:9px}.home-health-quick small{color:#b9afc3;text-align:center;font-size:8px;font-weight:800;letter-spacing:.5px}
 @media(max-width:430px){.rpg-home{gap:10px}.home-hero{padding-top:12px}}
+
+/* Keep the decorative sigil out of document flow so the home hero starts compactly */
+.home-hero>.hero-sigil{position:absolute;pointer-events:none}
