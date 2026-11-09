@@ -5,19 +5,19 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#100c16">
 <title>Duo Dungeon</title>
-<link rel="stylesheet" href="styles.css?v=20261108originalhome1">
+<link rel="stylesheet" href="styles.css?v=20261108topnav1">
 </head>
 <body>
 <div class="shell">
 <header><a class="brand">✦ DUO <b>DUNGEON</b></a><div class="wallet">◈ <b id="coins">250</b> <span>✧ <b id="dust">0</b></span> <button id="account-button" class="account-button">ACCOUNT</button></div></header>
-<main id="app"><section class="panel"><h1>ENTERING THE DUNGEON…</h1><p>Preparing your fresh crawler.</p></section></main>
-<nav class="main-nav">
+<nav class="main-nav" aria-label="Main navigation">
 <button data-page="home" class="active">⌂<small>HOME</small></button>
-<button data-fac-toggle aria-expanded="true">⚒<small>FACILITIES</small></button>
+<button data-page="facilities">⚒<small>FACILITIES</small></button>
 <button data-page="profile">♙<small>PROFILE</small></button>
 <button data-page="quests">☷<small>QUESTS</small></button>
 <button data-page="info">ⓘ<small>INFO</small></button>
 </nav>
+<main id="app"><section class="panel"><h1>ENTERING THE DUNGEON…</h1><p>Preparing your fresh crawler.</p></section></main>
 </div>
 <dialog id="detail"><button class="close" data-close>×</button><div id="detail-body"></div></dialog>
 <div id="toast"></div>
@@ -25,6 +25,6 @@
 <script src="auth.js?v=20261108accounts1"></script>
 <script src="game-data.js?v=20261108fresh" onerror="document.getElementById('app').innerHTML='<section class=&quot;panel&quot;><h1>DATA FILE FAILED</h1><p>Refresh this page.</p></section>'"></script>
 <script src="sync.js?v=20261108sync1"></script>
-<script src="app.js?v=20261108originalhome1" onerror="document.getElementById('app').innerHTML='<section class=&quot;panel&quot;><h1>GAME ENGINE FAILED</h1><p>Refresh this page.</p></section>'"></script>
+<script src="app.js?v=20261108topnav1" onerror="document.getElementById('app').innerHTML='<section class=&quot;panel&quot;><h1>GAME ENGINE FAILED</h1><p>Refresh this page.</p></section>'"></script>
 </body>
 </html>

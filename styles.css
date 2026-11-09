@@ -54,3 +54,10 @@
 .effect-line{padding:9px;border:1px solid #685071;border-radius:8px;color:#f3c56b!important;font-size:9px}
 blockquote{margin:12px 0;padding:10px 12px;border-left:2px solid #b68a58;background:#160f1d;color:#d5c1df;font-size:10px;line-height:1.5}
 @media(max-width:390px){.chest-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.chest-item{min-height:103px;padding:8px 4px}.material-chip small{font-size:5.5px}.relic-card{padding:9px}.craft-recipe{padding:10px}}
+
+
+/* Top navigation and dedicated facilities menu */
+.shell{padding-bottom:28px}
+.main-nav{position:sticky;top:0;left:auto;transform:none;width:100%;z-index:30;margin:0 0 4px;padding:8px 10px;background:#120d19f2;backdrop-filter:blur(16px);border-top:0;border-bottom:1px solid #624a69;border-radius:0 0 12px 12px;box-shadow:0 5px 16px #0003}
+.main-nav button{min-height:42px}
+.facilities-directory{margin-top:0}
