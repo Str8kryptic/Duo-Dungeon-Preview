@@ -106,6 +106,8 @@ Object.assign(itemAIComments,{
   greed:"The goblins distilled their favorite personality flaw and put it in a bottle. +50% coins for 30 minutes. Financially irresponsible, but effective.",
   wisdom:"A blue elixir that briefly makes the instructions seem obvious. +50% XP for 30 minutes. Side effects may include confidence.",
   luck:"A violet swirl of improbable outcomes. The dungeon insists it is not gambling. +25% rare finds for 20 minutes.",
+  liquidgold:"A gold-colored tonic that leaves tiny coin-shaped bubbles clinging to the glass. +25% coins for 25 folds.",
+  experience:"A bright blue distillate distilled from the last three brain cells of a retired wizard. +50% XP for 50 folds.",
   fortune:"A green-gold draught with a suspiciously cheerful label. +25% rare finds for 40 folds. Do not ask what is smiling inside.",
   blood:"A crimson brew that makes every coin look personally offended when it stays in your pocket. +100% coins for 20 folds.",
   scholar:"Ink-dark tea brewed from the notes of a wizard who alphabetized his regrets. +30% XP for 100 folds.",
