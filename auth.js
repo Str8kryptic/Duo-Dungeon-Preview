@@ -35,8 +35,8 @@ async function loadAccount(u,afterSignup){
   initialSave.number=crawlerNumber;await persist(initialSave);localStorage.removeItem(CLAIM_KEY);
  }
  root.classList.add("hidden");resolveReady();
- if(afterSignup){window.location.href="/setup.html";return}
- if(new URLSearchParams(location.search).get("welcome")==="1"){window.location.replace("/setup.html");return}
+ if(afterSignup){window.location.href=new URL("setup.html",window.location.href).href;return}
+ if(new URLSearchParams(location.search).get("welcome")==="1"){window.location.replace(new URL("setup.html",window.location.href).href);return}
  if(window.__DUO_APP_READY__)window.location.reload();
 }
 async function finishGuest(){mode="guest";user=null;initialSave=null;root.classList.add("hidden");resolveReady()}
@@ -56,7 +56,7 @@ form.addEventListener("submit",async function(e){
  try{
   if(currentMode==="signup"){
    if(readLocal())localStorage.setItem(CLAIM_KEY,"1");
-   var signup=await client.auth.signUp({email:email,password:password,options:{emailRedirectTo:window.location.origin+"/?welcome=1"}});
+   var signup=await client.auth.signUp({email:email,password:password,options:{emailRedirectTo:new URL("./?welcome=1",window.location.href).href}});
    if(signup.error)throw signup.error;
    if(signup.data.session){await loadAccount(signup.data.user,true)}
    else{message("Check your email to confirm your account. Your guest progress will be claimed when you return and log in on this device.")}
