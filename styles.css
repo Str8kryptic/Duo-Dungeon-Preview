@@ -523,3 +523,15 @@ body{background:radial-gradient(ellipse at 50% -12%,#483052 0%,#1b1324 34%,#0c09
 
 /* Account onboarding and persistent-session choice */
 .stay-label{display:flex!important;align-items:center;gap:10px;margin:14px 0!important;padding:10px 12px;border:1px solid #654c6d;border-radius:10px;background:#100b1688}.stay-label input{width:18px;height:18px;flex:none;accent-color:#d7a65e}.stay-label span{display:flex;flex-direction:column;gap:3px}.stay-label b{font-size:11px;color:#f4e5c8}.stay-label small{font-size:10px;color:#a99ab1;font-weight:400;letter-spacing:0}
+
+#account-dialog{width:min(94vw,460px);max-height:88dvh;padding:20px;background:radial-gradient(ellipse at 50% 0%,#4b315d 0,#24182f 43%,#130e19 100%);border:1px solid #b18a5a;border-radius:18px;color:var(--cream)}
+#account-dialog h2{clear:both;color:#ffe0a0;font-size:23px;margin:8px 0}
+#account-dialog .account-note{font-size:11px;line-height:1.55}
+.account-section{margin:15px 0;padding:13px;border:1px solid #5d486b;border-radius:12px;background:#17111f99}
+.account-section label{display:block;color:#d9c8e1;font-size:9px;font-weight:900;letter-spacing:1px;margin:8px 0 6px}
+.account-email{padding:11px;border:1px solid #654c6d;border-radius:9px;background:#100b16;color:#ffe0a0;font-size:13px;overflow-wrap:anywhere}
+.account-section input{width:100%;padding:11px;border:1px solid #654c6d;border-radius:9px;background:#100b16;color:#fff;font:inherit;font-size:13px;margin:4px 0 8px}
+.account-section button{width:100%;margin-top:7px}
+.account-feedback{font-size:10px;line-height:1.5;margin:8px 0 0}
+.account-signout{width:100%;margin-top:5px;background:#38212a;border:1px solid #87505a;color:#ffd4cc;padding:11px;border-radius:9px;font-size:10px;font-weight:900}
+#account-dialog button:disabled{opacity:.55}
