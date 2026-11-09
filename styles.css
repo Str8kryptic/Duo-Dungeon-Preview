@@ -603,3 +603,12 @@ body.account-fallback-active::before{content:"";position:fixed;inset:0;z-index:1
 
 /* Keep equipped companion artwork aligned with the navigation sigil system. */
 .build-slot>span .game-art{width:34px;height:34px;max-width:none;max-height:none;filter:drop-shadow(0 2px 5px #0008)}
+
+/* Recognizable pictograms, all rendered in the same framed fantasy icon language. */
+.home-stat-grid .game-art{display:inline-block;width:20px;height:20px;max-width:none;max-height:none;vertical-align:-5px}
+.recipe-head>span .game-art{width:30px;height:30px;max-width:none;max-height:none}
+.armory-crest .game-art{width:54px;height:54px;max-width:none;max-height:none}
+.profile-avatar .game-art{width:48px;height:48px;max-width:none;max-height:none}
+.manual-sigil .game-art{width:30px;height:30px;max-width:none;max-height:none}
+.rpg-section-head>span .game-art,.milestone-icon .game-art,.armory-bonus-grid>div>span .game-art{width:24px;height:24px;max-width:none;max-height:none}
+.bonus-chip>span .game-art{width:21px;height:21px;max-width:none;max-height:none}
