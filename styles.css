@@ -141,3 +141,56 @@ body{background:radial-gradient(ellipse at 50% -12%,#483052 0%,#1b1324 34%,#0c09
 .inspect-actions .action{width:100%;min-height:42px;font-size:9px;letter-spacing:.5px}
 .inspect-actions .action:not(.primary){background:#21172a}
 @media(max-width:390px){#detail{padding:11px}.inspect-art{min-height:142px}.inspect-narrator{font-size:9px}.inspect-effects,.inspect-details{padding:10px}}
+
+/* Crawler Vault and Warden Armory — equipment-first presentation */
+.vault-overview,.vault-equipped-strip,.armory-hero,.armory-loadout,.armory-bonus-panel,.armory-relic-panel{border:1px solid #695174;border-radius:16px;background:linear-gradient(145deg,#2b2035,#17111f);box-shadow:inset 0 1px #ffffff08,0 10px 24px #0003}
+.vault-overview{padding:15px;margin:8px 0 12px;background:radial-gradient(ellipse at 100% 0%,#70503b44,transparent 55%),linear-gradient(145deg,#34263a,#17111f)}
+.vault-title{display:flex;justify-content:space-between;gap:12px;align-items:center}.vault-title h2,.armory-hero h2{font:700 21px Georgia,serif;color:#ffe3ad;margin:5px 0}.vault-title p,.armory-hero p{font-size:10px;line-height:1.5;color:#c6b6ce;margin:0;max-width:330px}
+.vault-chest-mark{width:58px;height:58px;flex:none;display:grid;place-items:center;border:1px solid #a47b50;border-radius:14px;background:linear-gradient(145deg,#765032,#332039);color:#ffda91;font-size:34px;text-shadow:0 4px 10px #000}
+.vault-stat-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:14px}
+.vault-stat-row>div{padding:9px 4px;border:1px solid #59445f;border-radius:9px;background:#100b17a8;text-align:center;min-width:0}
+.vault-stat-row b,.vault-stat-row small{display:block}.vault-stat-row b{font:700 18px Georgia,serif;color:#ffdf9e}.vault-stat-row small{margin-top:4px;color:#bcaec8;font-size:6px;font-weight:950;letter-spacing:.5px;overflow-wrap:anywhere}
+.vault-equipped-strip{padding:11px;margin-bottom:13px;background:linear-gradient(110deg,#24182f,#17111e)}
+.vault-strip-head,.vault-section-head,.armory-section-title{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.vault-strip-head>span,.vault-strip-head{color:#d9bd8c;font-size:8px;font-weight:950;letter-spacing:1.2px}
+.vault-strip-head button{border:0;background:none;color:#c6a0df;font-size:7px;font-weight:900}
+.vault-mini-slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:9px}
+.vault-mini-slot{min-width:0;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;border:1px solid #5b4568;border-radius:10px;background:linear-gradient(145deg,#392744,#1b1423);color:#f7e8c9}
+.vault-mini-slot>span{font-size:22px}.vault-mini-slot small{font-size:6px;color:#c9a8df;font-weight:950;letter-spacing:.7px}.vault-mini-slot b{width:100%;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vault-filters{display:flex;gap:6px;overflow-x:auto;padding:2px 0 9px;scrollbar-width:none}.vault-filters .pill{flex:none;font-size:8px}
+.vault-section-head{margin:12px 1px 8px}.vault-section-head h3{margin:3px 0 0;color:#ffe3ad;font:700 15px Georgia,serif}.vault-section-head>small{font-size:7px;color:#bdaec7;font-weight:900}
+.loot-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.loot-card{--loot-accent:#a9a0b5;--loot-glow:#8c7c9e;position:relative;min-width:0;min-height:174px;padding:9px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:5px;overflow:hidden;border:1px solid color-mix(in srgb,var(--loot-accent),transparent 45%);border-radius:13px;background:linear-gradient(155deg,#30243a,#17111f 75%);color:#f6e8ce;text-align:center}
+.loot-card.rarity-common{--loot-accent:#b8b0c2;--loot-glow:#93869f}.loot-card.rarity-uncommon{--loot-accent:#8bc59b;--loot-glow:#4c9b70}.loot-card.rarity-rare{--loot-accent:#83b9ee;--loot-glow:#397fc4}.loot-card.rarity-epic{--loot-accent:#c39aef;--loot-glow:#9053ce}.loot-card.rarity-legendary{--loot-accent:#ffd27c;--loot-glow:#dc8b32}.loot-card.rarity-mythic{--loot-accent:#ff9bc9;--loot-glow:#d64d9b}
+.loot-card:before{content:"";position:absolute;inset:0 0 auto;height:3px;background:var(--loot-accent);box-shadow:0 0 12px var(--loot-glow)}
+.loot-card.is-equipped{box-shadow:inset 0 0 0 1px var(--loot-accent),inset 0 0 26px color-mix(in srgb,var(--loot-glow),transparent 83%)}
+.loot-rarity{align-self:flex-start;color:var(--loot-accent);font-size:7px;font-weight:950;letter-spacing:1px;text-transform:uppercase}
+.loot-art{position:relative;width:78px;height:74px;display:grid;place-items:center;isolation:isolate}
+.loot-art i{position:absolute;z-index:-1;width:55px;height:55px;border:1px solid color-mix(in srgb,var(--loot-accent),transparent 65%);border-radius:18px;transform:rotate(45deg);background:radial-gradient(circle,var(--loot-glow),transparent 70%);opacity:.5}
+.loot-art b{font-size:39px;filter:drop-shadow(0 5px 7px #0009)}
+.loot-name{width:100%;font:700 12px Georgia,serif;line-height:1.2;color:#fff0d0;overflow-wrap:anywhere}
+.loot-kind{font-size:7px;color:#b9a9c6;font-weight:900;letter-spacing:.8px}
+.loot-foot{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:auto}.loot-foot small{font-size:7px;color:#d6c5dc}
+.loot-equipped{position:absolute;top:8px;right:7px;padding:3px 5px;border-radius:5px;background:#d4a64e;color:#1b1117;font-size:6px;font-weight:950;letter-spacing:.5px}
+.relic-loot{background:linear-gradient(155deg,#263449,#17111f 78%)}
+.vault-empty{margin-top:8px}
+.vault-materials{margin-top:17px;padding:11px;border:1px solid #5d4868;border-radius:13px;background:#1a1322}
+.vault-materials .material-grid{margin-top:8px}
+.armory-hero{position:relative;overflow:hidden;margin:8px 0 12px;padding:16px;background:radial-gradient(ellipse at 100% 0%,#b57c3b38,transparent 50%),linear-gradient(145deg,#30233c,#17111f)}
+.armory-hero-copy{position:relative;z-index:1;max-width:78%}.armory-hero h2{font-size:22px}.armory-crest{position:absolute;right:14px;top:14px;width:64px;height:64px;display:grid;place-items:center;border:1px solid #9b774f;border-radius:50%;background:#1a1324;color:#f6cf84;font-size:37px;text-shadow:0 3px 12px #d48e3b66}
+.armory-power{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:15px}.armory-power>div{padding:8px 3px;border:1px solid #604b67;border-radius:9px;background:#100b17a8;text-align:center;min-width:0}.armory-power b,.armory-power small{display:block}.armory-power b{font:700 17px Georgia,serif;color:#ffdc98}.armory-power small{margin-top:3px;color:#c0afc9;font-size:6px;font-weight:950;letter-spacing:.3px}
+.armory-loadout,.armory-bonus-panel,.armory-relic-panel{padding:12px;margin:10px 0}
+.armory-section-title .eyebrow{font-size:7px}.armory-section-title h3{margin:3px 0 0;color:#ffe2ae;font:700 14px Georgia,serif}.armory-section-title>span{color:#c6a5dc;font-size:7px;font-weight:950;letter-spacing:.7px}
+.armory-item{--armory-accent:#a9a0b5;position:relative;display:grid;grid-template-columns:66px minmax(0,1fr);gap:10px;margin-top:10px;padding:11px;border:1px solid #695174;border-radius:12px;background:linear-gradient(145deg,#2b2035,#17111f)}
+.armory-item.rarity-rare{--armory-accent:#83b9ee;border-color:#527ca6}.armory-item.rarity-epic{--armory-accent:#c39aef;border-color:#8c64b5}.armory-item.rarity-legendary{--armory-accent:#ffd27c;border-color:#aa8043}.armory-item.rarity-mythic{--armory-accent:#ff9bc9;border-color:#ad5e8a}.armory-item.is-empty{border-style:dashed;opacity:.8}
+.armory-slot-label{grid-column:1/-1;color:#d5b47f;font-size:7px;font-weight:950;letter-spacing:1.2px}
+.armory-item-art{position:relative;display:grid;place-items:center;min-height:75px;border:1px solid color-mix(in srgb,var(--armory-accent),transparent 60%);border-radius:10px;background:radial-gradient(circle,color-mix(in srgb,var(--armory-accent),transparent 75%),transparent 70%),#17111f}
+.armory-item-art:before{content:"";position:absolute;width:48px;height:48px;border:1px solid color-mix(in srgb,var(--armory-accent),transparent 60%);transform:rotate(45deg);border-radius:12px}
+.armory-item-art b{font-size:34px;filter:drop-shadow(0 4px 6px #0009)}
+.armory-item-info{min-width:0;align-self:center}.armory-item-info>small{color:var(--armory-accent);font-size:7px;font-weight:950;letter-spacing:.8px}.armory-item-info h3{margin:4px 0;color:#fff0d0;font:700 14px Georgia,serif;overflow-wrap:anywhere}.armory-item-info p{margin:0;color:#c6b7d0;font-size:8px;line-height:1.5;overflow-wrap:anywhere}
+.armory-upgrade{margin-top:7px;color:#d6b77f;font-size:7px;font-weight:900}.armory-upgrade b{color:#ffe0a0}
+.armory-item-actions{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:7px}.armory-item-actions .action{min-height:36px}.armory-item-actions .action.primary{grid-column:1/-1}
+.armory-set-bonus{margin-top:10px;padding:10px;border:1px solid #aa8043;border-radius:10px;background:#4b351b55;text-align:center}.armory-set-bonus span,.armory-set-bonus b,.armory-set-bonus small{display:block}.armory-set-bonus span{color:#ffdc98;font-size:8px;font-weight:950;letter-spacing:1px}.armory-set-bonus b{margin:5px 0;color:#fff0d0;font-size:12px}.armory-set-bonus small{color:#d5c1a1;font-size:8px}
+.armory-bonus-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px}.armory-bonus-grid>div{display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:5px;padding:9px;border:1px solid #5b4568;border-radius:9px;background:#100b17}.armory-bonus-grid span{font-size:16px}.armory-bonus-grid small{color:#c5b2d0;font-size:7px;font-weight:900}.armory-bonus-grid b{color:#ffdc98;font:700 14px Georgia,serif}.armory-bonus-panel>p{font-size:8px;line-height:1.5;color:#bdaec7;margin:9px 2px 0}
+.armory-relic-grid{display:grid;gap:7px;margin-top:10px}.armory-relic{display:flex;align-items:center;gap:9px;padding:9px;border:1px solid #594a70;border-radius:10px;background:linear-gradient(100deg,#2c2440,#17111f);color:#f7e7c9;text-align:left}.armory-relic>span{font-size:23px}.armory-relic>div{flex:1;min-width:0}.armory-relic b,.armory-relic small{display:block}.armory-relic b{font-size:9px}.armory-relic small{margin-top:3px;color:#c0a7d6;font-size:7px}.armory-relic i{font-style:normal;color:#d9b77b}
+@media(min-width:560px){.loot-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.armory-item{grid-template-columns:76px minmax(0,1fr) auto}.armory-slot-label{grid-column:1/-1}.armory-item-actions{grid-column:3;grid-row:2;grid-template-columns:1fr;align-content:center}.armory-item-actions .action.primary{grid-column:auto}}
