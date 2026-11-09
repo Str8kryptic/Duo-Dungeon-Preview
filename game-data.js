@@ -85,7 +85,7 @@ const relicCatalog=[
 {id:"gilded_tooth",name:"Gilded Goblin Tooth",rarity:"Rare",emoji:"🦷",desc:"A tiny monument to poor dental choices. +1% coins forever.",effects:{coins:.01}},
 {id:"dragon_scale_relic",name:"Cinderheart Scale",rarity:"Epic",emoji:"🐉",desc:"Still warm. +2% XP forever.",effects:{xp:.02}},
 {id:"royal_seal",name:"Seal of the Lost King",rarity:"Epic",emoji:"👑",desc:"A royal stamp of approval. +2% coins forever.",effects:{coins:.02}},
-{id:"void_shard",name:"Shard of the Unsteping Void",rarity:"Legendary",emoji:"🔮",desc:"Reality has a dent now. +2% coins, XP and rare finds.",effects:{coins:.02,xp:.02,rare:.02}}
+{id:"void_shard",name:"Shard of the Unstepping Void",rarity:"Legendary",emoji:"🔮",desc:"Reality has a dent now. +2% coins, XP and rare finds.",effects:{coins:.02,xp:.02,rare:.02}}
 ];
 
 Object.assign(itemAIComments,{
