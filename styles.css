@@ -520,3 +520,6 @@ body{background:radial-gradient(ellipse at 50% -12%,#483052 0%,#1b1324 34%,#0c09
 
 /* Annual achievement title ribbon */
 .annual-title-ribbon{display:flex;flex-direction:column;gap:4px;margin:12px 0 16px;padding:11px 14px;border:1px solid rgba(211,174,105,.34);border-radius:12px;background:linear-gradient(110deg,rgba(151,105,47,.18),rgba(55,43,71,.28));}.annual-title-ribbon span{font-size:9px;letter-spacing:.16em;color:var(--gold,#d8b56f);font-weight:800;}.annual-title-ribbon strong{font-size:15px;letter-spacing:.08em;color:#f4dfb5;}.annual-title-ribbon small{font-size:10px;color:var(--muted,#aaa2b5);line-height:1.4;}
+
+/* Account onboarding and persistent-session choice */
+.stay-label{display:flex!important;align-items:center;gap:10px;margin:14px 0!important;padding:10px 12px;border:1px solid #654c6d;border-radius:10px;background:#100b1688}.stay-label input{width:18px;height:18px;flex:none;accent-color:#d7a65e}.stay-label span{display:flex;flex-direction:column;gap:3px}.stay-label b{font-size:11px;color:#f4e5c8}.stay-label small{font-size:10px;color:#a99ab1;font-weight:400;letter-spacing:0}
