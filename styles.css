@@ -230,3 +230,10 @@ body{background:radial-gradient(ellipse at 50% -12%,#483052 0%,#1b1324 34%,#0c09
 .inspect-art .game-art{width:132px;height:132px;max-width:none;max-height:none;filter:drop-shadow(0 0 12px #c69cff77) drop-shadow(0 8px 9px #000b)}
 .loot-art .game-art{width:78px;height:78px;max-width:none;max-height:none}
 .game-art.art-sword,.game-art.art-axe,.game-art.art-dagger,.game-art.art-doomblade{filter:drop-shadow(0 0 7px #e7c48c55) drop-shadow(0 5px 6px #000b)}
+
+.material-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:112px;padding:9px 5px}
+.material-chip .material-art{display:grid;place-items:center;width:58px;height:58px;border-radius:12px;background:radial-gradient(circle,#a77bdb33,transparent 72%)}
+.material-chip .material-art .game-art{width:58px;height:58px;max-width:none;max-height:none}
+.material-chip b{font-size:15px;color:#ffe0a3}.material-chip small{font-size:8px;letter-spacing:.7px}
+.game-art.art-potion{filter:drop-shadow(0 0 8px #9acbff66) drop-shadow(0 5px 7px #000b)}
+.inspect-art .game-art.art-potion{width:142px;height:142px}
