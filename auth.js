@@ -35,6 +35,8 @@ async function loadAccount(u,afterSignup){
   initialSave.number=crawlerNumber;await persist(initialSave);localStorage.removeItem(CLAIM_KEY);
  }
  root.classList.add("hidden");resolveReady();
+ if(afterSignup){window.location.href="/setup.html";return}
+ if(new URLSearchParams(location.search).get("welcome")==="1"){window.location.replace("/setup.html");return}
  if(window.__DUO_APP_READY__)window.location.reload();
 }
 async function finishGuest(){mode="guest";user=null;initialSave=null;root.classList.add("hidden");resolveReady()}
