@@ -497,3 +497,15 @@ body{background:radial-gradient(ellipse at 50% -12%,#483052 0%,#1b1324 34%,#0c09
   .scene-shop .npc-portrait.npc-shop{width:138px;height:156px}
   .scene-shop .npc-shop .npc-plaque,.scene-shop .npc-shop .npc-speech{left:116px;width:calc(100% - 122px)}
 }
+
+/* Apple Health step progression */
+.step-sync-panel{border-color:#8d75a5;background:linear-gradient(145deg,#241a30,#17111f)}
+.step-today{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 12px;margin:10px 0;border:1px solid #705b82;border-radius:12px;background:linear-gradient(120deg,#352343,#21182d)}
+.step-today small,.step-total small{display:block;color:#c4accf;font-size:7px;font-weight:900;letter-spacing:1px}
+.step-today strong{display:block;margin-top:4px;color:#f3d69c;font:700 29px Georgia,serif}
+.step-total{text-align:right}
+.step-total b{display:block;margin-top:6px;color:#e3c4f2;font:700 17px Georgia,serif}
+.step-meter{height:9px;margin:12px 0 8px;border-radius:20px;overflow:hidden;background:#100d17;border:1px solid #574366}
+.step-meter i{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,#8e65b4,#f1cc82);box-shadow:0 0 10px #b88bdb;transition:width .3s ease}
+.step-sync-status{margin:10px 0;padding:8px 9px;border-left:2px solid #d5b275;background:#17111f;color:#d7c6dc;font-size:8px}
+.manual-note{margin:9px 0 0;color:#9f91ab;font-size:8px;line-height:1.5}
