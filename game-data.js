@@ -116,7 +116,7 @@ Object.assign(itemAIComments,{
   mimicelixir:"The bottle tried to bite the cork. It has been reassured that this is not how employment works. +15% rare finds for 75 steps.",
   dragonbreath:"Warm, smoky, and legally distinct from breathing fire. +50% XP for 3,000 steps. Keep away from curtains.",
   goblingreed:"A suspiciously heavy purse in liquid form. The goblins swear the recipe is ethical. +40% coins for 6,000 steps.",
-  nectar:"A fragrant golden treat for your companion. They will love it. They will still ignore your commands. Doubles companion XP for 50 steps.",
+  nectar:"A fragrant golden treat for your companion. They will love it. They will still ignore your commands. Doubles companion XP for 5,000 steps.",
   phoenix:"One brilliant ember suspended in liquid sunrise. It doubles your next daily achievement reward. The phoenix requests you use it wisely."
 });
 window.DUO_DATA={achievements,dailyAchievements,itemAIComments,shopItems,relicCatalog};
