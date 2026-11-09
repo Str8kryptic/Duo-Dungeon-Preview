@@ -449,3 +449,11 @@ body{background:radial-gradient(ellipse at 50% -12%,#483052 0%,#1b1324 34%,#0c09
 .npc-shop .npc-plaque{left:88px;width:130px}
 .npc-shop .npc-speech{left:88px;top:65px;width:135px;min-height:34px}
 @media(max-width:430px){.npc-shop .npc-plaque{left:76px;width:120px}.npc-shop .npc-speech{left:76px;top:67px;width:126px}}
+
+/* Gribnik uses the supplied illustrated character art */
+.npc-shop .npc-portrait{width:126px;height:154px;transform:none;filter:drop-shadow(0 7px 8px #000b)}
+.npc-shop .gribnik-art{display:block;width:100%;height:100%;object-fit:contain;object-position:center bottom}
+.npc-shop .npc-halo{width:115px;height:120px;top:4px;opacity:.42}
+.npc-shop .npc-plaque{left:132px;top:2px;width:145px}
+.npc-shop .npc-speech{left:132px;top:66px;width:145px}
+@media(max-width:430px){.npc-shop .npc-portrait{width:112px;height:142px}.npc-shop .npc-plaque{left:112px;width:calc(100vw - 210px);min-width:108px}.npc-shop .npc-speech{left:112px;width:calc(100vw - 210px);min-width:108px;top:66px}}
