@@ -15,8 +15,8 @@ function xpgoal(){return level()*level()*100}
 function get(id){return items.find(function(x){return x.id===id})}
 function owned(id){return s.bag.indexOf(id)>=0}
 function itemCard(x){return '<article class="item"><div class="item-icon">'+esc(x.emoji||"✦")+'</div><div><h3>'+esc(x.name)+'</h3><p>'+esc(x.desc||"A mysterious dungeon object.")+'</p><small>'+esc(x.rarity||"Common")+' · '+esc(x.type)+'</small></div><div class="item-actions"><b class="price">◈ '+Number(x.price||0).toLocaleString()+'</b><button class="action" data-item="'+esc(x.id)+'">INSPECT</button></div></article>'}
-var facs=[["bag","BAG"],["shop","SHOP"],["forge","FORGE"],["alchemy","ALCHEMY"],["pets","PETS"],["relics","RELICS"],["armory","ARMORY"],["rewards","REWARDS"]];
-function facilityGrid(){return '<div class="facility-grid">'+facs.map(function(f){return '<button class="facility" data-fac="'+f[0]+'">'+f[1]+'</button>'}).join("")+'</div>'}
+var facs=[["bag","BAG",0,0],["shop","SHOP",1,0],["forge","FORGE",2,0],["alchemy","ALCHEMY",3,0],["pets","PETS",0,1],["relics","RELICS",1,1],["armory","ARMORY",2,1],["rewards","REWARDS",3,1]];
+function facilityGrid(){return '<div class="facility-grid">'+facs.map(function(f){var xp=[0,33.333,66.667,100][f[2]],yp=f[3]===0?0:100;return '<button class="facility" data-fac="'+f[0]+'"><span class="facility-art" style="background-position:'+xp+'% '+yp+'%"></span><span class="facility-label">'+f[1]+'</span></button>'}).join("")+'</div>'}
 var aiRants=[
 "Oh, look. {name} has returned. I was enjoying the silence, but apparently the dungeon has other plans.",
 "Welcome back, {name}. Your hinge called. It wants hazard pay and a new management team.",
