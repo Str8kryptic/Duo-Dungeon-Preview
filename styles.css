@@ -259,3 +259,27 @@ body{background:radial-gradient(ellipse at 50% -12%,#483052 0%,#1b1324 34%,#0c09
 .district-card-copy{padding:10px;display:flex;flex-direction:column;flex:1}.district-card-copy>small{font-size:6px;letter-spacing:.8px;color:#c9a5e1;font-weight:950}.district-card-copy h3{font:700 13px Georgia,serif;color:#ffe5bf;margin:5px 0}.district-card-copy p{font-size:8px;line-height:1.5;color:#b9a9c4;margin:0 0 10px;flex:1}.district-card-copy>span{display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid #ffffff18;font-size:7px;letter-spacing:.7px;color:#e4c48e;font-weight:950}.district-card-copy>span b{font-size:13px}
 .base-command-note{margin-top:14px;padding:12px 14px;border:1px solid #59436c;border-radius:12px;background:linear-gradient(110deg,#20152a,#120e18)}.base-command-note p{font:italic 11px Georgia,serif;line-height:1.6;color:#d4c0de;margin:6px 0 0}
 @media(max-width:360px){.base-status-strip{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:10px}.base-hero-art .game-art{width:90px;height:90px}.base-hero>.eyebrow{max-width:100%}.base-hero h1{max-width:100%;font-size:25px}}
+
+/* Immersive facility environments */
+.district-environment{position:relative;isolation:isolate;display:flex;align-items:center;min-height:166px;overflow:hidden;padding:17px 15px;margin-bottom:14px;border:1px solid var(--district-edge,#8062a0);border-radius:17px;background:linear-gradient(110deg,var(--district-bg1,#30213b),var(--district-bg2,#100c17) 75%);box-shadow:inset 0 0 34px #0008,0 9px 22px #0004}
+.district-environment:before{content:"";position:absolute;z-index:-1;inset:0;background:radial-gradient(ellipse at 80% 50%,var(--district-glow,#8e62b9) 0,transparent 58%),linear-gradient(90deg,#0d0914bb,transparent 80%)}
+.district-environment:after{content:"";position:absolute;z-index:-1;right:-25px;top:-55px;width:205px;height:205px;border:1px solid color-mix(in srgb,var(--district-edge,#8062a0),transparent 55%);border-radius:50%;box-shadow:0 0 0 16px #ffffff08,0 0 0 34px #ffffff05,0 0 30px var(--district-glow,#8e62b9)}
+.district-environment-art{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:142px;height:142px;display:grid;place-items:center;opacity:.9}
+.district-environment-art .game-art{width:140px;height:140px;max-width:none;max-height:none;filter:drop-shadow(0 0 13px var(--district-glow,#8e62b9)) drop-shadow(0 9px 9px #000b)}
+.district-environment-copy{position:relative;z-index:1;max-width:72%}
+.district-environment-copy .eyebrow{font-size:7px;letter-spacing:1px;color:var(--district-edge,#d1a7ed)}
+.district-environment-copy h2{font:700 clamp(19px,5vw,25px) Georgia,serif;color:#ffebc9;line-height:1.12;margin:8px 0;text-shadow:0 3px 12px #000b}
+.district-environment-copy p{font-size:9px;color:#ead7ef;margin:0 0 6px;line-height:1.45}
+.district-environment-copy small{display:block;max-width:245px;font-size:8px;color:#c8b8d2;line-height:1.5}
+.district-environment-lights{position:absolute;inset:auto 0 0;height:2px;background:linear-gradient(90deg,transparent,var(--district-edge,#b68be0),transparent);opacity:.8}
+.scene-bag .district-environment{--district-bg1:#49351f;--district-bg2:#171019;--district-edge:#e3b86f;--district-glow:#a76b2d88}
+.scene-shop .district-environment{--district-bg1:#44301f;--district-bg2:#171019;--district-edge:#e6b86c;--district-glow:#c08a3c88}
+.scene-forge .district-environment{--district-bg1:#4b211b;--district-bg2:#160d12;--district-edge:#f18b4c;--district-glow:#e3542788}
+.scene-alchemy .district-environment{--district-bg1:#1d4135;--district-bg2:#0c1517;--district-edge:#8bd7ad;--district-glow:#4ab98b88}
+.scene-pets .district-environment{--district-bg1:#35432a;--district-bg2:#101610;--district-edge:#c4d68b;--district-glow:#87b86c88}
+.scene-relics .district-environment{--district-bg1:#252e4d;--district-bg2:#100d1b;--district-edge:#9bc6ff;--district-glow:#668de088}
+.scene-armory .district-environment{--district-bg1:#303b4b;--district-bg2:#11121a;--district-edge:#b6c9e1;--district-glow:#809ab888}
+.scene-rewards .district-environment{--district-bg1:#4a361d;--district-bg2:#171019;--district-edge:#f1d28b;--district-glow:#c9963f88}
+.district-environment .game-art{animation:district-art-float 5s ease-in-out infinite}
+@keyframes district-art-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@media(max-width:360px){.district-environment{min-height:150px;padding:13px 11px}.district-environment-art{right:-7px;width:120px;height:120px}.district-environment-art .game-art{width:118px;height:118px}.district-environment-copy{max-width:76%}.district-environment-copy h2{font-size:19px}}
