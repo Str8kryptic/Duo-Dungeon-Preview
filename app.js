@@ -15,32 +15,28 @@ function xpgoal(){return level()*level()*100}
 function get(id){return items.find(function(x){return x.id===id})}
 function owned(id){return s.bag.indexOf(id)>=0}
 function gameArt(id,rarity){
-var paths={
-sword:'M50 5L63 28 56 66 50 91 44 66 37 28Z M27 64H73L78 73H22Z M44 73H56V94H44Z',
-axe:'M50 8L62 35 90 20 78 60 54 70 50 94 44 70 20 60 10 20 38 35Z',
-dagger:'M50 8L62 37 55 68 50 82 45 68 38 37Z M30 68H70L75 76H25Z M45 76H55V93H45Z',
-doomblade:'M50 4L66 26 57 58 78 42 65 76 50 94 35 76 22 42 43 58 34 26Z',
-helmet:'M18 76L22 38 36 15 50 8 64 15 78 38 82 76 62 68 50 91 38 68Z',
-armor:'M25 15L42 8 50 22 58 8 75 15 88 43 70 58 65 90 50 78 35 90 30 58 12 43Z',
-cloak:'M35 10L50 5 65 10 82 92 50 78 18 92Z',
-goblin:'M18 35L7 15 34 25 50 12 66 25 93 15 82 40 84 72 68 90 32 90 16 72Z',
-dragon:'M50 8L64 27 88 18 76 49 94 62 68 68 62 91 50 76 38 91 32 68 6 62 24 49 12 18 36 27Z',
-cat:'M17 38L14 9 39 25 61 25 86 9 83 38 82 70 66 90 34 90 18 70Z',
-demon:'M22 35L9 8 40 23 50 10 60 23 91 8 78 35 82 72 66 90 34 90 18 72Z',
-potion:'M38 8H62V28L74 43 78 82Q50 98 22 82L26 43 38 28Z',
-crystal:'M50 5L82 28 72 78 50 95 28 78 18 28Z',
-ring:'M50 39C88 39 88 83 50 83S12 39 50 39Z M50 8L65 27 50 46 35 27Z',
-skull:'M50 10C18 10 18 57 38 68V88H62V68C82 57 82 10 50 10Z M34 43H44V54H34Z M56 43H66V54H56Z',
-book:'M12 18Q34 7 50 23Q66 7 88 18V84Q66 73 50 88Q34 73 12 84Z',
-crown:'M12 28L32 48 50 12 68 48 88 28 80 84H20Z',
-leaf:'M83 12Q20 15 17 69Q17 88 35 87Q88 82 83 12Z M23 82L75 27',
-ore:'M50 6L80 23 92 57 67 91H32L8 57 20 23Z'
+var k=String(id||''),shapes={
+sword:'M50 5L64 29 56 67 50 88 44 67 36 29Z M25 65H75L80 73H20Z M44 73H56V94H44Z',
+axe:'M48 9L59 34 88 17 82 52 62 66 52 70 50 94 44 70 24 65 12 52 10 20 38 35Z',
+dagger:'M50 9L62 35 55 68 50 81 45 68 38 35Z M30 67H70L75 75H25Z M45 75H55V93H45Z',
+doomblade:'M50 3L65 24 58 52 80 37 68 73 50 96 32 73 20 37 42 52 35 24Z',
+helmet:'M18 76L21 40 35 16 50 8 65 16 79 40 82 76 64 69 57 88 50 76 43 88 36 69Z',
+armor:'M24 14L42 7 50 21 58 7 76 14 89 43 70 58 65 90 50 79 35 90 30 58 11 43Z',
+cloak:'M35 9L50 5 65 9 77 35 87 91 50 77 13 91 23 35Z',
+cap:'M18 63Q20 23 50 13Q80 23 82 63L92 72H8Z',
+crystal:'M50 5L81 28 72 78 50 95 28 78 19 28Z'
 };
-var k=String(id||'');
-var shape=k==='axe'?'axe':k==='dagger'?'dagger':k==='sword'?'sword':k==='doomblade'?'doomblade':k==='helmet'||k==='cap'?'helmet':k==='armor'?'armor':k==='cloak'?'cloak':k==='goblin'?'goblin':k==='dragon'?'dragon':k==='cat'?'cat':k==='demon'?'demon':k.indexOf('potion')>=0||['greed','wisdom','luck','berserker','liquidgold','experience','fortune','blood','scholar','mimicelixir','dragonbreath','goblingreed','nectar','phoenix'].indexOf(k)>=0?'potion':k.indexOf('title')===0?'crown':k.indexOf('relic')>=0||k.indexOf('seal')>=0?'ring':k.indexOf('eye')>=0||k.indexOf('tooth')>=0?'skull':k.indexOf('book')>=0?'book':k.indexOf('herb')>=0?'leaf':k.indexOf('ore')>=0||k.indexOf('dust')>=0?'ore':'crystal';
-var colors={Common:['#d0c8da','#666078'],Uncommon:['#a7e7b0','#347c55'],Rare:['#9bd0ff','#2c69ad'],Epic:['#d6a8ff','#753bb2'],Legendary:['#ffdc8b','#b56a27'],Mythic:['#ff9acb','#a82d75']}[rarity||'Common']||['#c9a5f5','#6b3d9b'];
-var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="a" x1="0" y1="0" x2="1" y2="1"><stop stop-color="'+colors[0]+'"/><stop offset="1" stop-color="'+colors[1]+'"/></linearGradient><radialGradient id="b"><stop stop-color="'+colors[0]+'" stop-opacity=".5"/><stop offset="1" stop-color="'+colors[1]+'" stop-opacity="0"/></radialGradient></defs><circle cx="50" cy="50" r="48" fill="url(#b)"/><path d="M50 3L91 27V73L50 97 9 73V27Z" fill="#171020" stroke="url(#a)" stroke-width="2"/><path d="'+paths[shape]+'" fill="url(#a)" stroke="#fff0cf" stroke-width="2" stroke-linejoin="round"/></svg>';
-return '<img class="game-art" alt="" aria-hidden="true" src="data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg)+'">';
+var shape=k==='sword'?'sword':k==='axe'?'axe':k==='dagger'?'dagger':k==='doomblade'?'doomblade':k==='helmet'?'helmet':k==='armor'?'armor':k==='cloak'?'cloak':k==='cap'?'cap':k==='goblin'?'goblin':k==='dragon'?'dragon':k==='cat'?'cat':k==='demon'?'demon':k.indexOf('potion')>=0||['greed','wisdom','luck','berserker','liquidgold','experience','fortune','blood','scholar','mimicelixir','dragonbreath','goblingreed','nectar','phoenix'].indexOf(k)>=0?'potion':k.indexOf('title')===0?'crown':k.indexOf('relic')>=0||k.indexOf('seal')>=0?'ring':k.indexOf('eye')>=0||k.indexOf('tooth')>=0?'skull':k.indexOf('book')>=0?'book':k.indexOf('herb')>=0?'leaf':k.indexOf('ore')>=0||k.indexOf('dust')>=0?'ore':'crystal';
+var colors={Common:['#d8d2df','#696276'],Uncommon:['#b4efb9','#347e52'],Rare:['#b0dcff','#2769a9'],Epic:['#e0b5ff','#7135a8'],Legendary:['#ffe2a0','#a85b1b'],Mythic:['#ffb0d5','#a72d75']}[rarity||'Common']||['#d8b5ff','#7135a8'];
+var detail='';
+if(shape==='sword'||shape==='dagger'||shape==='doomblade'){detail='<path d="M50 12L50 63" stroke="#fff4d4" stroke-width="2" opacity=".9"/><path d="M42 68L50 73 58 68" fill="none" stroke="#fff0cb" stroke-width="2"/><path d="M50 78V90" stroke="#5b3322" stroke-width="5"/><path d="M44 81H56M44 86H56" stroke="#e2bd83" stroke-width="2"/>'+(shape==='doomblade'?'<path d="M38 34L28 24 36 47 25 55M62 34L72 24 64 47 75 55" fill="none" stroke="#b98cff" stroke-width="3" opacity=".9"/>':'');}
+if(shape==='axe'){detail='<path d="M49 17L50 91" stroke="#f2d4a2" stroke-width="4"/><path d="M44 80H56M44 85H56" stroke="#633b29" stroke-width="3"/><path d="M18 24L38 37M18 42L34 52" stroke="#fff2d4" stroke-width="2" opacity=".8"/>';}
+if(shape==='helmet'){detail='<path d="M23 55L50 66 77 55M50 10V65M35 30L43 39M65 30L57 39" fill="none" stroke="#fff0d1" stroke-width="2" opacity=".85"/><path d="M43 65L50 76 57 65" fill="#8b5b33" stroke="#ffe3ad" stroke-width="1.5"/>';}
+if(shape==='armor'){detail='<path d="M50 24V72M27 39L40 48 50 42 60 48 73 39M35 68L50 76 65 68" fill="none" stroke="#fff0d1" stroke-width="2" opacity=".8"/><path d="M44 48L50 43 56 48 50 58Z" fill="#f5d28d" stroke="#fff0d1" stroke-width="1.5"/>';}
+if(shape==='cloak'){detail='<path d="M50 12V77M31 31L50 45 69 31" fill="none" stroke="#fff0d1" stroke-width="2" opacity=".75"/><path d="M43 43L50 35 57 43 50 52Z" fill="#f1cb83"/>';}
+if(shape==='cap'){detail='<path d="M25 55Q50 43 75 55" fill="none" stroke="#fff0d1" stroke-width="2"/><path d="M50 15V48" stroke="#fff0d1" stroke-width="2"/>';}
+var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="'+colors[0]+'"/><stop offset=".48" stop-color="'+colors[1]+'"/><stop offset=".72" stop-color="'+colors[0]+'"/><stop offset="1" stop-color="'+colors[1]+'"/></linearGradient><radialGradient id="halo"><stop stop-color="'+colors[0]+'" stop-opacity=".55"/><stop offset="1" stop-color="'+colors[1]+'" stop-opacity="0"/></radialGradient><filter id="glow"><feGaussianBlur stdDeviation="3"/></filter></defs><circle cx="50" cy="50" r="48" fill="url(#halo)"/><path d="M50 3L91 27V73L50 97 9 73V27Z" fill="#171020" stroke="url(#metal)" stroke-width="2"/><path d="M50 9L84 29V70L50 90 16 70V29Z" fill="none" stroke="'+colors[0]+'" stroke-opacity=".25"/><path d="'+(shapes[shape]||'M50 5L81 28 72 78 50 95 28 78 19 28Z')+'" fill="url(#metal)" stroke="#fff0cf" stroke-width="1.7" stroke-linejoin="round"/>'+detail+'<path d="M50 3V10M91 50H84M50 97V90M9 50H16" stroke="'+colors[0]+'" stroke-width="2"/></svg>';
+return '<img class="game-art art-'+shape+'" alt="" aria-hidden="true" src="data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg)+'">';
 }
 
 function itemCard(x){return '<article class="item"><div class="item-icon">'+gameArt(x.id,x.rarity)+'</div><div><h3>'+esc(x.name)+'</h3><p>'+esc(x.desc||"A mysterious dungeon object.")+'</p><small>'+esc(x.rarity||"Common")+' · '+esc(x.type)+'</small></div><div class="item-actions"><b class="price">◈ '+Number(x.price||0).toLocaleString()+'</b><button class="action" data-item="'+esc(x.id)+'">INSPECT</button></div></article>'}
