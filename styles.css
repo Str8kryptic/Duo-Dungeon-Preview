@@ -585,3 +585,14 @@ body.account-fallback-active::before{content:"";position:fixed;inset:0;z-index:1
 .step-sync-items li b{color:#f3c66e;white-space:nowrap}
 .step-sync-items p{margin:8px 0 0;color:#c5b6cd;font-size:11px;line-height:1.5}
 @media(max-width:360px){#step-sync-dialog{padding:17px}.step-reward-grid{gap:4px}.step-reward-grid>div{padding:9px 4px}.step-reward-grid b{font-size:13px}}
+
+/* Consolidated navigation and Quest Journal controls */
+.main-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.main-nav button{min-width:0;padding:7px 2px;font-size:17px}
+.main-nav button small{font-size:8px;letter-spacing:.55px}
+.milestone-row .milestone-claim{flex:none;min-width:67px;padding:8px 7px;font-size:8px}
+.milestone-claim:disabled{opacity:.58;cursor:default}
+.reward-history-row>strong{color:#b8efc9;font-size:8px}
+.home-armory-link{display:inline-flex;margin-top:12px}
+.base-command-note .text-link{margin-top:8px}
+@media(max-width:360px){.main-nav{gap:2px;padding-left:5px;padding-right:5px}.main-nav button small{font-size:7px;letter-spacing:.2px}}
