@@ -320,3 +320,43 @@ body{background:radial-gradient(ellipse at 50% -12%,#483052 0%,#1b1324 34%,#0c09
 .scene-armory .facility-interior{--room-wall-a:#394555;--room-wall-b:#121720;--room-edge:#c0d1e7;--room-glow:#829bbd}
 .scene-rewards .facility-interior{--room-wall-a:#4e3a20;--room-wall-b:#1c140e;--room-edge:#f0d18b;--room-glow:#d0a047}
 @media(max-width:390px){.interior-architecture{height:180px}.interior-props{left:2%;right:2%;gap:5px}.interior-prop{width:29%;height:75px}.prop-art{height:51px}.prop-art .game-art{width:50px;height:50px}.interior-npc{left:50%;transform:translateX(-50%) scale(.9);transform-origin:bottom center}.npc-plaque{left:69px;width:108px}}
+
+/* Living district pass: ambient motion, readable room props and reactive keeper dialogue */
+.interior-architecture{height:216px}
+.interior-architecture:before{background:repeating-linear-gradient(90deg,transparent 0 48px,#ffffff08 49px 50px),linear-gradient(180deg,#fff2 0,transparent 35%,#0005 100%)}
+.interior-wall-emblem{position:absolute;left:50%;top:20px;transform:translateX(-50%);opacity:.22;filter:drop-shadow(0 0 12px var(--room-glow));}
+.interior-wall-emblem .game-art{width:94px;height:94px;max-width:none;max-height:none}
+.interior-atmosphere{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.interior-atmosphere i{position:absolute;bottom:38px;width:4px;height:4px;border-radius:50%;background:var(--room-edge);box-shadow:0 0 9px 2px var(--room-glow);opacity:0;animation:room-mote 6s linear infinite}
+.interior-atmosphere i:nth-child(1){left:8%;animation-delay:-1s}.interior-atmosphere i:nth-child(2){left:18%;animation-delay:-4s}.interior-atmosphere i:nth-child(3){left:31%;animation-delay:-2s}.interior-atmosphere i:nth-child(4){left:44%;animation-delay:-5s}.interior-atmosphere i:nth-child(5){left:57%;animation-delay:-3s}.interior-atmosphere i:nth-child(6){left:69%;animation-delay:-1.5s}.interior-atmosphere i:nth-child(7){left:79%;animation-delay:-4.5s}.interior-atmosphere i:nth-child(8){left:91%;animation-delay:-2.5s}.interior-atmosphere i:nth-child(9){left:38%;animation-delay:-.5s}.interior-atmosphere i:nth-child(10){left:63%;animation-delay:-3.5s}
+@keyframes room-mote{0%{transform:translateY(0) scale(.5);opacity:0}15%{opacity:.8}85%{opacity:.6}100%{transform:translateY(-155px) translateX(13px) scale(1.2);opacity:0}}
+.interior-props{bottom:30px;z-index:5}
+.interior-prop{height:96px;justify-content:space-between;padding-top:7px}
+.prop-art{height:57px}.interior-prop small{font-size:6px}.interior-prop em{font-style:normal;font-size:6px;color:#ffe1a0;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;padding-bottom:3px}
+.interior-npc{bottom:25px;z-index:7;animation:npc-idle 4s ease-in-out infinite}
+@keyframes npc-idle{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-2px)}}
+.npc-speech{position:absolute;left:77px;top:51px;width:125px;min-height:30px;padding:6px 7px;border:1px solid var(--room-edge);border-radius:7px 7px 7px 2px;background:#0e0a14ed;color:#e9d8c0;font:italic 7px/1.35 Georgia,serif;box-shadow:0 3px 10px #0009;opacity:0;transform:translateY(4px);animation:keeper-speech 9s ease-in-out infinite;animation-delay:1.2s}
+@keyframes keeper-speech{0%,12%,88%,100%{opacity:0;transform:translateY(4px)}20%,78%{opacity:1;transform:translateY(0)}}
+.npc-hood{box-shadow:inset 0 -8px 12px #0007,0 0 8px var(--room-glow)}
+.npc-face:after{content:"";position:absolute;left:4px;top:12px;width:14px;height:2px;background:#25151a;border-radius:50%;box-shadow:0 0 4px var(--room-edge)}
+.npc-trim{box-shadow:0 0 7px #f0d18d,0 0 14px var(--room-glow)}
+.npc-shop .npc-face{background:linear-gradient(145deg,#9b6b47,#5b3b2e)}
+.npc-forge .npc-body{background:linear-gradient(90deg,#241016,#b44b27,#241016)}
+.npc-alchemy .npc-hood{background:linear-gradient(135deg,#7ac7a3,#1a3029 70%)}
+.npc-pets .npc-face{background:linear-gradient(145deg,#e6bf91,#986e55)}
+.npc-relics .npc-hood{background:linear-gradient(135deg,#9cbbe8,#28395e 70%)}
+.npc-armory .npc-body{background:linear-gradient(90deg,#1a2533,#788da5,#1a2533)}
+.npc-rewards .npc-hood{background:linear-gradient(135deg,#f0d28b,#64421d 70%)}
+.interior-room-sign{position:absolute;z-index:8;left:10px;top:9px;display:flex;flex-direction:column;gap:3px;padding:5px 7px;border-left:2px solid var(--room-edge);background:#100c16b8;box-shadow:0 2px 7px #0005}
+.interior-room-sign span{font-size:6px;letter-spacing:1px;color:#d7c3e2;font-weight:950}.interior-room-sign b{font:700 9px Georgia,serif;color:#ffe3b0}
+.interior-caption{min-height:29px}
+.scene-forge .interior-atmosphere i{background:#ff9a4a;box-shadow:0 0 12px 3px #f45b28}
+.scene-alchemy .interior-atmosphere i{border-radius:50%;width:6px;height:6px;background:#a3f4d0;box-shadow:0 0 9px #62e6ae}
+.scene-relics .interior-atmosphere i{width:3px;height:3px;background:#b6d6ff;box-shadow:0 0 12px #7bbaff}
+.scene-pets .interior-atmosphere i{background:#d9ed9b;box-shadow:0 0 10px #a9d96d}
+.scene-rewards .interior-atmosphere i{background:#ffe2a1;box-shadow:0 0 12px #f1c46c}
+.scene-shop .interior-atmosphere i{background:#ffcf83;box-shadow:0 0 9px #d99a42}
+.scene-bag .interior-atmosphere i{background:#f8d78b;box-shadow:0 0 10px #d8a64b}
+.scene-armory .interior-atmosphere i{background:#c3d9f6;box-shadow:0 0 10px #8fb9ed}
+@media(max-width:390px){.interior-architecture{height:206px}.npc-speech{left:70px;width:112px;font-size:6.5px}.interior-prop{height:88px}.interior-room-sign{left:7px;top:7px}}
+@media(prefers-reduced-motion:reduce){.interior-atmosphere i,.interior-npc,.npc-speech{animation:none!important}.interior-atmosphere i{opacity:.25}}
