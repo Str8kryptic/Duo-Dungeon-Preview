@@ -34,7 +34,7 @@ async function loadAccount(u,afterSignup){
   initialSave=guestSave||fresh();
   if(guestSave&&guestSave.number){
    var up=await client.from("player_profiles").update({crawler_number:guestSave.number,display_name:String(guestSave.name||"NEW CRAWLER").slice(0,20),updated_at:new Date().toISOString()}).eq("id",u.id).select("crawler_number").maybeSingle();
-   if(!up.error&&up.data)crawlerNumber=up.data.crawler_number;
+   if(up.error){if(up.error.code==="23505")throw new Error("That crawler name or number is already in use. Choose a different identity.");throw up.error}if(up.data)crawlerNumber=up.data.crawler_number;
   }
   initialSave.number=crawlerNumber;await persist(initialSave);localStorage.removeItem(CLAIM_KEY);
  }
