@@ -9,7 +9,7 @@ Create the following actions in Apple Shortcuts, in order:
 3. **Format Date** — Current Date; Custom format: `yyyy-MM-dd`.
 4. **Text** — Build this URL using the Magic Variables from steps 2 and 3:
 
-   `https://duodungeon.com/?duoSteps=[SUM]&duoDate=[DATE]`
+   `https://str8kryptic.github.io/Duo-Dungeon-Preview/?duoSteps=[SUM]&duoDate=[DATE]`
 
 5. **Open URLs** — Input: the Text action.
 6. Run it and allow Apple Health access when prompted.
@@ -24,3 +24,6 @@ Create the following actions in Apple Shortcuts, in order:
 - Re-running the Shortcut only rewards the increase since the last successful sync.
 
 > This is an action-by-action setup guide, not an installable Apple-signed `.shortcut` package. Apple Shortcuts creates shareable iCloud install links from inside the Shortcuts app; we can add that one once the Shortcut has been created and shared.
+
+
+> Testing note: use the Preview URL while testing. After the changes are approved and promoted, switch the Shortcut to `https://duodungeon.com/`.
