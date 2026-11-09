@@ -544,3 +544,7 @@ body.account-fallback-active::before{content:"";position:fixed;inset:0;z-index:1
 /* Password recovery link */
 .auth-forgot{display:block;width:100%;margin:7px 0 2px;padding:8px;border:0;background:transparent;color:#d7b2e5;font-size:10px;font-weight:900;letter-spacing:1px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .auth-forgot:disabled{opacity:.5}
+
+
+/* Dungeon Dispatches email preference */
+.email-preference-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:13px 0 5px;padding:13px;border:1px solid #806348;border-radius:12px;background:linear-gradient(145deg,#30213a,#17111e);cursor:pointer}.email-preference-row>span{display:grid;gap:5px;min-width:0}.email-preference-row b{color:#ffe0a0;font-size:9px;letter-spacing:.7px}.email-preference-row small{color:#c2b2cb;font-size:8px;line-height:1.45}.email-preference-row input{appearance:none;flex:none;width:44px;height:25px;border:1px solid #796181;border-radius:20px;background:#21172b;position:relative;cursor:pointer;transition:background .18s,border-color .18s}.email-preference-row input:before{content:"";position:absolute;width:17px;height:17px;left:3px;top:3px;border-radius:50%;background:#c5b5ce;transition:transform .18s,background .18s}.email-preference-row input:checked{background:#80602f;border-color:#e8bd70}.email-preference-row input:checked:before{transform:translateX(19px);background:#ffe0a0}
