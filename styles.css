@@ -540,3 +540,7 @@ body{background:radial-gradient(ellipse at 50% -12%,#483052 0%,#1b1324 34%,#0c09
 body.account-fallback-active::before{content:"";position:fixed;inset:0;z-index:1000;background:#07050bcc;backdrop-filter:blur(4px)}
 #account-dialog.account-fallback-open{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1001;margin:0;width:min(94vw,460px);max-height:88dvh;overflow:auto}
 .account-button{position:relative;z-index:2;cursor:pointer;touch-action:manipulation}
+
+/* Password recovery link */
+.auth-forgot{display:block;width:100%;margin:7px 0 2px;padding:8px;border:0;background:transparent;color:#d7b2e5;font-size:10px;font-weight:900;letter-spacing:1px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.auth-forgot:disabled{opacity:.5}
