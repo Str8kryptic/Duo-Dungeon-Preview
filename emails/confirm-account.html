@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="supported-color-schemes" content="dark">
+<title>Confirm your Duo Dungeon account</title>
+</head>
+<body style="margin:0;padding:0;background-color:#0c0911;font-family:Arial,Helvetica,sans-serif;color:#f3eadb;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0c0911;padding:34px 12px;">
+<tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;background-color:#17111f;border:1px solid #8b6946;border-radius:18px;overflow:hidden;">
+<tr><td align="center" style="padding:34px 26px 24px;background-color:#24182f;border-bottom:1px solid #705276;">
+<div style="font-family:Georgia,serif;font-size:13px;letter-spacing:4px;color:#e8bd70;">✦ DUO DUNGEON ✦</div>
+<div style="margin-top:18px;font-family:Georgia,serif;font-size:30px;line-height:1.2;font-weight:bold;color:#ffe0a0;">YOUR DESCENT BEGINS</div>
+<div style="margin-top:9px;font-size:10px;letter-spacing:2px;color:#c7b3d2;">CRAWLER REGISTRATION · ACCOUNT VERIFICATION</div>
+</td></tr>
+<tr><td style="padding:32px 30px 14px;">
+<p style="margin:0 0 14px;font-size:15px;line-height:1.7;color:#f3eadb;">Well, look who has decided to enter the dungeon.</p>
+<p style="margin:0 0 22px;font-size:14px;line-height:1.75;color:#cbbfd2;">One final administrative inconvenience remains: confirm that this email address belongs to you. The System would hate to assign your achievements to some random goblin. Again.</p>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:28px auto 26px;">
+<tr><td align="center" bgcolor="#9a713d" style="border:1px solid #f0cf8b;border-radius:10px;">
+<a href="{{ .ConfirmationURL }}" target="_blank" style="display:inline-block;padding:16px 30px;font-size:12px;font-weight:bold;letter-spacing:1.5px;color:#160f18;text-decoration:none;">CONFIRM ACCOUNT</a>
+</td></tr>
+</table>
+<p style="margin:0 0 8px;font-size:11px;line-height:1.6;color:#b8a9c2;">Button not cooperating? Apparently even email clients have dungeon-level intelligence. Use this link instead:</p>
+<p style="margin:0 0 22px;word-break:break-all;font-size:11px;line-height:1.6;"><a href="{{ .ConfirmationURL }}" style="color:#e8bd70;text-decoration:underline;">{{ .ConfirmationURL }}</a></p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #493750;border-bottom:1px solid #493750;">
+<tr><td style="padding:17px 0;font-size:11px;line-height:1.7;color:#b8a9c2;">
+<strong style="color:#e8bd70;">A QUICK SECURITY NOTE</strong><br>
+If you did not attempt to create a Duo Dungeon account, ignore this message. No dungeon access will be granted, and no action is required.
+</td></tr>
+</table>
+<p style="margin:22px 0 4px;font-size:13px;line-height:1.7;color:#f3eadb;">Proceed carefully, crawler. The dungeon has a reputation to maintain.</p>
+<p style="margin:0;font-family:Georgia,serif;font-size:14px;color:#ffe0a0;">— Duo Dungeon System AI</p>
+</td></tr>
+<tr><td align="center" style="padding:20px 24px;background-color:#110c17;border-top:1px solid #493750;">
+<div style="font-size:9px;letter-spacing:2px;color:#8e7c98;">THE DUNGEON REMEMBERS.</div>
+<div style="margin-top:8px;font-size:10px;color:#776b80;">Duo Dungeon · <a href="{{ .SiteURL }}" style="color:#b99a69;text-decoration:none;">duodungeon.com</a></div>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>
