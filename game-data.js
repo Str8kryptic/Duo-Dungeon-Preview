@@ -85,4 +85,34 @@ const relicCatalog=[
 {id:"royal_seal",name:"Seal of the Lost King",rarity:"Epic",emoji:"👑",desc:"A royal stamp of approval. +2% coins forever.",effects:{coins:.02}},
 {id:"void_shard",name:"Shard of the Unfolding Void",rarity:"Legendary",emoji:"🔮",desc:"Reality has a crease now. +2% coins, XP and rare finds.",effects:{coins:.02,xp:.02,rare:.02}}
 ];
+
+Object.assign(itemAIComments,{
+  sword:"The blade hums with the confidence of a weapon that has never once had to pay rent. +10% XP. Try not to sharpen your furniture.",
+  axe:"A goblin chieftain lost this in a very one-sided negotiation. It smells like victory and damp onions. +15% coins.",
+  dagger:"A little blade with a big personality. It has already judged your grip and found it wanting. +3% XP.",
+  doomblade:"The runes rearrange themselves whenever you blink. The last owner folded reality. You just fold a phone. +10% XP and +5% coins.",
+  helmet:"A crown forged for the sort of ruler who declares war on a charging cable. +10% coins. Royalty has never looked so nervous.",
+  armor:"Goblin-forged plates, stitched with questionable thread and unreasonable confidence. +5% coins and XP.",
+  cloak:"The shadows cling to this cloak like unpaid debts. It hides your outline and improves your odds of finding something interesting. +10% XP and +5% rare finds.",
+  cap:"A helmet for people who believe in safety, but only as a loose concept. +2% coins.",
+  goblin:"This goblin signed the contract with a crayon and immediately stole the signing pen. It pockets extra coin when nobody is looking. +5% coins.",
+  dragon:"A dragon small enough to fit in your pocket and arrogant enough to demand a throne. Its fire is miniature; its attitude is not. +10% XP.",
+  cat:"The cat has inspected your dungeon, rejected the furniture, and decided you may remain. It occasionally finds extra coin. +10% coins.",
+  demon:"A tiny apocalypse with excellent punctuality and a deeply concerning employee handbook. +15% XP.",
+  title1:"The registry has reluctantly certified you as a Professional Disaster. It is not a compliment, but it is official.",
+  title2:"A title of considerable authority over hinges, questionable decisions, and at least one deeply offended goblin.",
+  title3:"Supreme Crawler. The dungeon has updated its emergency procedures and added your portrait.",
+  potion:"A cloudy tonic that smells like a wizard's laboratory after a plumbing incident. +10% XP for 10 minutes.",
+  greed:"The goblins distilled their favorite personality flaw and put it in a bottle. +50% coins for 30 minutes. Financially irresponsible, but effective.",
+  wisdom:"A blue elixir that briefly makes the instructions seem obvious. +50% XP for 30 minutes. Side effects may include confidence.",
+  luck:"A violet swirl of improbable outcomes. The dungeon insists it is not gambling. +25% rare finds for 20 minutes.",
+  fortune:"A green-gold draught with a suspiciously cheerful label. +25% rare finds for 40 folds. Do not ask what is smiling inside.",
+  blood:"A crimson brew that makes every coin look personally offended when it stays in your pocket. +100% coins for 20 folds.",
+  scholar:"Ink-dark tea brewed from the notes of a wizard who alphabetized his regrets. +30% XP for 100 folds.",
+  mimicelixir:"The bottle tried to bite the cork. It has been reassured that this is not how employment works. +15% rare finds for 75 folds.",
+  dragonbreath:"Warm, smoky, and legally distinct from breathing fire. +50% XP for 30 folds. Keep away from curtains.",
+  goblingreed:"A suspiciously heavy purse in liquid form. The goblins swear the recipe is ethical. +40% coins for 60 folds.",
+  nectar:"A fragrant golden treat for your companion. They will love it. They will still ignore your commands. Doubles companion XP for 50 folds.",
+  phoenix:"One brilliant ember suspended in liquid sunrise. It doubles your next daily achievement reward. The phoenix requests you use it wisely."
+});
 window.DUO_DATA={achievements,dailyAchievements,itemAIComments,shopItems,relicCatalog};
