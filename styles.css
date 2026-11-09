@@ -516,3 +516,7 @@ body{background:radial-gradient(ellipse at 50% -12%,#483052 0%,#1b1324 34%,#0c09
 
 /* Keep the decorative sigil out of document flow so the home hero starts compactly */
 .home-hero>.hero-sigil{position:absolute;pointer-events:none}
+
+
+/* Annual achievement title ribbon */
+.annual-title-ribbon{display:flex;flex-direction:column;gap:4px;margin:12px 0 16px;padding:11px 14px;border:1px solid rgba(211,174,105,.34);border-radius:12px;background:linear-gradient(110deg,rgba(151,105,47,.18),rgba(55,43,71,.28));}.annual-title-ribbon span{font-size:9px;letter-spacing:.16em;color:var(--gold,#d8b56f);font-weight:800;}.annual-title-ribbon strong{font-size:15px;letter-spacing:.08em;color:#f4dfb5;}.annual-title-ribbon small{font-size:10px;color:var(--muted,#aaa2b5);line-height:1.4;}
