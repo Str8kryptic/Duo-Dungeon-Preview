@@ -14,12 +14,12 @@
 <div class="step"><span class="num">2</span><div><b>Find today's steps</b><p>Add <b>Find Health Samples</b>. Set Type to Steps and Start Date to Today. Sort newest first if the action asks.</p></div></div>
 <div class="step"><span class="num">3</span><div><b>Add Calculate Statistics</b><p>Choose Sum and use the Health Samples from the previous action as input. This gives the total steps recorded today.</p></div></div>
 <div class="step"><span class="num">4</span><div><b>Format today's date</b><p>Add Format Date. Use Current Date, Custom format <span class="code">yyyy-MM-dd</span>.</p></div></div>
-<div class="step"><span class="num">5</span><div><b>Build the game link</b><p>Add a Text action. Replace the bracketed placeholders with the magic variables from steps 3 and 4:</p><div class="code">https://duodungeon.com/?duoSteps=[SUM]&amp;duoDate=[DATE]</div></div></div>
+<div class="step"><span class="num">5</span><div><b>Build the game link</b><p>Add a Text action. Replace the bracketed placeholders with the magic variables from steps 3 and 4:</p><div class="code"><span id="sync-url"></span></div></div></div>
 <div class="step"><span class="num">6</span><div><b>Open the link</b><p>Add Open URLs and pass it the Text from the previous action. Run the Shortcut once and allow Apple Health access.</p></div></div>
 <a class="btn" href="shortcuts://">OPEN APPLE SHORTCUTS</a>
 <a class="btn secondary" href="shortcuts/DUO-DUNGEON-STEP-SYNC-SETUP.txt" download>DOWNLOAD QUICK SETUP FILE</a>
 <a class="btn secondary" href="shortcuts/DUO-DUNGEON-STEP-SYNC-SETUP.md" download>DOWNLOAD FULL ACTION-BY-ACTION GUIDE</a>
 </section>
-<section class="panel"><div class="eyebrow">YOUR FIRST SYNC</div><h2>Make sure it's going to the right crawler</h2><p>Keep Duo Dungeon signed in to the account that should receive the steps. When the Shortcut opens the game, Duo Dungeon will show the signed-in email and ask you to confirm before rewards are applied.</p><p class="note">If you're on a shared device, sign out before another player uses the game. The Shortcut never chooses an account; the active Duo Dungeon session does.</p><a class="btn secondary" href="/">RETURN TO DUO DUNGEON</a></section>
+<section class="panel"><div class="eyebrow">YOUR FIRST SYNC</div><h2>Make sure it's going to the right crawler</h2><p>Keep Duo Dungeon signed in to the account that should receive the steps. When the Shortcut opens the game, Duo Dungeon will show the signed-in email and ask you to confirm before rewards are applied.</p><p class="note">If you're on a shared device, sign out before another player uses the game. The Shortcut never chooses an account; the active Duo Dungeon session does.</p><a class="btn secondary" href="./">RETURN TO DUO DUNGEON</a></section>
 <div class="footer">THE AI IS NOT RESPONSIBLE FOR YOUR STEP COUNT. IT IS, HOWEVER, JUDGING IT.</div>
-</main></body></html>
+</main><script>document.getElementById("sync-url").textContent=new URL("./",location.href).href+"?duoSteps=[SUM]&duoDate=[DATE]";</script></body></html>
