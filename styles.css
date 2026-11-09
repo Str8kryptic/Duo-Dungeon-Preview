@@ -600,3 +600,6 @@ body.account-fallback-active::before{content:"";position:fixed;inset:0;z-index:1
 /* Give the seventh Sanctum district a deliberate full-width finale. */
 .base-district-card.district-armory{grid-column:1/-1}
 .base-district-card.district-armory .district-art{min-height:150px}
+
+/* Keep equipped companion artwork aligned with the navigation sigil system. */
+.build-slot>span .game-art{width:34px;height:34px;max-width:none;max-height:none;filter:drop-shadow(0 2px 5px #0008)}
