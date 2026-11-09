@@ -46,8 +46,8 @@ const itemAIComments = {
  phoenix:"One glorious second chance, bottled. Try not to waste it on something silly."
 };
 const shopItems = [
-{id:"identity_random",name:"Crawler Number Reassignment",type:"identity",rarity:"Epic",price:15000,emoji:"◇",desc:"A sanctioned identity reroll. Cost: 10 Hinge Dust + 5 Mimic Shards."},
-{id:"identity_custom",name:"Bespoke Crawler Number License",type:"identity",rarity:"Mythic",price:50000,emoji:"◇",desc:"Cost: 50 Hinge Dust + 25 Mimic Shards + 10 Dragon Scales. Choose a six-digit Crawler Number."},
+{id:"identity_random",name:"Crawler Number Reassignment",type:"identity",rarity:"Epic",price:15000,emoji:"◇",desc:"A sanctioned identity reroll. Cost: 10 Step Dust + 5 Mimic Shards."},
+{id:"identity_custom",name:"Bespoke Crawler Number License",type:"identity",rarity:"Mythic",price:50000,emoji:"◇",desc:"Cost: 50 Step Dust + 25 Mimic Shards + 10 Dragon Scales. Choose a six-digit Crawler Number."},
 {id:"sword",name:"Legendary Trail Slayer",type:"weapon",rarity:"Legendary",price:8500,emoji:"⚔️",set:"Royal",effects:{xp:.10},desc:"Forged from the tears of overworked goblins. +10% XP per 100 steps."},
 {id:"axe",name:"Goblin Cleaver",type:"weapon",rarity:"Rare",price:1400,emoji:"🪓",set:"Goblin",effects:{coins:.15},desc:"For chopping questionable decisions. +15% coins per 100 steps."},
 {id:"dagger",name:"Pocket Knife of Regret",type:"weapon",rarity:"Common",price:300,emoji:"🗡️",effects:{xp:.03},desc:"Small weapon. Massive disappointment. +3% XP per 100 steps."},
