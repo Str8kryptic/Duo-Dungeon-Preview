@@ -1043,3 +1043,22 @@ body:after{inset:0;opacity:.18;background-image:radial-gradient(1px 1px at 8% 18
 .home-quick-tabs{grid-template-columns:repeat(5,minmax(0,1fr))}
 .home-quick-tabs button>b{font-size:6.5px;letter-spacing:.35px}
 @media(max-width:390px){.main-nav{gap:1px;padding-left:3px;padding-right:3px}.main-nav button{padding:5px 0;font-size:13px}.main-nav button small{font-size:5.8px;letter-spacing:0}#dev-tools-tab{width:96px}}
+
+/* Ornate System navigation: gold-framed primary bar, quieter Home shortcuts. */
+.main-nav{position:sticky;isolation:isolate;border:1px solid #bd9252;border-bottom-color:#8d693d;border-radius:14px;background:linear-gradient(110deg,#3a293b,#211827 28%,#17111e 55%,#302035 80%,#211725);box-shadow:inset 0 0 0 1px #f3d18a35,inset 0 1px 0 #fff0c22b,0 0 0 1px #3b293f,0 7px 22px #0007,0 0 18px #d6a65318;padding:9px 10px calc(9px + env(safe-area-inset-bottom))}
+.main-nav:before{content:"";position:absolute;inset:4px;z-index:-1;border:1px solid #a77b493d;border-radius:10px;pointer-events:none}
+.main-nav:after{content:"✦";position:absolute;top:-7px;left:50%;transform:translateX(-50%);padding:0 9px;color:#e9c47d;background:#211725;font-size:10px;line-height:12px;text-shadow:0 0 9px #e8bd6a88;pointer-events:none}
+.main-nav button{position:relative;border:1px solid transparent;border-radius:9px;color:#c4b4c9;text-shadow:0 1px 4px #0009;transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,color .18s ease}
+.main-nav button.active{border-color:#d3aa69;background:linear-gradient(150deg,#59415a,#302238 72%,#261b2d);color:#ffe5a7;box-shadow:inset 0 0 0 1px #f6d89932,inset 0 0 17px #dcae5b20,0 2px 9px #0005}
+.main-nav button.active:before{content:"";position:absolute;top:2px;left:22%;right:22%;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,#f5d48f,transparent);box-shadow:0 0 7px #f3c56b88}
+.main-nav button.active small{color:#ffe0a0}
+.main-nav button:focus-visible{outline:2px solid #f3c56b;outline-offset:2px}
+.main-nav button:not(.active):hover{border-color:#8c6c55;background:#ffffff08;color:#f5dba7}
+.home-quick-tabs{position:relative;border-color:#856849;background:linear-gradient(135deg,#2b2032,#19131f 48%,#251a2b);box-shadow:inset 0 0 0 1px #d8b77716,0 5px 15px #0004}
+.home-quick-tabs:before{content:"";position:absolute;inset:3px;border:1px solid #a9825630;border-radius:10px;pointer-events:none}
+.home-quick-tabs button{position:relative;color:#c6b7c9}
+.home-quick-tabs button>span{color:#c9a66c}
+.home-quick-tabs button.active,.home-quick-tabs button:focus-visible{border-color:#a98759;background:linear-gradient(145deg,#3b2b40,#281e30);color:#ffe5b0;box-shadow:inset 0 0 0 1px #e7c98720,inset 0 0 10px #d8a85a12}
+.home-quick-tabs button.active>span{color:#f0cc83}
+@media(max-width:390px){.main-nav{padding-left:5px;padding-right:5px}.main-nav button{border-radius:7px}.main-nav button small{font-size:5.8px;letter-spacing:0}.home-quick-tabs{padding:5px}}
+@media(prefers-reduced-motion:reduce){.main-nav button{transition:none}}
