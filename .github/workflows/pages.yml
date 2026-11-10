@@ -21,13 +21,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Check application syntax
-        run: node --check app.js
-      - name: Verify current Shortcut onboarding
         run: |
-          grep -q 'Install the Shortcut once' app.js
-          grep -q 'shortcut-install' styles.css
-          grep -q 'INSTALL SHORTCUT' setup.html
-          grep -q 'shortcutcompact3' index.html
+          node --check app.js
+          node --check auth.js
+      - name: Verify platform step-sync onboarding
+        run: |
+          grep -q 'CHOOSE YOUR STEP-SYNC METHOD' app.js
+          grep -q 'APPLE HEALTH' app.js
+          grep -q 'HEALTH CONNECT' app.js
+          grep -q 'sync-method-option' styles.css
+          grep -q 'health_connect' setup.html
+          grep -q 'health_connect' auth.js
+          grep -q 'step_platform' auth.js
+          grep -q 'app.js?v=20261110codexsyncoptions1' index.html
 
   deploy:
     needs: verify
