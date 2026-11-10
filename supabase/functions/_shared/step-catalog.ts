@@ -14,10 +14,10 @@ export const STEP_ITEMS = [
 ] as const;
 
 export const STEP_RELICS = [
-  { id: "hinge_relic", rarity: "Common", effects: { xp: .01 } },
-  { id: "mimic_eye", rarity: "Rare", effects: { rare: .01 } },
-  { id: "gilded_tooth", rarity: "Rare", effects: { coins: .01 } },
-  { id: "dragon_scale_relic", rarity: "Epic", effects: { xp: .02 } },
-  { id: "royal_seal", rarity: "Epic", effects: { coins: .02 } },
-  { id: "void_shard", rarity: "Legendary", effects: { coins: .02, xp: .02, rare: .02 } },
+  { id: "hinge_relic", name: "Relic of the First Footstep", rarity: "Common", effects: { xp: .01 } },
+  { id: "mimic_eye", name: "Mimic's Glass Eye", rarity: "Rare", effects: { rare: .01 } },
+  { id: "gilded_tooth", name: "Gilded Goblin Tooth", rarity: "Rare", effects: { coins: .01 } },
+  { id: "dragon_scale_relic", name: "Cinderheart Scale", rarity: "Epic", effects: { xp: .02 } },
+  { id: "royal_seal", name: "Seal of the Lost King", rarity: "Epic", effects: { coins: .02 } },
+  { id: "void_shard", name: "Shard of the Unstepping Void", rarity: "Legendary", effects: { coins: .02, xp: .02, rare: .02 } },
 ] as const;
