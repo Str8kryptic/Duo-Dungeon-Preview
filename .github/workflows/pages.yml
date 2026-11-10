@@ -44,6 +44,7 @@ jobs:
           grep -q 'android-sync-status' styles.css
           grep -q 'styles.css?v=20261110androidhealth1' index.html
           grep -q 'app.js?v=20261110huntprofile1' index.html
+          grep -q 'rpg-combat.js?v=20261110rpgcombat1' index.html
           grep -q 'rpg-combat.css?v=20261110huntprofile1' index.html
           grep -q 'data-page="combat"' index.html
           grep -q 'health-connect.js?v=20261110androidhealthconnect1' index.html
