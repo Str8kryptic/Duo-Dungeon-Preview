@@ -42,8 +42,8 @@ jobs:
           grep -q 'selectedStepPlatform==="health_connect"' app.js
           grep -q 'ANDROID HEALTH CONNECT' app.js
           grep -q 'android-sync-status' styles.css
-          grep -q 'styles.css?v=20261110orbdispatch1' index.html
-          grep -q 'app.js?v=20261110orbdispatch1' index.html
+          grep -q 'styles.css?v=20261110aifloat2' index.html
+          grep -q 'app.js?v=20261110aifloat2' index.html
           grep -q 'rpg-combat.js?v=20261110rpgcombat1' index.html
           grep -q 'rpg-combat.css?v=20261110huntprofile1' index.html
           grep -q 'data-title-picker' app.js
@@ -62,6 +62,10 @@ jobs:
           grep -q 'assistant-launcher.has-unread' styles.css
           grep -q 'dungeon-assistant' app.js
           grep -q 'replayTutorial' app.js
+          grep -q 'updateAssistantViewport' app.js
+          grep -q 'assistant-keyboard-inset' styles.css
+          grep -q 'keyboard-open' styles.css
+          grep -q 'I need one more detail' app.js
           grep -q 'startFirstDescent(true)' app.js
           ! grep -q 'dungeon-guide-trigger' app.js
           ! grep -q 'notificationPanel()' app.js
