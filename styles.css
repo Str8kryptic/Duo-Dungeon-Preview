@@ -799,3 +799,6 @@ body.account-fallback-active::before{content:"";position:fixed;inset:0;z-index:1
 
 /* Codex step-sync method choices */
 .sync-method-option{margin:12px 0 0;padding:12px;border:1px solid #654c6d;border-radius:11px;background:#100b1688}.sync-method-option>b{display:block;color:#ffe0a0;font-size:11px;letter-spacing:.45px}.sync-method-option p{margin:7px 0;color:#d8cbdc;font-size:12px;line-height:1.5}.sync-method-option .action{margin:7px 0 2px}.sync-method-coming{border-style:dashed;background:#17111e99}.sync-method-coming .text-link{display:inline-block;margin-top:5px}
+
+/* Selected sync method in the Codex */
+.sync-choice-notice{margin:12px 0;padding:12px 14px;border:1px solid #b18a5a;border-radius:11px;background:linear-gradient(135deg,#3a2b3f,#211827);box-shadow:inset 0 0 0 1px #f1d49a12}.sync-choice-notice b{display:block;color:#ffe0a0;font-size:11px;letter-spacing:.55px}.sync-choice-notice p{margin:6px 0 0;color:#dfd0e2;font-size:12px;line-height:1.5}
