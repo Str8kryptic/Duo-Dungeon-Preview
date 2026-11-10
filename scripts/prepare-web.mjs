@@ -3,6 +3,7 @@ import { extname, join } from 'node:path';
 
 const root = process.cwd();
 const output = join(root, 'www');
+const capacitorRuntime = join(root, 'node_modules/@capacitor/core/dist/capacitor.js');
 const webExtensions = new Set([
   '.html', '.js', '.css', '.json', '.svg', '.png', '.jpg', '.jpeg',
   '.webp', '.gif', '.ico', '.woff', '.woff2', '.ttf', '.otf'
@@ -35,5 +36,10 @@ for (const required of ['app.js', 'auth.js', 'game-data.js', 'styles.css']) {
     throw new Error('Web bundle is missing required file: ' + required);
   }
 }
+
+if (!existsSync(capacitorRuntime)) {
+  throw new Error('Capacitor runtime is missing; install dependencies before preparing the Android web bundle.');
+}
+cpSync(capacitorRuntime, join(output, 'capacitor.js'));
 
 console.log('Prepared Duo Dungeon web bundle in ./www');
