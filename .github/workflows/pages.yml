@@ -46,14 +46,19 @@ jobs:
           grep -q 'android-sync-status' styles.css
           grep -q 'styles.css?v=20261110aifloat2' index.html
           grep -q 'guild.js?v=20261110guild1' index.html
-          grep -q 'app.js?v=20261110guildtabs1' index.html
+          grep -q 'app.js?v=20261110navredesign1' index.html
           grep -q 'THE GUILD HALL' guild.js
           grep -q 'data-guild-claim' guild.js
           grep -q 'guildStats.kills++' app.js
           grep -q 'home-quick-tabs' app.js
           grep -q 'home-quick-tabs' styles.css
+          grep -q 'data-page="guild"' index.html
+          grep -q 'data-fac="treasury"' app.js
+          grep -q "facility==='treasury'?treasuryShop()" app.js
+          grep -q 'repeat(7,minmax(0,1fr))' styles.css
+          grep -q 'data-fac="armory"' app.js
           grep -q 'guildStats.crafts++' app.js
-          grep -q 'data-page=\"guild\"' app.js
+          grep -q 'else if(page==="guild")' app.js
           grep -q 'rpg-combat.js?v=20261110rpgcombat1' index.html
           grep -q 'rpg-combat.css?v=20261110huntprofile1' index.html
           grep -q 'data-title-picker' app.js
