@@ -167,4 +167,71 @@ assert.match(finalBossBoard, /The Abyssal Dragon/);
 combat.handleAction(bossState, "hunt:abyssal-dragon", hooks);
 assert.equal(bossRpg.battle.monsterId, "abyssal-dragon", "final boss should unlock at Descent floor nine");
 
-console.log("RPG combat, crafting, and boss tests passed.");
+// Secret chambers: elite key drops, key-gated entry, mini-boss victories and journal persistence.
+const chamberState = { descent: { depth: 2 } };
+const chamberRpg = combat.ensure(chamberState);
+const lockedChambers = combat.render(chamberState);
+assert.match(lockedChambers, /Secret Chambers/);
+assert.match(lockedChambers, /The Forgotten Crypt Vault/);
+combat.handleAction(chamberState, "chamber:crypt-vault", hooks);
+assert.equal(chamberRpg.battle, null, "chamber should remain locked before its floor requirement");
+
+chamberState.descent.depth = 3;
+const eliteBoard = combat.render(chamberState);
+assert.match(eliteBoard, /Crypt Reaver/);
+assert.match(eliteBoard, /ELITE · UNDEAD/);
+combat.handleAction(chamberState, "hunt:crypt-vault-sentinel", hooks);
+assert.equal(chamberRpg.battle, null, "mini-boss cannot be challenged without entering its chamber");
+
+// Force the rare elite-key roll while keeping all other combat randomness deterministic.
+const originalRandom = Math.random;
+Math.random = () => 0;
+try {
+  chamberRpg.stamina = chamberRpg.maxStamina;
+  combat.handleAction(chamberState, "hunt:crypt-reaver", hooks);
+  assert.equal(chamberRpg.battle.monsterId, "crypt-reaver");
+  chamberRpg.battle.hp = 1;
+  chamberRpg.battle.quickReadyAt = 0;
+  combat.handleAction(chamberState, "quick-strike", hooks);
+  assert.equal(chamberRpg.battle, null);
+  assert.ok(chamberRpg.inventory.materials.crypt_key >= 1, "elite Crypt Reaver should have a chance to drop a Crypt Vault Key");
+
+  const keysBefore = chamberRpg.inventory.materials.crypt_key;
+  combat.handleAction(chamberState, "chamber:crypt-vault", hooks);
+  assert.equal(chamberRpg.inventory.materials.crypt_key, keysBefore - 1, "opening the vault should consume exactly one key");
+  assert.equal(chamberRpg.battle.monsterId, "crypt-vault-sentinel");
+  assert.ok(chamberRpg.chambers.discovered.includes("crypt-vault"), "entering a chamber should record its discovery");
+  assert.match(combat.render(chamberState), /The Vault Sentinel/);
+
+  chamberRpg.battle.hp = 1;
+  chamberRpg.battle.quickReadyAt = 0;
+  combat.handleAction(chamberState, "quick-strike", hooks);
+  assert.equal(chamberRpg.battle, null);
+  assert.equal(chamberRpg.chambers.cleared["crypt-vault"], 1, "victory should update the chamber journal");
+  assert.ok(chamberRpg.inventory.gear.includes("gravemantle_blade"), "first clear should award the chamber weapon");
+  assert.ok(chamberRpg.inventory.gear.includes("gravemantle_guard"), "first clear should award the chamber armor");
+  assert.match(combat.render(chamberState), /CLEARED 1×/);
+
+  chamberRpg.inventory.materials.crypt_key += 1;
+  combat.handleAction(chamberState, "chamber:crypt-vault", hooks);
+  chamberRpg.battle.hp = 1;
+  chamberRpg.battle.quickReadyAt = 0;
+  combat.handleAction(chamberState, "quick-strike", hooks);
+  assert.equal(chamberRpg.chambers.cleared["crypt-vault"], 2, "repeat chamber clears should be tracked");
+  assert.equal(chamberRpg.inventory.gear.filter(id => id === "gravemantle_blade").length, 1, "repeat clears must not duplicate relic equipment");
+  assert.ok(chamberRpg.inventory.materials.crypt_key >= 4, "duplicate chamber relics should convert into key materials");
+
+  chamberState.descent.depth = 9;
+  chamberRpg.stamina = chamberRpg.maxStamina;
+  const allChambers = combat.render(chamberState);
+  assert.match(allChambers, /The Ashen Treasury/);
+  assert.match(allChambers, /The Void Archive/);
+  assert.match(allChambers, /Ashen Knight/);
+  assert.match(allChambers, /Void Stalker/);
+  combat.ensure(chamberState);
+  assert.equal(chamberRpg.chambers.cleared["crypt-vault"], 2, "journal data should survive save normalization");
+} finally {
+  Math.random = originalRandom;
+}
+
+console.log("RPG combat, crafting, bosses, and secret chamber tests passed.");
