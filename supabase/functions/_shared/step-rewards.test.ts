@@ -90,3 +90,65 @@ Deno.test("treasury overflow converts into marks using the crawler's efficiency 
   assertEquals(r.save.treasuryStepRemainder, 50);
   assertEquals(r.save.treasuryMarks, 0);
 });
+
+
+Deno.test("Royal weapon and armor set bonuses stack with equipped item effects", () => {
+  const save = baseSave();
+  save.gear = { weapon: "sword", armor: "helmet" };
+  const items = [
+    { id: "sword", type: "weapon", set: "Royal", effects: { xp: .10 } },
+    { id: "helmet", type: "armor", set: "Royal", effects: { coins: .10 } },
+  ];
+  const r = run(save, 100, items);
+  assertEquals(r.coins, 12);
+  assertEquals(r.xp, 2);
+});
+
+Deno.test("owned relic bonuses are included in step currency calculations", () => {
+  const save = baseSave();
+  save.relics = ["gilded_tooth", "hinge_relic"];
+  const relics = [
+    { id: "gilded_tooth", name: "Gilded Goblin Tooth", rarity: "Rare", effects: { coins: .01 } },
+    { id: "hinge_relic", name: "Relic of the First Footstep", rarity: "Common", effects: { xp: .01 } },
+  ];
+  const r = run(save, 100, [], relics);
+  assertEquals(r.coins, 10);
+  assertEquals(r.xp, 2);
+});
+
+Deno.test("new-day sync settles prior Treasury before crediting today's steps", () => {
+  const save = baseSave();
+  save.stepDate = "2026-11-08";
+  save.healthStepsToday = 100;
+  save.stepsToday = 100;
+  save.stepLifetime = 100;
+  save.yearSteps = 100;
+  save.bankedSteps = 100;
+  save.dailyStepsEarned = 100;
+  save.dailyStepsBanked = 100;
+  save.dailyReserveBaseline = 0;
+  const r = run(save, 50);
+  assertEquals(r.save.stepDate, "2026-11-09");
+  assertEquals(r.save.healthStepsToday, 50);
+  assertEquals(r.save.stepLifetime, 150);
+  assertEquals(r.save.bankedSteps, 100);
+  assertEquals(r.save.treasuryStepRemainder, 50);
+  assertEquals(r.save.dailyStepsBanked, 50);
+  assertEquals(r.coins, 5);
+  assertEquals(r.xp, 1);
+});
+
+Deno.test("steps beyond the reward cap increase lifetime totals without extra currency", () => {
+  const save = baseSave();
+  save.stepDate = "2026-11-09";
+  save.healthStepsToday = 20000;
+  save.stepsToday = 20000;
+  save.stepLifetime = 20000;
+  save.yearSteps = 20000;
+  const r = run(save, 21000);
+  assertEquals(r.rewardDelta, 0);
+  assertEquals(r.coins, 0);
+  assertEquals(r.xp, 0);
+  assertEquals(r.save.stepLifetime, 21000);
+  assertEquals(r.save.healthStepsToday, 21000);
+});
