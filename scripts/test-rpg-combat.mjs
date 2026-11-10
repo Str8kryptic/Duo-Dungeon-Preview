@@ -240,7 +240,7 @@ const bountyRpg = combat.ensure(bountyState);
 const bountyBoard = combat.render(bountyState);
 assert.match(bountyBoard, /Bounty Board/);
 assert.equal((bountyBoard.match(/<details class="rpg-collapsible"/g) || []).length, 8, "each independent Hunt section should render as a collapsible panel");
-["DAILY BOUNTIES", "HUNT BOARD", "DUNGEON BOSSES", "SECRET CHAMBERS", "THE FORGE", "ALCHEMY LAB", "SEALED LOOT", "EQUIPMENT & MATERIALS"].forEach(label => assert.ok(bountyBoard.includes(">" + label + "</span>"), "missing collapsible Hunt section: " + label));
+["DAILY BOUNTIES", "HUNT BOARD", "DUNGEON BOSSES", "SECRET CHAMBERS", "THE FORGE", "ALCHEMY LAB", "SEALED LOOT", "EQUIPMENT &amp; MATERIALS"].forEach(label => assert.ok(bountyBoard.includes(">" + label + "</span>"), "missing collapsible Hunt section: " + label));
 assert.match(bountyBoard, /Pest Control/);
 assert.match(bountyBoard, /Problem Solvers/);
 assert.match(bountyBoard, /Head of the Problem/);
