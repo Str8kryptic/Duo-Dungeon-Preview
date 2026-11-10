@@ -1155,3 +1155,27 @@ body:after{inset:0;opacity:.18;background-image:radial-gradient(1px 1px at 8% 18
 #dev-tools-tab{display:block;position:relative;z-index:31;margin:7px 0 12px 8px;width:108px;min-height:38px;padding:5px 10px;border:1px solid #856b91;border-radius:10px;background:linear-gradient(145deg,#2a1d35,#19121f);color:#d7b9e8;font-size:17px;font-weight:800;box-shadow:inset 0 0 0 1px #d8b77712,0 3px 9px #0004}
 #dev-tools-tab small{display:block;margin-top:3px;font-size:7px;letter-spacing:.7px;color:#d7b9e8}
 @media(max-width:390px){.main-nav{gap:2px;padding:6px 5px}.main-nav>button{min-height:42px;padding:4px 0}.main-nav>button small{font-size:5.5px;letter-spacing:0}#dev-tools-tab{width:96px;margin:6px 0 10px 5px}}
+
+/* Every primary destination gets its own antique-gold tab frame, not just the selected tab. */
+.main-nav>button{
+  border:1px solid #927047!important;
+  border-radius:9px;
+  background:linear-gradient(155deg,#302238 0%,#211725 70%,#1b1420 100%);
+  color:#d7c7d9;
+  box-shadow:inset 0 0 0 1px #e6c17a16,0 2px 5px #0003;
+}
+.main-nav>button.active{
+  border:1px solid #f0c978!important;
+  background:linear-gradient(150deg,#654b5d,#3a293e 70%,#2b1d32);
+  color:#ffe5a7;
+  box-shadow:inset 0 0 0 1px #fff0bd45,inset 0 0 13px #e0b65c2b,0 0 8px #d6a65335;
+}
+.main-nav>button:not(.active):hover{
+  border-color:#d0a866!important;
+  background:linear-gradient(145deg,#443047,#2a1d32);
+  color:#ffe4ad;
+}
+.main-nav>button:focus-visible{outline:2px solid #f3c56b;outline-offset:2px}
+@media(max-width:390px){
+ .main-nav>button{border-radius:7px;box-shadow:inset 0 0 0 1px #e6c17a12}
+}
