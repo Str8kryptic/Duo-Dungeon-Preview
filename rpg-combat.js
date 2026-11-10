@@ -28,6 +28,22 @@
     demon_horn: "Demon Horns"
   };
 
+  var forgeRecipes = [
+    { gear: "stalker_fang", depth: 1, costs: { cave_chitin: 4, venom_gland: 2 }, note: "A fast, vicious starter weapon." },
+    { gear: "chitin_vest", depth: 1, costs: { cave_chitin: 6, venom_gland: 1 }, note: "Your first real layer between you and the teeth." },
+    { gear: "cryptbone_blade", depth: 3, costs: { ancient_bone: 6, cursed_essence: 2, rusted_fragment: 3 }, note: "A blade forged from the crypt's leftovers." },
+    { gear: "guardian_plate", depth: 3, costs: { ancient_bone: 5, cursed_essence: 2, rusted_fragment: 4 }, note: "Heavy protection for increasingly rude monsters." },
+    { gear: "infernal_edge", depth: 6, costs: { infernal_hide: 6, fire_core: 2, demon_horn: 1 }, note: "An endgame edge with a temper." },
+    { gear: "infernal_mail", depth: 6, costs: { infernal_hide: 8, fire_core: 2, demon_horn: 2 }, note: "Armor made from things that should not be wearable." }
+  ];
+
+  var alchemyRecipes = [
+    { id: "healing", name: "Field Healing Draught", depth: 1, costs: { bitter_herb: 2, venom_gland: 1 }, output: "Restores up to 45 HP.", action: "craft-healing" },
+    { id: "power", name: "Brutal Tonic", depth: 3, costs: { bitter_herb: 2, cursed_essence: 1 }, output: "Adds 5 attack for 30 seconds.", action: "craft-power-tonic" },
+    { id: "ward", name: "Warden's Elixir", depth: 3, costs: { ancient_bone: 1, cursed_essence: 1 }, output: "Adds 5 defense for 30 seconds.", action: "craft-ward-tonic" },
+    { id: "stamina", name: "Ember Stimulant", depth: 6, costs: { bitter_herb: 2, fire_core: 1 }, output: "Restores 25 stamina instantly.", action: "craft-stamina-elixir" }
+  ];
+
   var timer = null;
   var activeState = null;
   var activeHooks = null;
@@ -63,8 +79,13 @@
     r.inventory.materials = r.inventory.materials && typeof r.inventory.materials === "object" ? r.inventory.materials : {};
     r.inventory.gear = Array.isArray(r.inventory.gear) ? r.inventory.gear : [];
     r.inventory.potions = Math.max(0, Number(r.inventory.potions) || 0);
+    r.inventory.consumables = r.inventory.consumables && typeof r.inventory.consumables === "object" ? r.inventory.consumables : {};
+    ["power", "ward"].forEach(function (key) { r.inventory.consumables[key] = Math.max(0, Math.floor(Number(r.inventory.consumables[key]) || 0)); });
     r.inventory.lootBoxes = Math.max(0, Number(r.inventory.lootBoxes) || 0);
     r.upgrades = r.upgrades && typeof r.upgrades === "object" ? r.upgrades : {};
+    r.buffs = r.buffs && typeof r.buffs === "object" ? r.buffs : {};
+    r.buffs.powerUntil = Math.max(0, Number(r.buffs.powerUntil) || 0);
+    r.buffs.wardUntil = Math.max(0, Number(r.buffs.wardUntil) || 0);
     r.kills = r.kills && typeof r.kills === "object" ? r.kills : {};
     r.log = Array.isArray(r.log) ? r.log.slice(-8) : [];
     r.battle = r.battle && typeof r.battle === "object" ? r.battle : null;
@@ -91,9 +112,12 @@
   function stats(r) {
     var weapon = itemById(r.equipment.weapon);
     var armor = itemById(r.equipment.armor);
+    var now = Date.now();
+    var powerBuff = r.buffs && Number(r.buffs.powerUntil) > now ? 5 : 0;
+    var wardBuff = r.buffs && Number(r.buffs.wardUntil) > now ? 5 : 0;
     return {
-      attack: 12 + (r.level - 1) + (weapon ? weapon.attack + (Number(r.upgrades[weapon.id]) || 0) * 2 : 0),
-      defense: 5 + Math.floor((r.level - 1) * 0.6) + (armor ? armor.defense + (Number(r.upgrades[armor.id]) || 0) * 2 : 0),
+      attack: 12 + (r.level - 1) + (weapon ? weapon.attack + (Number(r.upgrades[weapon.id]) || 0) * 2 : 0) + powerBuff,
+      defense: 5 + Math.floor((r.level - 1) * 0.6) + (armor ? armor.defense + (Number(r.upgrades[armor.id]) || 0) * 2 : 0) + wardBuff,
       maxHp: r.maxHp,
       maxStamina: r.maxStamina
     };
@@ -245,6 +269,42 @@
     refresh(hooks);
   }
 
+  function canAfford(r, costs) {
+    return Object.keys(costs).every(function (id) { return materialCount(r, id) >= costs[id]; });
+  }
+
+  function costMarkup(r, costs) {
+    return Object.keys(costs).map(function (id) {
+      var have = materialCount(r, id);
+      return '<span class="' + (have >= costs[id] ? "is-funded" : "is-short") + '">' + have + ' / ' + costs[id] + ' ' + esc(materialNames[id] || id) + '</span>';
+    }).join("");
+  }
+
+  function craftGear(r, recipe, hooks) {
+    var item = itemById(recipe.gear);
+    if (!item || depthOf(activeState || {}) < recipe.depth) { notify(hooks, "Descend further to unlock this blueprint."); return; }
+    if (r.inventory.gear.indexOf(item.id) >= 0 || r.equipment[item.slot] === item.id) { notify(hooks, "You already own this blueprint's equipment."); return; }
+    if (!canAfford(r, recipe.costs)) { notify(hooks, "You are missing materials for " + item.name + "."); return; }
+    Object.keys(recipe.costs).forEach(function (id) { r.inventory.materials[id] -= recipe.costs[id]; });
+    r.inventory.gear.push(item.id);
+    log(r, "Forged " + item.name + ". The forge approves. The monster probably won't.");
+    notify(hooks, item.name + " forged and added to your equipment pack.");
+    refresh(hooks);
+  }
+
+  function craftConsumable(r, recipe, hooks) {
+    if (!canAfford(r, recipe.costs)) { notify(hooks, "You are missing materials for " + recipe.name + "."); return; }
+    Object.keys(recipe.costs).forEach(function (id) { r.inventory.materials[id] -= recipe.costs[id]; });
+    if (recipe.id === "healing") {
+      r.inventory.potions += 1;
+    } else {
+      r.inventory.consumables[recipe.id] = (Number(r.inventory.consumables[recipe.id]) || 0) + 1;
+    }
+    log(r, "Brewed " + recipe.name + ".");
+    notify(hooks, recipe.name + " brewed.");
+    refresh(hooks);
+  }
+
   function upgradeCost(r, item) {
     var rank = Number(r.upgrades[item.id]) || 0;
     return { material: item.depth >= 6 ? "infernal_hide" : item.depth >= 3 ? "rusted_fragment" : "cave_chitin", amount: 2 + rank };
@@ -267,7 +327,32 @@
     var r = ensure(state);
     if (!r || !action) return;
     if (action.indexOf("hunt:") === 0) { startBattle(state, action.slice(5), hooks); return; }
+    if (action.indexOf("forge:") === 0) {
+      var forgeRecipe = forgeRecipes.find(function (recipe) { return recipe.gear === action.slice(6); });
+      if (!forgeRecipe) { notify(hooks, "That forge blueprint does not exist."); return; }
+      craftGear(r, forgeRecipe, hooks);
+      return;
+    }
+    if (action.indexOf("brew:") === 0) {
+      var brewRecipe = alchemyRecipes.find(function (recipe) { return recipe.id === action.slice(5); });
+      if (!brewRecipe) { notify(hooks, "That alchemy recipe does not exist."); return; }
+      if (depthOf(state) < brewRecipe.depth) { notify(hooks, "Reach Descent floor " + brewRecipe.depth + " to unlock this recipe."); return; }
+      craftConsumable(r, brewRecipe, hooks);
+      return;
+    }
     if (action === "craft-healing") { craftPotion(r, hooks); return; }
+    if (action === "craft-power-tonic") { craftConsumable(r, alchemyRecipes[1], hooks); return; }
+    if (action === "craft-ward-tonic") { craftConsumable(r, alchemyRecipes[2], hooks); return; }
+    if (action === "craft-stamina-elixir") {
+      var staminaRecipe = alchemyRecipes[3];
+      if (!canAfford(r, staminaRecipe.costs)) { notify(hooks, "You are missing materials for " + staminaRecipe.name + "."); return; }
+      Object.keys(staminaRecipe.costs).forEach(function (id) { r.inventory.materials[id] -= staminaRecipe.costs[id]; });
+      r.stamina = Math.min(r.maxStamina, r.stamina + 25);
+      log(r, "Used " + staminaRecipe.name + ". 25 stamina restored.");
+      notify(hooks, "25 stamina restored.");
+      refresh(hooks);
+      return;
+    }
     if (action === "open-cache") { openLootBox(r, hooks, state); return; }
     if (action.indexOf("upgrade:") === 0) {
       var upgradeId = action.slice(8);
@@ -318,6 +403,14 @@
       var healed = Math.min(45, r.maxHp - r.hp);
       r.hp += healed;
       log(r, "Healing Draught restores " + healed + " HP.");
+      refresh(hooks);
+    } else if (action === "use-power-tonic" || action === "use-ward-tonic") {
+      var tonic = action === "use-power-tonic" ? "power" : "ward";
+      if (r.inventory.consumables[tonic] < 1) { notify(hooks, "You do not have that tonic ready."); return; }
+      r.inventory.consumables[tonic] -= 1;
+      r.buffs[tonic + "Until"] = Date.now() + 30000;
+      log(r, tonic === "power" ? "Brutal Tonic active: +5 attack for 30 seconds." : "Warden's Elixir active: +5 defense for 30 seconds.");
+      notify(hooks, tonic === "power" ? "Attack increased for 30 seconds." : "Defense increased for 30 seconds.");
       refresh(hooks);
     } else if (action === "flee") {
       var monster = monsterById(r.battle.monsterId);
@@ -398,7 +491,7 @@
     return '<section class="rpg-battle-panel"><div class="rpg-battle-heading"><div><div class="rpg-eyebrow">ACTIVE ENCOUNTER · ' + esc(monster.kind) + '</div><h2>' + esc(monster.name) + '</h2><p>' + esc(monster.flavor) + '</p></div><span class="rpg-live-mark">IN COMBAT</span></div>' +
       '<div class="rpg-combatants"><article class="rpg-combatant rpg-player-combatant"><span class="rpg-combatant-icon">♙</span><small>CRAWLER</small><b>LVL ' + r.level + '</b><strong>' + r.hp + ' / ' + r.maxHp + ' HP</strong>' + bar(r.hp, r.maxHp, "rpg-hp") + '<small>ATK ' + player.attack + ' · DEF ' + player.defense + '</small></article>' +
       '<div class="rpg-versus">VS</div><article class="rpg-combatant rpg-monster-combatant"><span class="rpg-combatant-icon">☠</span><small>HOSTILE</small><b>' + esc(monster.kind) + '</b><strong>' + battle.hp + ' / ' + battle.maxHp + ' HP</strong>' + bar(battle.hp, battle.maxHp, "rpg-enemy-hp") + '<small>ATK ' + monster.attack + ' · DEF ' + monster.defense + '</small></article></div>' +
-      '<div class="rpg-action-grid"><button class="rpg-action-primary" data-rpg-action="quick-strike" ' + (quickReady ? "" : "disabled") + '>⚔ QUICK STRIKE</button><button data-rpg-action="heavy-strike" ' + (heavyReady && r.stamina >= 5 ? "" : "disabled") + '>✦ HEAVY STRIKE <small>5 STAMINA</small></button><button data-rpg-action="guard">⬟ GUARD</button><button data-rpg-action="use-potion" ' + (r.inventory.potions > 0 && r.hp < r.maxHp ? "" : "disabled") + '>✚ HEALING DRAUGHT <small>' + r.inventory.potions + ' READY</small></button></div>' +
+      '<div class="rpg-action-grid"><button class="rpg-action-primary" data-rpg-action="quick-strike" ' + (quickReady ? "" : "disabled") + '>⚔ QUICK STRIKE</button><button data-rpg-action="heavy-strike" ' + (heavyReady && r.stamina >= 5 ? "" : "disabled") + '>✦ HEAVY STRIKE <small>5 STAMINA</small></button><button data-rpg-action="guard">⬟ GUARD</button><button data-rpg-action="use-potion" ' + (r.inventory.potions > 0 && r.hp < r.maxHp ? "" : "disabled") + '>✚ HEALING DRAUGHT <small>' + r.inventory.potions + ' READY</small></button><button data-rpg-action="use-power-tonic" ' + (r.inventory.consumables.power > 0 ? "" : "disabled") + '>✦ BRUTAL TONIC <small>' + r.inventory.consumables.power + ' READY</small></button><button data-rpg-action="use-ward-tonic" ' + (r.inventory.consumables.ward > 0 ? "" : "disabled") + '>⬡ WARDEN ELIXIR <small>' + r.inventory.consumables.ward + ' READY</small></button></div>' +
       '<div class="rpg-battle-footer"><span>Auto-attacks are active while this screen is open.</span><button class="rpg-text-button" data-rpg-action="flee">RETREAT</button></div>' +
       '<div class="rpg-log"><div class="rpg-eyebrow">BATTLE LOG</div>' + r.log.slice(-5).reverse().map(function (entry) { return '<p>' + esc(entry.text) + '</p>'; }).join("") + '</div></section>';
   }
@@ -410,6 +503,29 @@
       var kills = Number(r.kills[monster.id]) || 0;
       return '<article class="rpg-monster-card ' + (unlocked ? "" : "is-locked") + '"><div class="rpg-monster-symbol">' + (monster.id === "cave-stalker" ? "♜" : monster.id === "crypt-guardian" ? "☠" : "♨") + '</div><div class="rpg-monster-copy"><div class="rpg-eyebrow">' + esc(monster.kind) + ' · ' + (unlocked ? "UNLOCKED" : "LOCKED") + '</div><h3>' + esc(monster.name) + '</h3><p>' + esc(unlocked ? monster.flavor : "Reach Descent floor " + monster.depth + " to reveal this target.") + '</p><div class="rpg-monster-meta"><span>HP ' + monster.hp + '</span><span>ATK ' + monster.attack + '</span><span>STAMINA ' + monster.stamina + '</span><span>' + kills + ' KILLS</span></div></div><button class="rpg-hunt-button" data-rpg-action="hunt:' + monster.id + '" ' + (!unlocked || !!r.battle || r.stamina < monster.stamina ? "disabled" : "") + '>' + (!unlocked ? "LOCKED" : r.stamina < monster.stamina ? "NEED STAMINA" : "HUNT") + '</button></article>';
     }).join("");
+  }
+
+  function renderForge(state, r) {
+    var depth = depthOf(state);
+    var cards = forgeRecipes.map(function (recipe) {
+      var item = itemById(recipe.gear);
+      var owned = r.inventory.gear.indexOf(recipe.gear) >= 0 || r.equipment[item.slot] === recipe.gear;
+      var unlocked = depth >= recipe.depth;
+      var ready = unlocked && !owned && canAfford(r, recipe.costs);
+      return '<article class="rpg-recipe-card"><div class="rpg-recipe-title"><div><small>' + esc(item.rarity) + ' · ' + esc(item.slot) + '</small><b>' + esc(item.name) + '</b></div><span>' + (owned ? "OWNED" : unlocked ? "FLOOR " + recipe.depth : "LOCKED") + '</span></div><p>' + esc(recipe.note) + '</p><div class="rpg-recipe-costs">' + costMarkup(r, recipe.costs) + '</div><button class="rpg-action-primary rpg-craft-button" data-rpg-action="forge:' + recipe.gear + '" ' + (ready ? "" : "disabled") + '>' + (owned ? "ALREADY OWNED" : !unlocked ? "DESCEND TO UNLOCK" : "FORGE EQUIPMENT") + '</button></article>';
+    }).join("");
+    return '<section class="rpg-subpanel"><div class="rpg-section-head"><div><div class="rpg-eyebrow">THE FORGE</div><h3>Weapons & Armor</h3></div><span class="rpg-count">6 BLUEPRINTS</span></div><p class="rpg-section-hint">Turn monster trophies into permanent equipment. Blueprints unlock as you descend; forged gear can be equipped and enhanced.</p><div class="rpg-recipe-grid">' + cards + '</div></section>';
+  }
+
+  function renderAlchemy(state, r) {
+    var depth = depthOf(state);
+    var cards = alchemyRecipes.map(function (recipe) {
+      var unlocked = depth >= recipe.depth;
+      var count = recipe.id === "healing" ? r.inventory.potions : recipe.id === "stamina" ? "INSTANT" : r.inventory.consumables[recipe.id];
+      var ready = unlocked && canAfford(r, recipe.costs);
+      return '<article class="rpg-recipe-card"><div class="rpg-recipe-title"><div><small>ALCHEMY · ' + (recipe.depth === 1 ? "BASIC" : recipe.depth === 3 ? "ADVANCED" : "MASTER") + '</small><b>' + esc(recipe.name) + '</b></div><span>' + (unlocked ? (recipe.id === "stamina" ? "ON DEMAND" : count + " READY") : "LOCKED") + '</span></div><p>' + esc(recipe.output) + '</p><div class="rpg-recipe-costs">' + costMarkup(r, recipe.costs) + '</div><button class="rpg-action-primary rpg-craft-button" data-rpg-action="brew:' + recipe.id + '" ' + (ready ? "" : "disabled") + '>' + (!unlocked ? "DESCEND TO UNLOCK" : recipe.id === "stamina" ? "BREW & RESTORE 25" : "BREW ITEM") + '</button></article>';
+    }).join("");
+    return '<section class="rpg-subpanel"><div class="rpg-section-head"><div><div class="rpg-eyebrow">THE ALCHEMY LAB</div><h3>Potions & Combat Tonics</h3></div><span class="rpg-count">' + r.inventory.potions + ' HEALING DRAUGHTS</span></div><p class="rpg-section-hint">Craft every consumable from monster materials. Advanced recipes require deeper exploration.</p><div class="rpg-recipe-grid">' + cards + '</div></section>';
   }
 
   function renderInventory(r) {
@@ -437,8 +553,8 @@
     return '<div class="rpg-page"><section class="rpg-hero"><div class="rpg-hero-copy"><div class="rpg-eyebrow">DUO DUNGEON · COMBAT DIVISION</div><h1>THE HUNTING GROUNDS</h1><p>Descent reveals the prey. Your preparation decides whether you become the meal.</p><div class="rpg-hero-tags"><span>FLOOR ' + depth + ' REACHED</span><span>COMBAT LEVEL ' + r.level + '</span></div></div><div class="rpg-hero-sigil">⚔</div></section>' +
       '<section class="rpg-resource-grid"><article><small>STAMINA</small><strong>' + r.stamina + '<i> / ' + r.maxStamina + '</i></strong>' + bar(r.stamina, r.maxStamina, "rpg-stamina") + '<span>Regenerates 1 every 5 minutes.</span></article><article><small>HEALTH</small><strong>' + r.hp + '<i> / ' + r.maxHp + '</i></strong>' + bar(r.hp, r.maxHp, "rpg-hp") + '<span>Healing Draughts restore up to 45 HP.</span></article><article><small>COMBAT EXPERIENCE</small><strong>' + r.xp + '<i> / ' + r.xpNext + ' XP</i></strong>' + bar(r.xp, r.xpNext, "rpg-xp") + '<span>Level-ups improve your combat stats.</span></article></section>' +
       (r.battle ? renderBattle(r) : '<section class="rpg-subpanel rpg-hunt-board"><div class="rpg-section-head"><div><div class="rpg-eyebrow">AVAILABLE TARGETS</div><h2>Monster Board</h2></div><span class="rpg-count">' + monsters.filter(function (m) { return depth >= m.depth; }).length + ' / ' + monsters.length + ' UNLOCKED</span></div><p class="rpg-section-hint">Only creatures discovered through Descent can be hunted here. Each target has its own stamina cost and crafting materials.</p><div class="rpg-monster-list">' + renderMonsters(state, r) + '</div></section>') +
-      '<div class="rpg-two-column"><section class="rpg-subpanel"><div class="rpg-section-head"><div><div class="rpg-eyebrow">ALCHEMY BENCH</div><h3>Field Healing Draught</h3></div><span class="rpg-count">' + r.inventory.potions + ' READY</span></div><p class="rpg-section-hint">Crafted from 2 Bitter Herbs and 1 Venom Gland. Restores up to 45 HP during combat.</p><div class="rpg-recipe-row"><span>' + materialCount(r, "bitter_herb") + ' / 2 Bitter Herbs</span><span>' + materialCount(r, "venom_gland") + ' / 1 Venom Gland</span></div><button class="rpg-action-primary rpg-craft-button" data-rpg-action="craft-healing" ' + (potionReady ? "" : "disabled") + '>✚ CRAFT HEALING DRAUGHT</button></section>' +
-      '<section class="rpg-subpanel"><div class="rpg-section-head"><div><div class="rpg-eyebrow">REWARD CACHE</div><h3>Sealed Loot</h3></div><span class="rpg-count">' + r.inventory.lootBoxes + ' CACHES</span></div><p class="rpg-section-hint">Monster loot caches contain weapons and armor appropriate to your deepest unlocked floor.</p><button class="rpg-action-primary rpg-craft-button" data-rpg-action="open-cache" ' + (r.inventory.lootBoxes > 0 ? "" : "disabled") + '>◇ OPEN LOOT CACHE</button></section></div>' +
+      renderForge(state, r) + renderAlchemy(state, r) +
+      '<section class="rpg-subpanel"><div class="rpg-section-head"><div><div class="rpg-eyebrow">REWARD CACHE</div><h3>Sealed Loot</h3></div><span class="rpg-count">' + r.inventory.lootBoxes + ' CACHES</span></div><p class="rpg-section-hint">Monster loot caches contain equipment appropriate to your deepest unlocked floor.</p><button class="rpg-action-primary rpg-craft-button" data-rpg-action="open-cache" ' + (r.inventory.lootBoxes > 0 ? "" : "disabled") + '>◇ OPEN LOOT CACHE</button></section>' +
       renderInventory(r) + '<p class="rpg-footnote">Combat uses stamina, never Step Power. Basic attacks run automatically while this page is open; you control special attacks, guarding, and healing.</p></div>';
   }
 
