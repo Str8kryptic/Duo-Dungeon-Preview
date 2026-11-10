@@ -971,7 +971,7 @@ body:after{inset:0;opacity:.18;background-image:radial-gradient(1px 1px at 8% 18
 .assistant-compose input:focus{border-color:#73c6ff;box-shadow:0 0 0 2px #329fff55}
 .assistant-compose button{width:37px;border-color:#329fff;background:linear-gradient(135deg,#147bc8,#45baff);color:white}
 .assistant-disclaimer{padding:0 9px 7px}
-#dungeon-assistant-host.keyboard-open .assistant-window{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:calc(var(--assistant-keyboard-inset,0px) + 78px + env(safe-area-inset-bottom));width:min(310px,calc(100vw - 24px));max-height:min(280px,38vh);border:2px solid #39aaff;box-shadow:0 0 0 1px #b9e8ff77,0 0 26px #168bff77,0 12px 40px #000c;z-index:1001}
+#dungeon-assistant-host.keyboard-open .assistant-window{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:calc(var(--assistant-keyboard-inset,0px) + 10px + env(safe-area-inset-bottom));width:min(310px,calc(100vw - 24px));max-height:min(270px,38vh);border:2px solid #39aaff;box-shadow:0 0 0 1px #b9e8ff77,0 0 26px #168bff77,0 12px 40px #000c;z-index:1001}
 #dungeon-assistant-host.keyboard-open .assistant-dispatch{max-height:66px}
 #dungeon-assistant-host.keyboard-open .assistant-messages{min-height:38px;max-height:74px}
 #dungeon-assistant-host.keyboard-open .assistant-intro{padding:5px 9px 3px}
