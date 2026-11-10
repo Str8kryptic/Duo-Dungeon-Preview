@@ -28,6 +28,20 @@
 .rpg-monster-list { display:flex; flex-direction:column; gap:9px; }
 .rpg-monster-card { display:flex; align-items:center; gap:11px; padding:11px; border:1px solid #66516c; border-radius:11px; background:#110d18a8; }
 .rpg-monster-card.is-locked { opacity:.55; border-style:dashed; }
+.rpg-boss-board { margin-top:12px; padding:14px; border:1px solid #8d573d; border-radius:13px; background:linear-gradient(145deg,#2a171d,#17101b); }
+.rpg-boss-list { display:flex; flex-direction:column; gap:9px; }
+.rpg-boss-card { display:flex; align-items:center; gap:10px; padding:11px; border:1px solid #8e5b43; border-radius:10px; background:linear-gradient(120deg,#3a2028aa,#19121e); }
+.rpg-boss-card.is-locked { opacity:.52; border-style:dashed; }
+.rpg-boss-mark { flex:none; display:grid; place-items:center; width:44px; height:44px; border:1px solid #bd8256; border-radius:10px; color:#ffc17c; background:radial-gradient(circle,#75402e,#2b1b24); font-size:24px; }
+.rpg-boss-copy { flex:1; min-width:0; }
+.rpg-boss-copy h3 { margin:3px 0; color:#ffe0b1; font:700 15px Georgia,serif; }
+.rpg-boss-copy p { margin:0 0 6px; color:#c3aab1; font-size:9px; line-height:1.4; }
+.rpg-boss-relic { display:block; margin-top:6px; color:#e5b875; font-size:8px; font-weight:900; letter-spacing:.5px; }
+.rpg-boss-button { border-color:#c18455; color:#ffe0a0; background:linear-gradient(135deg,#75402f,#442432); }
+.rpg-boss-phase { margin:12px 0; padding:10px; border:1px solid #9b6549; border-radius:8px; color:#ffc58a; background:#4b282c77; font-size:10px; font-weight:900; letter-spacing:.7px; }
+.rpg-boss-phase span { display:block; margin-top:4px; color:#c8b6b7; font-size:9px; font-weight:500; letter-spacing:0; }
+.rpg-boss-phase strong { display:block; margin-top:5px; color:#ff9c78; font-size:10px; }
+
 .rpg-monster-symbol { flex:none; display:grid; place-items:center; width:43px; height:43px; border-radius:10px; border:1px solid #866a76; background:linear-gradient(145deg,#443044,#211724); color:#e8bd83; font-size:22px; }
 .rpg-monster-copy { flex:1; min-width:0; }
 .rpg-monster-copy h3 { margin:3px 0; color:#f4e1c0; font:700 15px Georgia,serif; }
@@ -112,6 +126,10 @@
   .rpg-battle-heading { flex-direction:column; }
   .rpg-material-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .rpg-recipe-grid { grid-template-columns:1fr; }
+  .rpg-boss-card { flex-wrap:wrap; }
+  .rpg-boss-copy { flex:1 1 calc(100% - 56px); }
+  .rpg-boss-button { width:100%; }
+
   .main-nav button { font-size:15px; }
   .main-nav small { font-size:7px; letter-spacing:.35px; }
 }
