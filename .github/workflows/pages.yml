@@ -58,7 +58,7 @@ jobs:
           grep -q 'repeat(7,minmax(0,1fr))' styles.css
           grep -q 'data-fac="armory"' app.js
           grep -q 'guildStats.crafts++' app.js
-          grep -q 'data-page=\"guild\"' app.js
+          grep -q 'else if(page==="guild")' app.js
           grep -q 'rpg-combat.js?v=20261110rpgcombat1' index.html
           grep -q 'rpg-combat.css?v=20261110huntprofile1' index.html
           grep -q 'data-title-picker' app.js
