@@ -133,18 +133,17 @@ function stepSyncDialog(total,date){
  var player=String(s.name||"Unnamed Crawler");
  var quip=stepSyncSnarks[Math.floor(Math.random()*stepSyncSnarks.length)].replace(/\{\{name\}\}/g,esc(player));
  function close(){dlg.close()}
- function bindClose(){dlg.querySelectorAll("[data-step-close]").forEach(function(b){b.addEventListener("click",close)})}
  dlg.innerHTML=
   '<button class="close" type="button" data-step-close aria-label="Close">×</button>'+
   '<div class="eyebrow" data-sync-eyebrow>DUNGEON STEP LEDGER · INCOMING REPORT</div>'+
   '<h2 data-sync-title>CONFIRM STEP SYNC</h2>'+
   '<div class="step-sync-player"><small>CRAWLER</small><strong>'+esc(player)+'</strong></div>'+
-  '<div class="step-sync-total"><small>APPLE HEALTH TOTAL</small><strong>'+Number(total).toLocaleString()+'</strong><span>steps recorded today</span></div>'+
-  '<blockquote class="step-sync-quip">“'+quip+'”<small>— THE SYSTEM</small></blockquote>'+
+  '<div class="step-sync-total"><small data-total-label>APPLE HEALTH TOTAL</small><strong>'+Number(total).toLocaleString()+'</strong><span>steps recorded today</span></div>'+
+  '<blockquote class="step-sync-quip" data-sync-quip>“'+quip+'”<small>— THE SYSTEM</small></blockquote>'+
   '<p class="manual-note" data-sync-note>Ready to record this Health reading? Only steps beyond your previous successful sync earn rewards.</p>'+
-  '<div class="step-sync-actions" data-sync-actions><button class="action secondary" type="button" data-step-close>CANCEL</button><button class="action primary" type="button" data-step-confirm>CONFIRM &amp; SYNC TO DUNGEON</button></div>'+
-  '<section data-sync-results hidden><div class="step-reward-grid" data-reward-grid></div><div class="step-sync-items" data-reward-items></div><blockquote class="step-sync-quip" data-reward-quip></blockquote><div class="step-sync-actions"><button class="action primary" type="button" data-step-close>BACK TO THE DUNGEON</button></div></section>';
- bindClose();
+  '<section class="step-sync-rewards" data-sync-rewards hidden style="display:none"><div class="step-reward-grid" data-reward-grid></div><div class="step-sync-items" data-reward-items></div></section>'+
+  '<div class="step-sync-actions" data-sync-actions><button class="action secondary" type="button" data-step-close>CANCEL</button><button class="action primary" type="button" data-step-confirm>CONFIRM &amp; SYNC TO DUNGEON</button></div>';
+ dlg.querySelectorAll("[data-step-close]").forEach(function(b){b.addEventListener("click",close)});
  dlg.querySelector("[data-step-confirm]").addEventListener("click",async function(){
   var btn=this;btn.disabled=true;btn.textContent="CONTACTING THE LEDGER…";
   var result=await applyStepTotal(total,date);
@@ -153,9 +152,9 @@ function stepSyncDialog(total,date){
    result.relics.map(function(x){return '<li>Relic: '+esc(x)+' <b>NEW</b></li>'}).join("");
   dlg.querySelector("[data-sync-eyebrow]").textContent="DUNGEON LEDGER · SYNC COMPLETE";
   dlg.querySelector("[data-sync-title]").textContent=result.alreadyCurrent?"ALREADY COUNTED":"REWARDS PROCESSED";
-  dlg.querySelector(".step-sync-total small").textContent="HEALTH TOTAL RECORDED";
+  dlg.querySelector("[data-total-label]").textContent="HEALTH TOTAL RECORDED";
+  dlg.querySelector("[data-sync-quip]").innerHTML="“"+(result.alreadyCurrent?"Already counted. The dungeon's accounting department remains undefeated.":quip)+"”<small>— THE SYSTEM</small>";
   dlg.querySelector("[data-sync-note]").textContent=result.alreadyCurrent?"This reading was already processed. No duplicate rewards were issued.":"Your steps have been credited. Here's what the dungeon awarded.";
-  var syncActions=dlg.querySelector("[data-sync-actions]"),syncResults=dlg.querySelector("[data-sync-results]");syncActions.hidden=true;syncActions.style.display="none";syncResults.hidden=false;syncResults.style.display="block";
   dlg.querySelector("[data-reward-grid]").innerHTML=
    '<div><small>NEW STEPS</small><b>'+result.delta.toLocaleString()+'</b></div>'+
    '<div><small>ADDED TO RESERVE</small><b>'+result.bankedAdded.toLocaleString()+'</b></div>'+
@@ -163,7 +162,11 @@ function stepSyncDialog(total,date){
    '<div><small>COINS</small><b>+'+result.coins.toLocaleString()+' ◈</b></div>';
   dlg.querySelector("[data-reward-items]").innerHTML='<small>ITEMS &amp; MATERIALS EARNED</small>'+
    (rewards?'<ul>'+rewards+'</ul>':'<p>'+(result.alreadyCurrent?"No new steps to reward. The dungeon refuses duplicate invoices.":"No bonus materials this time. Your legs did the work; the loot department was on break.")+'</p>');
-  dlg.querySelector("[data-reward-quip]").innerHTML="“"+(result.alreadyCurrent?"Already counted. The dungeon's accounting department remains undefeated.":quip)+"”<small>— THE SYSTEM</small>";
+  var rewardSection=dlg.querySelector("[data-sync-rewards]");
+  rewardSection.hidden=false;rewardSection.style.display="block";
+  var actions=dlg.querySelector("[data-sync-actions]");
+  actions.innerHTML='<button class="action primary" type="button" data-step-return>BACK TO THE DUNGEON</button>';
+  actions.querySelector("[data-step-return]").addEventListener("click",close);
  });
  if(typeof dlg.showModal==="function")dlg.showModal();else dlg.setAttribute("open","");
 }
