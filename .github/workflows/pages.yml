@@ -25,6 +25,8 @@ jobs:
       - name: Check application syntax
         run: |
           node --check app.js
+          node --check guild.js
+          node scripts/test-guild.mjs
           node --check auth.js
           node --check health-connect.js
           node --check rpg-combat.js
@@ -43,7 +45,13 @@ jobs:
           grep -q 'ANDROID HEALTH CONNECT' app.js
           grep -q 'android-sync-status' styles.css
           grep -q 'styles.css?v=20261110aifloat2' index.html
-          grep -q 'app.js?v=20261110aifloat2' index.html
+          grep -q 'guild.js?v=20261110guild1' index.html
+          grep -q 'app.js?v=20261110guild1' index.html
+          grep -q 'THE GUILD HALL' guild.js
+          grep -q 'data-guild-claim' guild.js
+          grep -q 'guildStats.kills++' app.js
+          grep -q 'guildStats.crafts++' app.js
+          grep -q 'data-page=\"guild\"' app.js
           grep -q 'rpg-combat.js?v=20261110rpgcombat1' index.html
           grep -q 'rpg-combat.css?v=20261110huntprofile1' index.html
           grep -q 'data-title-picker' app.js
