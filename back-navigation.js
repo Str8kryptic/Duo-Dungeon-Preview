@@ -11,6 +11,7 @@ document.addEventListener("click",function(e){
  var f=e.target.closest("[data-fac]");if(f){pushRoute({page:"facility",facility:f.dataset.fac});return}
 },true);
 function backFromPage(){var previous=stack.pop();if(previous){current=previous;goRoute(previous)}else{current={page:"home",facility:""};goRoute(current)}}
+function ensureStandaloneBack(){var wrap=document.querySelector(".wrap");if(!wrap||root||wrap.querySelector(":scope > .duo-standalone-backbar"))return;var bar=document.createElement("div");bar.className="duo-standalone-backbar";var b=button("BACK","standalone");b.addEventListener("click",function(){if(window.history.length>1)window.history.back();else window.location.href="./"});bar.appendChild(b);wrap.insertBefore(bar,wrap.firstChild)}
 function ensurePageBack(){
  if(!root)return;var isHome=routeKey(current)==="home|";var old=root.querySelector(":scope > .duo-page-backbar");if(isHome){if(old)old.remove();return}
  if(old)return;var bar=document.createElement("div");bar.className="duo-page-backbar";var b=button("BACK","page");b.addEventListener("click",backFromPage);bar.appendChild(b);root.insertBefore(bar,root.firstChild);
@@ -25,7 +26,7 @@ function ensureOverlayBack(el){
  var b=button("BACK","overlay");b.addEventListener("click",function(){el.remove()});el.appendChild(b);
 }
 function scan(){
- if(root){ensurePageBack()}
+ if(root){ensurePageBack()}else{ensureStandaloneBack()}
  document.querySelectorAll("dialog[open]").forEach(ensureDialogBack);
  ["#section-guide-popover","#first-descent-panel"].forEach(function(sel){var el=document.querySelector(sel);if(el)ensureOverlayBack(el)});
 }
