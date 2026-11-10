@@ -64,6 +64,7 @@
     r.inventory.gear = Array.isArray(r.inventory.gear) ? r.inventory.gear : [];
     r.inventory.potions = Math.max(0, Number(r.inventory.potions) || 0);
     r.inventory.lootBoxes = Math.max(0, Number(r.inventory.lootBoxes) || 0);
+    r.upgrades = r.upgrades && typeof r.upgrades === "object" ? r.upgrades : {};
     r.kills = r.kills && typeof r.kills === "object" ? r.kills : {};
     r.log = Array.isArray(r.log) ? r.log.slice(-8) : [];
     r.battle = r.battle && typeof r.battle === "object" ? r.battle : null;
@@ -91,8 +92,8 @@
     var weapon = itemById(r.equipment.weapon);
     var armor = itemById(r.equipment.armor);
     return {
-      attack: 12 + (r.level - 1) + (weapon ? weapon.attack : 0),
-      defense: 5 + Math.floor((r.level - 1) * 0.6) + (armor ? armor.defense : 0),
+      attack: 12 + (r.level - 1) + (weapon ? weapon.attack + (Number(r.upgrades[weapon.id]) || 0) * 2 : 0),
+      defense: 5 + Math.floor((r.level - 1) * 0.6) + (armor ? armor.defense + (Number(r.upgrades[armor.id]) || 0) * 2 : 0),
       maxHp: r.maxHp,
       maxStamina: r.maxStamina
     };
@@ -244,6 +245,11 @@
     refresh(hooks);
   }
 
+  function upgradeCost(r, item) {
+    var rank = Number(r.upgrades[item.id]) || 0;
+    return { material: item.depth >= 6 ? "infernal_hide" : item.depth >= 3 ? "rusted_fragment" : "cave_chitin", amount: 2 + rank };
+  }
+
   function openLootBox(r, hooks, state) {
     if (r.inventory.lootBoxes < 1) { notify(hooks, "No loot caches to open."); return; }
     var availableDepth = depthOf(state);
@@ -263,6 +269,21 @@
     if (action.indexOf("hunt:") === 0) { startBattle(state, action.slice(5), hooks); return; }
     if (action === "craft-healing") { craftPotion(r, hooks); return; }
     if (action === "open-cache") { openLootBox(r, hooks, state); return; }
+    if (action.indexOf("upgrade:") === 0) {
+      var upgradeId = action.slice(8);
+      var upgradeItem = itemById(upgradeId);
+      if (!upgradeItem || r.inventory.gear.indexOf(upgradeId) < 0) { notify(hooks, "That equipment is not in your combat pack."); return; }
+      var rank = Number(r.upgrades[upgradeId]) || 0;
+      var cost = upgradeCost(r, upgradeItem);
+      if (rank >= 5) { notify(hooks, "That item has reached its maximum enhancement rank."); return; }
+      if (materialCount(r, cost.material) < cost.amount) { notify(hooks, "Upgrade requires " + cost.amount + " " + (materialNames[cost.material] || cost.material) + "."); return; }
+      r.inventory.materials[cost.material] -= cost.amount;
+      r.upgrades[upgradeId] = rank + 1;
+      log(r, upgradeItem.name + " enhanced to rank " + (rank + 1) + ".");
+      notify(hooks, upgradeItem.name + " upgraded to rank " + (rank + 1) + ".");
+      refresh(hooks);
+      return;
+    }
     if (action.indexOf("equip:") === 0) {
       var id = action.slice(6);
       var item = itemById(id);
@@ -275,6 +296,8 @@
     }
     if (!r.battle) { notify(hooks, "Choose a monster to begin a hunt."); return; }
     if (action === "quick-strike") {
+      if (Date.now() < Number(r.battle.quickReadyAt || 0)) { notify(hooks, "Quick Strike is still recovering."); return; }
+      r.battle.quickReadyAt = Date.now() + 1300;
       dealDamage(state, r, 1.2, "Quick Strike", hooks);
       refresh(hooks);
     } else if (action === "heavy-strike") {
@@ -307,8 +330,13 @@
 
   function tick() {
     if (!activeState || !activeHooks) return;
+    var previousStamina = activeState.rpgCombat ? Number(activeState.rpgCombat.stamina) || 0 : 0;
     var r = ensure(activeState);
-    if (!r || !r.battle) { stopTimer(); return; }
+    if (!r) { stopTimer(); return; }
+    if (!r.battle) {
+      if (r.stamina !== previousStamina) refresh(activeHooks);
+      return;
+    }
     var now = Date.now();
     var changed = false;
     if (now >= Number(r.battle.nextPlayerAt || 0)) {
@@ -332,7 +360,7 @@
   }
 
   function sync(state, page, hooks) {
-    if (page !== "combat" || !state || !state.rpgCombat || !state.rpgCombat.battle) {
+    if (page !== "combat" || !state) {
       stopTimer();
       return;
     }
@@ -344,8 +372,10 @@
     activeState = state;
     activeHooks = hooks;
     var now = Date.now();
-    state.rpgCombat.battle.nextPlayerAt = now + 1600;
-    state.rpgCombat.battle.nextEnemyAt = now + 2600;
+    if (state.rpgCombat && state.rpgCombat.battle) {
+      state.rpgCombat.battle.nextPlayerAt = now + 1600;
+      state.rpgCombat.battle.nextEnemyAt = now + 2600;
+    }
     timer = window.setInterval(tick, 450);
   }
 
@@ -363,11 +393,12 @@
     var monster = monsterById(battle.monsterId);
     if (!monster) return "";
     var player = stats(r);
+    var quickReady = Date.now() >= Number(battle.quickReadyAt || 0);
     var heavyReady = Date.now() >= Number(battle.heavyReadyAt || 0);
     return '<section class="rpg-battle-panel"><div class="rpg-battle-heading"><div><div class="rpg-eyebrow">ACTIVE ENCOUNTER · ' + esc(monster.kind) + '</div><h2>' + esc(monster.name) + '</h2><p>' + esc(monster.flavor) + '</p></div><span class="rpg-live-mark">IN COMBAT</span></div>' +
       '<div class="rpg-combatants"><article class="rpg-combatant rpg-player-combatant"><span class="rpg-combatant-icon">♙</span><small>CRAWLER</small><b>LVL ' + r.level + '</b><strong>' + r.hp + ' / ' + r.maxHp + ' HP</strong>' + bar(r.hp, r.maxHp, "rpg-hp") + '<small>ATK ' + player.attack + ' · DEF ' + player.defense + '</small></article>' +
       '<div class="rpg-versus">VS</div><article class="rpg-combatant rpg-monster-combatant"><span class="rpg-combatant-icon">☠</span><small>HOSTILE</small><b>' + esc(monster.kind) + '</b><strong>' + battle.hp + ' / ' + battle.maxHp + ' HP</strong>' + bar(battle.hp, battle.maxHp, "rpg-enemy-hp") + '<small>ATK ' + monster.attack + ' · DEF ' + monster.defense + '</small></article></div>' +
-      '<div class="rpg-action-grid"><button class="rpg-action-primary" data-rpg-action="quick-strike">⚔ QUICK STRIKE</button><button data-rpg-action="heavy-strike" ' + (heavyReady && r.stamina >= 5 ? "" : "disabled") + '>✦ HEAVY STRIKE <small>5 STAMINA</small></button><button data-rpg-action="guard">⬟ GUARD</button><button data-rpg-action="use-potion" ' + (r.inventory.potions > 0 && r.hp < r.maxHp ? "" : "disabled") + '>✚ HEALING DRAUGHT <small>' + r.inventory.potions + ' READY</small></button></div>' +
+      '<div class="rpg-action-grid"><button class="rpg-action-primary" data-rpg-action="quick-strike" ' + (quickReady ? "" : "disabled") + '>⚔ QUICK STRIKE</button><button data-rpg-action="heavy-strike" ' + (heavyReady && r.stamina >= 5 ? "" : "disabled") + '>✦ HEAVY STRIKE <small>5 STAMINA</small></button><button data-rpg-action="guard">⬟ GUARD</button><button data-rpg-action="use-potion" ' + (r.inventory.potions > 0 && r.hp < r.maxHp ? "" : "disabled") + '>✚ HEALING DRAUGHT <small>' + r.inventory.potions + ' READY</small></button></div>' +
       '<div class="rpg-battle-footer"><span>Auto-attacks are active while this screen is open.</span><button class="rpg-text-button" data-rpg-action="flee">RETREAT</button></div>' +
       '<div class="rpg-log"><div class="rpg-eyebrow">BATTLE LOG</div>' + r.log.slice(-5).reverse().map(function (entry) { return '<p>' + esc(entry.text) + '</p>'; }).join("") + '</div></section>';
   }
@@ -387,7 +418,9 @@
     var materialMarkup = mats.length ? mats.map(function (id) { return '<div class="rpg-material-chip"><b>' + materialCount(r, id) + '</b><span>' + esc(materialNames[id]) + '</span></div>'; }).join("") : '<p class="rpg-empty-copy">No monster materials yet. The first hunt is waiting.</p>';
     var gearMarkup = gear.length ? gear.map(function (item) {
       var equipped = r.equipment[item.slot] === item.id;
-      return '<article class="rpg-gear-row"><div><small>' + esc(item.rarity) + ' · ' + esc(item.slot) + '</small><b>' + esc(item.name) + '</b><span>' + (item.attack ? "+" + item.attack + " ATK" : "+" + item.defense + " DEF") + '</span></div><button data-rpg-action="equip:' + item.id + '" ' + (equipped ? "disabled" : "") + '>' + (equipped ? "EQUIPPED" : "EQUIP") + '</button></article>';
+      var rank = Number(r.upgrades[item.id]) || 0;
+      var cost = upgradeCost(r, item);
+      return '<article class="rpg-gear-row"><div><small>' + esc(item.rarity) + ' · ' + esc(item.slot) + ' · RANK ' + rank + '</small><b>' + esc(item.name) + '</b><span>' + (item.attack ? "+" + (item.attack + rank * 2) + " ATK" : "+" + (item.defense + rank * 2) + " DEF") + '</span></div><div class="rpg-gear-actions"><button data-rpg-action="equip:' + item.id + '" ' + (equipped ? "disabled" : "") + '>' + (equipped ? "EQUIPPED" : "EQUIP") + '</button><button data-rpg-action="upgrade:' + item.id + '" ' + (rank >= 5 || materialCount(r, cost.material) < cost.amount ? "disabled" : "") + '>+ ENHANCE</button></div></article>';
     }).join("") : '<p class="rpg-empty-copy">No equipment found. Loot caches may contain upgrades.</p>';
     var weapon = itemById(r.equipment.weapon);
     var armor = itemById(r.equipment.armor);
