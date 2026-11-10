@@ -2,6 +2,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { calculateStepRewards } from "../_shared/step-rewards.ts";
 import { STEP_ITEMS, STEP_RELICS } from "../_shared/step-catalog.ts";
 import { validateLocalStepDate } from "../_shared/step-date.ts";
+import { savedStepBaseline } from "../_shared/step-baseline.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "https://str8kryptic.github.io",
@@ -15,14 +16,6 @@ function json(body: unknown, status = 200) {
     status,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
-}
-
-function savedStepBaseline(save: Record<string, any>, date: string): number {
-  if (String(save.stepDate || "") !== date) return 0;
-  const value = save.healthStepsToday == null ? save.stepsToday : save.healthStepsToday;
-  const n = Number(value == null ? 0 : value);
-  if (!Number.isSafeInteger(n) || n < 0 || n > 100000) throw new Error("invalid_saved_step_baseline");
-  return n;
 }
 
 Deno.serve(async (req: Request) => {
@@ -54,7 +47,7 @@ Deno.serve(async (req: Request) => {
     catch { return json({ error: "Invalid step-sync request." }, 400); }
 
     const total = body?.total;
-    if (!Number.isSafeInteger(total) || (total as number) < 0 || (total as number) > 100000) {
+    if (!Number.isSafeInteger(total as number) || (total as number) < 0 || (total as number) > 100000) {
       return json({ error: "That step reading is invalid." }, 400);
     }
     let date: string;
