@@ -980,3 +980,7 @@ body:after{inset:0;opacity:.18;background-image:radial-gradient(1px 1px at 8% 18
 #dungeon-assistant-host.keyboard-open .assistant-disclaimer{display:none}
 @media(max-width:430px){.assistant-window{width:min(320px,calc(100vw - 20px));max-height:min(360px,calc(100dvh - 130px))}.assistant-messages{max-height:125px}#dungeon-assistant-host.keyboard-open .assistant-window{right:10px;width:calc(100vw - 20px);max-height:min(270px,38vh)}}
 @media(prefers-reduced-motion:reduce){#dungeon-assistant-host{transition:none}}
+
+/* iOS Safari zooms the page when a focused input uses text smaller than 16px. Keep the AI composer at the no-auto-zoom threshold without disabling user pinch zoom. */
+.assistant-compose input{font-size:16px!important;line-height:1.25;touch-action:manipulation}
+.assistant-launcher,.assistant-close,.assistant-compose button{touch-action:manipulation}
