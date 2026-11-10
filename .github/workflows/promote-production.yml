@@ -59,7 +59,7 @@ jobs:
           prod_auth = Path("production/auth.js").read_text()
 
           def project_url(source, label):
-              match = re.search(r'PROJECT_URL\\s*=\\s*"([^"]+)"', source)
+              match = re.search(r'PROJECT_URL\s*=\s*"([^"]+)"', source)
               if not match:
                   raise SystemExit(f"BLOCKED: {label} Supabase project URL is missing.")
               return match.group(1)
