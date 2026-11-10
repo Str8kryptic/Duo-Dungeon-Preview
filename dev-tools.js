@@ -9,7 +9,7 @@ auth.ready.then(function(){
  if(!auth.user||auth.user.id!==ADMIN_ID)return;
  var nav=document.querySelector(".main-nav"),root=document.getElementById("app");if(!nav||!root)return;
 
- var tab=document.createElement("button");tab.type="button";tab.id="dev-tools-tab";tab.innerHTML='⚙<small>DEV TOOLS</small>';nav.appendChild(tab);
+ var tab=document.createElement("button");tab.type="button";tab.id="dev-tools-tab";tab.className="dev-tools-tab";tab.innerHTML='⚙<small>DEV TOOLS</small>';nav.insertAdjacentElement("afterend",tab);
  var users=[],summary={},loading=false,errorText="",filter="all",search="",selectedId="",generatedAt=null,draft={version:"",title:"",intro:"",features:"",changes:"",fixes:"",patches:"",other:""},previewHtml="",previewReady=false,previewLoading=false,publishLoading=false,publishResult="",requestId="";
  function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
  function date(v){if(!v)return "Never";var d=new Date(v);return isNaN(d.getTime())?"Unknown":d.toLocaleString(undefined,{year:"numeric",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}
