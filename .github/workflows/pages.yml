@@ -27,6 +27,8 @@ jobs:
           node --check app.js
           node --check guild.js
           node scripts/test-guild.mjs
+          node scripts/test-adventurers-path.mjs
+          node --check adventurers-path.js
           node --check auth.js
           node --check health-connect.js
           node --check rpg-combat.js
@@ -51,6 +53,9 @@ jobs:
           grep -q 'data-guild-claim' guild.js
           grep -q 'guildStats.kills++' app.js
           grep -q 'home-quick-tabs' app.js
+          grep -q 'THE ADVENTURER’S PATH' adventurers-path.js
+          grep -q 'adventurers-path.js?v=20261110path1' index.html
+          grep -q 'adventurer-path' styles.css
           grep -q 'home-quick-tabs' styles.css
           grep -q 'data-page="guild"' index.html
           grep -q 'data-fac="treasury"' app.js
