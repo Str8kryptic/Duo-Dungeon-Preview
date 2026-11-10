@@ -68,4 +68,51 @@ rpg.staminaUpdatedAt = Date.now() - 300000;
 combat.ensure(state);
 assert.equal(rpg.stamina, 51, "stamina should regenerate by one every five minutes");
 
-console.log("RPG combat foundation tests passed.");
+// Forge: floor-gated recipes consume the right monster materials and add real equipment.
+const forgeState = { descent: { depth: 1 } };
+const forgeRpg = combat.ensure(forgeState);
+forgeRpg.inventory.materials.cave_chitin = 10;
+forgeRpg.inventory.materials.venom_gland = 4;
+combat.handleAction(forgeState, "forge:stalker_fang", hooks);
+assert.ok(forgeRpg.inventory.gear.includes("stalker_fang"), "starter weapon should be forgeable");
+assert.equal(forgeRpg.inventory.materials.cave_chitin, 6);
+combat.handleAction(forgeState, "forge:stalker_fang", hooks);
+assert.equal(forgeRpg.inventory.gear.filter(id => id === "stalker_fang").length, 1, "forge should not create duplicate owned gear");
+combat.handleAction(forgeState, "forge:cryptbone_blade", hooks);
+assert.ok(!forgeRpg.inventory.gear.includes("cryptbone_blade"), "deeper blueprints must remain locked");
+
+// Alchemy: combat tonics become usable consumables with temporary stat bonuses.
+forgeState.descent.depth = 3;
+forgeRpg.inventory.materials.bitter_herb = 4;
+forgeRpg.inventory.materials.cursed_essence = 2;
+combat.handleAction(forgeState, "brew:power", hooks);
+assert.equal(forgeRpg.inventory.consumables.power, 1, "Brutal Tonic should be craftable");
+combat.handleAction(forgeState, "hunt:cave-stalker", hooks);
+combat.handleAction(forgeState, "use-power-tonic", hooks);
+assert.equal(forgeRpg.inventory.consumables.power, 0, "using a tonic should consume one charge");
+assert.equal(forgeRpg.buffs.powerUntil > Date.now(), true, "tonic should apply a timed buff");
+assert.match(combat.render(forgeState), /ATK 17/, "Brutal Tonic should increase combat attack by five");
+
+// Warden's Elixir and the stamina stimulant consume their recipes correctly.
+forgeRpg.inventory.materials.ancient_bone = 1;
+forgeRpg.inventory.materials.cursed_essence = 1;
+combat.handleAction(forgeState, "brew:ward", hooks);
+assert.equal(forgeRpg.inventory.consumables.ward, 1, "Warden's Elixir should be craftable");
+combat.handleAction(forgeState, "use-ward-tonic", hooks);
+assert.ok(forgeRpg.buffs.wardUntil > Date.now(), "Warden's Elixir should apply a timed defense buff");
+assert.match(combat.render(forgeState), /DEF 10/, "Warden's Elixir should increase combat defense by five");
+forgeRpg.battle = null;
+forgeState.descent.depth = 6;
+forgeRpg.stamina = 50;
+forgeRpg.inventory.materials.fire_core = 1;
+forgeRpg.inventory.materials.bitter_herb = 2;
+combat.handleAction(forgeState, "brew:stamina", hooks);
+assert.equal(forgeRpg.stamina, 75, "Ember Stimulant should restore 25 stamina");
+assert.equal(forgeRpg.inventory.materials.fire_core, 0);
+
+const forgeView = combat.render(forgeState);
+assert.match(forgeView, /THE FORGE/);
+assert.match(forgeView, /THE ALCHEMY LAB/);
+assert.match(forgeView, /Infernal Edge/);
+
+console.log("RPG combat and crafting tests passed.");
