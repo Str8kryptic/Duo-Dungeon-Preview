@@ -4,7 +4,7 @@ const require=createRequire(import.meta.url),Path=require("../adventurers-path.j
 const guild={ensure(s){return s.guild||(s.guild={daily:{claimed:[],contracts:[{id:"steps",target:100},{id:"kills",target:5}]}})},progress(s,p,c){return c.id==="steps"?s.stepsToday:s.guildStats?.kills||0}};
 const player={stepDate:day,stepsToday:2500,xp:200,gear:{weapon:"sword",armor:"shield",companion:"pet"},descent:{pathSteps:400,nextEncounterAt:800},guildStats:{kills:2}};
 let html=Path.render(player,day,400,2,guild);
-assert.match(html,/THE ADVENTURER’S PATH/);assert.match(html,/DAILY STRIDE/);assert.match(html,/2,500 \/ 5,000 STEPS/);assert.match(html,/GUILD COMMISSIONS/);assert.match(html,/3 \/ 3 SLOTS EQUIPPED/);assert.match(html,/400 \/ 800 PATH STEPS/);assert.match(html,/0 \/ 4/);
+assert.match(html,/THE ADVENTURER’S PATH/);assert.match(html,/DAILY STRIDE/);assert.match(html,/2,500 \/ 5,000 STEPS/);assert.match(html,/GUILD COMMISSIONS/);assert.match(html,/3 \/ 3 SLOTS EQUIPPED/);assert.match(html,/400 \/ 800 PATH STEPS/);assert.match(html,/1 \/ 4/);
 player.stepsToday=5000;player.guildStats.kills=5;player.guild.daily.claimed=["one","two","three"];html=Path.render(player,day,400,2,guild);assert.match(html,/3 \/ 4/);assert.match(html,/is-complete/);
 const yesterday=Path.render(player,"2026-11-11",400,2,guild);assert.match(yesterday,/0 \/ 5,000 STEPS/,"Daily step progress resets at local midnight");
 console.log("Adventurer's Path tests passed.");
