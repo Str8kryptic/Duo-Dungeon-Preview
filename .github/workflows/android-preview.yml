@@ -40,7 +40,7 @@ jobs:
       - name: Prepare bundled game assets
         run: npm run build:web
       - name: Check JavaScript and Android build scripts
-        run: node --check app.js && node --check health-connect.js && node --check scripts/prepare-android-health.mjs && node --check scripts/verify-android-health-manifest.mjs
+        run: node --check app.js && node --check health-connect.js && node --check scripts/prepare-android-health.mjs && node --check scripts/verify-android-health-manifest.mjs && node scripts/test-health-connect.mjs
       - name: Generate Android project
         run: npx cap add android
       - name: Restrict Health Connect permissions to steps only
