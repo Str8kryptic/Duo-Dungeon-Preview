@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 var PROJECT_URL="https://xuxwwpfeenaaxzfspiiq.supabase.co",PUBLISHABLE_KEY="sb_publishable_h_Dw5OeqfUQ856jYriSMRg_iFg-_pzS";
-var SAVE_KEY="duo-dungeon-save-v2",CLAIM_KEY="duo-dungeon-claim-guest",client=null,user=null,mode="pending",initialSave=null,crawlerNumber=null,resolveReady,staySignedIn=localStorage.getItem("duo-dungeon-stay-signed-in")!=="false";
+var SAVE_KEY="duo-dungeon-save-v2",CLAIM_KEY="duo-dungeon-claim-guest",client=null,user=null,mode="pending",initialSave=null,crawlerNumber=null,saveRevision=null,persistQueue=Promise.resolve(),resolveReady,staySignedIn=localStorage.getItem("duo-dungeon-stay-signed-in")!=="false";
 var ready=new Promise(function(resolve){resolveReady=resolve});
 var root=document.createElement("div");root.className="auth-overlay";root.id="auth-overlay";
 root.innerHTML='<section class="auth-card"><h1 class="auth-title">DUO DUNGEON</h1><p class="auth-sub">YOUR NEXT QUESTIONABLE DECISION AWAITS</p><div class="auth-buttons"><button type="button" data-mode="signup" class="active">CREATE ACCOUNT</button><button type="button" data-mode="login">LOG IN</button></div><form id="auth-form"><label for="auth-email">EMAIL ADDRESS</label><input id="auth-email" type="email" autocomplete="email" required placeholder="crawler@example.com"><label for="auth-password">PASSWORD</label><input id="auth-password" type="password" autocomplete="new-password" minlength="12" required placeholder="At least 12 characters"><label class="stay-label"><input id="stay-signed-in" type="checkbox" checked> <span><b>Stay signed in on this device</b><small>Uncheck on a shared or public device.</small></span></label><button class="auth-wide primary" id="auth-submit" type="submit">CREATE ACCOUNT</button></form><button type="button" class="auth-forgot" id="auth-forgot" style="display:none">FORGOT PASSWORD?</button><p class="auth-message" id="auth-message">Create an account to protect your crawler, or enter as a guest.</p><div class="auth-divider">OR</div><button type="button" class="auth-wide" id="guest-button">CONTINUE AS GUEST</button><button type="button" class="auth-wide" id="auth-back" style="display:none">BACK TO GAME</button><button type="button" class="auth-wide" id="auth-signout" style="display:none">SIGN OUT</button><button type="button" class="auth-wide" id="auth-resend" style="display:none" disabled>RESEND CONFIRMATION</button><p class="auth-small">Guest progress stays on this device until you create an account.</p></section>';
@@ -20,20 +20,37 @@ function fresh(){return {name:"",number:100000+Math.floor(Math.random()*900000),
 async function persist(save){
  if(!user||!client)return;
  var payload=JSON.parse(JSON.stringify(save));
- var result=await client.from("player_saves").upsert({user_id:user.id,save_data:payload,updated_at:new Date().toISOString()},{onConflict:"user_id"});
- if(result.error){console.error("Duo Dungeon save failed:",result.error.message);message("Save warning: "+result.error.message)}
- if(payload.name)await client.from("player_profiles").update({display_name:String(payload.name).slice(0,20),updated_at:new Date().toISOString()}).eq("id",user.id);
+ persistQueue=persistQueue.then(async function(){
+  if(!user||!client)return;
+  var now=new Date().toISOString(),result;
+  if(saveRevision===null){
+   result=await client.from("player_saves").insert({user_id:user.id,save_data:payload,revision:1,updated_at:now}).select("revision").maybeSingle();
+   if(!result.error&&result.data)saveRevision=Number(result.data.revision);
+  }else{
+   var expected=saveRevision;
+   result=await client.from("player_saves").update({save_data:payload,revision:expected+1,updated_at:now}).eq("user_id",user.id).eq("revision",expected).select("revision").maybeSingle();
+   if(!result.error&&result.data)saveRevision=Number(result.data.revision);
+   else if(!result.error&&!result.data){
+    message("Save conflict detected. Your newer server progress was protected; reload the game to continue.");
+    console.warn("Duo Dungeon save revision conflict; stale write was blocked.");
+    return;
+   }
+  }
+  if(result.error){console.error("Duo Dungeon save failed:",result.error.message);message("Save warning: "+result.error.message);return}
+  if(payload.name)await client.from("player_profiles").update({display_name:String(payload.name).slice(0,20),updated_at:now}).eq("id",user.id);
+ }).catch(function(error){console.error("Duo Dungeon save queue failed:",error);message("Save warning: your latest changes could not be saved.")});
+ return persistQueue;
 }
 async function loadAccount(u,afterSignup){
  user=u;mode="account";
  var p=await client.from("player_profiles").select("crawler_number,display_name").eq("id",u.id).single();
  if(p.error)throw p.error;crawlerNumber=p.data.crawler_number;
- var r=await client.from("player_saves").select("save_data").eq("user_id",u.id).maybeSingle();
+ var r=await client.from("player_saves").select("save_data,revision").eq("user_id",u.id).maybeSingle();
  if(r.error)throw r.error;
- if(r.data&&r.data.save_data){initialSave=r.data.save_data;localStorage.removeItem(CLAIM_KEY)}
+ if(r.data&&r.data.save_data){initialSave=r.data.save_data;saveRevision=Number(r.data.revision||0);localStorage.removeItem(CLAIM_KEY)}
  else{
   var claim=localStorage.getItem(CLAIM_KEY)==="1",guestSave=claim?readLocal():null,legacySave=!guestSave?migrateLegacy(readLegacy()):null;
-  initialSave=guestSave||legacySave||fresh();
+  initialSave=guestSave||legacySave||fresh();saveRevision=null;
   if(guestSave&&guestSave.number){
    var up=await client.from("player_profiles").update({crawler_number:guestSave.number,display_name:String(guestSave.name||"NEW CRAWLER").slice(0,20),updated_at:new Date().toISOString()}).eq("id",u.id).select("crawler_number").maybeSingle();
    if(up.error){if(up.error.code==="23505")throw new Error("That crawler name or number is already in use. Choose a different identity.");throw up.error}if(up.data)crawlerNumber=up.data.crawler_number;
