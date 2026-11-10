@@ -42,8 +42,8 @@ jobs:
           grep -q 'selectedStepPlatform==="health_connect"' app.js
           grep -q 'ANDROID HEALTH CONNECT' app.js
           grep -q 'android-sync-status' styles.css
-          grep -q 'styles.css?v=20261110homeai1' index.html
-          grep -q 'app.js?v=20261110homeai1' index.html
+          grep -q 'styles.css?v=20261110orbdispatch1' index.html
+          grep -q 'app.js?v=20261110orbdispatch1' index.html
           grep -q 'rpg-combat.js?v=20261110rpgcombat1' index.html
           grep -q 'rpg-combat.css?v=20261110huntprofile1' index.html
           grep -q 'data-title-picker' app.js
@@ -58,6 +58,13 @@ jobs:
           grep -q 'function assistantAnswer' app.js
           grep -q 'dungeon-assistant-host' styles.css
           grep -q 'prefers-reduced-motion' styles.css
+          grep -q 'function assistantDispatchMarkup' app.js
+          grep -q 'assistant-launcher.has-unread' styles.css
+          grep -q 'dungeon-assistant' app.js
+          grep -q 'replayTutorial' app.js
+          grep -q 'startFirstDescent(true)' app.js
+          ! grep -q 'dungeon-guide-trigger' app.js
+          ! grep -q 'notificationPanel()' app.js
 
   deploy:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
