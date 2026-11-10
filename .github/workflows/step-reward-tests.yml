@@ -8,6 +8,10 @@ on:
       - "supabase/functions/_shared/step-rewards.test.ts"
       - "supabase/functions/_shared/step-date.ts"
       - "supabase/functions/_shared/step-date.test.ts"
+      - "supabase/functions/_shared/step-baseline.ts"
+      - "supabase/functions/_shared/step-baseline.test.ts"
+      - "supabase/functions/_shared/step-catalog.ts"
+      - "supabase/functions/step-reward-sync/index.ts"
       - ".github/workflows/step-reward-tests.yml"
   workflow_dispatch:
 
