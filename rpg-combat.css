@@ -34,6 +34,8 @@
 .rpg-monster-copy p { margin:0 0 6px; color:#a99ab1; font-size:10px; line-height:1.35; }
 .rpg-monster-meta { display:flex; flex-wrap:wrap; gap:7px; color:#c8b9d0; font-size:8px; font-weight:800; letter-spacing:.4px; }
 .rpg-hunt-button,.rpg-gear-row button { flex:none; border:1px solid #a27a4c; border-radius:8px; padding:9px 10px; color:#ffe0a0; background:linear-gradient(135deg,#4a3035,#302137); font-size:9px; font-weight:900; letter-spacing:.6px; }
+.rpg-gear-actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:5px; }
+.rpg-gear-actions button { padding:7px 8px; font-size:8px; }
 .rpg-hunt-button:disabled,.rpg-action-grid button:disabled,.rpg-craft-button:disabled,.rpg-gear-row button:disabled { opacity:.38; cursor:not-allowed; filter:saturate(.5); }
 .rpg-battle-panel { border-color:#9b6e53; background:radial-gradient(circle at 50% 0,#5b3b3b44,transparent 48%),linear-gradient(145deg,#2a1b2d,#17111e); }
 .rpg-battle-heading { align-items:flex-start; }
