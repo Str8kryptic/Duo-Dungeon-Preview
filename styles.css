@@ -984,3 +984,44 @@ body:after{inset:0;opacity:.18;background-image:radial-gradient(1px 1px at 8% 18
 /* iOS Safari zooms the page when a focused input uses text smaller than 16px. Keep the AI composer at the no-auto-zoom threshold without disabling user pinch zoom. */
 .assistant-compose input{font-size:16px!important;line-height:1.25;touch-action:manipulation}
 .assistant-launcher,.assistant-close,.assistant-compose button{touch-action:manipulation}
+
+/* Adventurer's Guild: contract board, progress tracks and reward states */
+.guild-page{gap:14px}
+.guild-hero{position:relative;overflow:hidden;padding:20px 17px;border:1px solid #a47a4d;border-radius:17px;background:radial-gradient(circle at 88% 8%,#e3b76b33,transparent 34%),linear-gradient(145deg,#3b2a43,#211629 58%,#120d18);box-shadow:inset 0 0 0 1px #f1d49a18,0 10px 26px #0005}
+.guild-hero-sigil{float:right;width:52px;height:52px;display:grid;place-items:center;border:1px solid #c69a5c;border-radius:15px;background:#1a1222;color:#ffe0a0;font:30px Georgia,serif;box-shadow:0 0 24px #e0ad5733}
+.guild-hero h1{margin:7px 0;color:#ffe0a0;font:700 clamp(25px,6vw,33px) Georgia,serif}
+.guild-hero>p{max-width:470px;color:#d0bfd8;font-size:10px}
+.guild-hero-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:15px}
+.guild-hero-stats>div{padding:10px 5px;border:1px solid #72577c;border-radius:10px;background:#100b17aa;text-align:center}
+.guild-hero-stats b,.guild-hero-stats small{display:block}
+.guild-hero-stats b{color:#ffe0a0;font:700 19px Georgia,serif}
+.guild-hero-stats small{margin-top:4px;color:#c6b4cf;font-size:7px;font-weight:900;letter-spacing:.55px}
+.guild-board{padding:14px;border:1px solid #765b7d;border-radius:15px;background:linear-gradient(145deg,#2a1e35,#15101b);box-shadow:0 7px 18px #0003}
+.guild-board.weekly{border-color:#8b704e;background:linear-gradient(145deg,#302538,#17111c)}
+.guild-board-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.guild-board-heading h2{margin:4px 0 0;color:#ffe0a0;font:700 18px Georgia,serif}
+.guild-ready-count{flex:none;padding:6px 8px;border:1px solid #73577d;border-radius:20px;background:#17101e;color:#cdb2df;font-size:7px;font-weight:950;letter-spacing:.7px}
+.guild-contract{padding:12px;margin-top:8px;border:1px solid #594365;border-radius:12px;background:linear-gradient(145deg,#201729,#130e19)}
+.guild-contract.is-complete{border-color:#9b8051;box-shadow:inset 0 0 16px #e0ad5710}
+.guild-contract.is-claimed{border-color:#52785e;opacity:.8}
+.guild-contract-top,.guild-contract-progress>div:first-child,.guild-contract-footer{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.guild-contract-type,.guild-contract-status{font-size:7px;font-weight:950;letter-spacing:.7px;color:#bfa7d0}
+.guild-contract-status{color:#d7bd83}
+.guild-contract.is-claimed .guild-contract-status{color:#a9d8b2}
+.guild-contract h3{margin:7px 0 3px;color:#fff0d0;font:700 13px Georgia,serif;letter-spacing:.35px}
+.guild-contract>p{margin:0;color:#c1b0ca;font-size:9px}
+.guild-contract-progress{margin-top:10px}
+.guild-contract-progress>div:first-child{color:#bdaac8;font-size:7px;font-weight:900;letter-spacing:.65px}
+.guild-contract-progress b{color:#f3d49a;font-size:8px}
+.guild-contract-progress .bar{height:6px;margin-top:6px}
+.guild-contract-progress .bar span{background:linear-gradient(90deg,#9b6ac2,#e6bd70)}
+.guild-contract-footer{flex-wrap:wrap;margin-top:10px}
+.guild-contract-footer>span{color:#e7c98e;font-size:7px;font-weight:950;letter-spacing:.3px}
+.guild-contract-footer i{color:#8b7893;font-style:normal}
+.guild-contract-footer button{min-width:92px;padding:8px 10px}
+.guild-contract-footer button:disabled{opacity:.48;cursor:default}
+.guild-notice{padding:13px 15px;border:1px dashed #6d5475;border-radius:12px;background:#17111e}
+.guild-notice b{color:#e6c58c;font-size:8px;letter-spacing:1px}
+.guild-notice p{margin:6px 0 0;color:#bdaec7;font-size:9px;line-height:1.5}
+.home-action-grid>button:last-child{grid-column:1/-1}
+@media(max-width:390px){.guild-board{padding:11px}.guild-contract{padding:10px}.guild-contract-footer>span{font-size:6.5px}.guild-hero{padding:16px 13px}}

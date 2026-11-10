@@ -9,7 +9,8 @@
     "android:sync": "npm run build:web && cap sync android && npm run android:configure",
     "android:open": "cap open android",
     "android:configure": "node scripts/prepare-android-health.mjs",
-    "android:verify": "node scripts/verify-android-health-manifest.mjs"
+    "android:verify": "node scripts/verify-android-health-manifest.mjs",
+    "test:guild": "node scripts/test-guild.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.0.0",
