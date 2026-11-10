@@ -76,3 +76,9 @@
 .dev-sync-history-list article b{color:#fff0d5;font-size:10px}
 .dev-sync-history-list article small,.dev-sync-history>p{margin:4px 0 0;color:#aa9db3;font-size:8px}
 .dev-sync-history-list article strong{color:#f3c66e;font-size:10px;white-space:nowrap}
+
+
+/* Developer-only page refresh beside the dungeon title */
+header .brand{display:inline-flex;align-items:center;white-space:nowrap}
+.dev-page-refresh{display:inline-grid;place-items:center;width:30px;height:30px;margin-left:9px;border:1px solid #80668a;border-radius:9px;background:linear-gradient(145deg,#30203b,#17111e);color:#f3c56b;font-size:20px;line-height:1;cursor:pointer;transition:transform .18s,border-color .18s,background .18s}
+.dev-page-refresh:hover,.dev-page-refresh:focus-visible{transform:rotate(35deg);border-color:#f3c56b;background:#3b2946;outline:none}
