@@ -160,6 +160,7 @@ assert.equal(bossRpg.inventory.gear.filter(id => id === "warden_oath").length, 1
 assert.ok(bossRpg.inventory.materials.warden_seal >= 5, "repeat victories should convert duplicate relic rewards into boss materials");
 
 bossState.descent.depth = 9;
+bossRpg.stamina = bossRpg.maxStamina;
 const finalBossBoard = combat.render(bossState);
 assert.match(finalBossBoard, /The Infernal Tyrant/);
 assert.match(finalBossBoard, /The Abyssal Dragon/);
