@@ -28,5 +28,7 @@ jobs:
         uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
+      - name: Type-check step reward endpoint
+        run: deno check supabase/functions/step-reward-sync/index.ts
       - name: Run step reward tests
         run: deno test --no-check supabase/functions/_shared/
