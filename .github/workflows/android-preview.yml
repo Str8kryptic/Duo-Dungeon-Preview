@@ -41,10 +41,14 @@ jobs:
         run: npm run build:web
       - name: Generate Android project
         run: npx cap add android
+      - name: Restrict Health Connect permissions to steps only
+        run: npm run android:configure
       - name: Build Android debug APK
         run: |
           cd android
           ./gradlew assembleDebug
+      - name: Verify merged Health Connect permissions
+        run: npm run android:verify
       - name: Upload Development APK
         uses: actions/upload-artifact@v4
         with:
