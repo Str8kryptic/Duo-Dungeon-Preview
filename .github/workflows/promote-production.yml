@@ -70,30 +70,46 @@ jobs:
           # Production's Pages workflow, domain configuration, and repository
           # settings are deliberately not copied from Development.
 
-      - name: Create a Production promotion pull request
+      - name: Create or update the single Production promotion pull request
         if: steps.freshness.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
-          RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
           SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
         shell: bash
         run: |
           set -euo pipefail
           cd production
-          branch="promotion/development-${RUN_NUMBER}"
+          # Reuse one stable branch so each verified Development build refreshes
+          # the same review request instead of creating a new PR.
+          branch="promotion/development-latest"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$branch"
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+            git fetch origin "$branch"
+            git checkout -B "$branch" "origin/$branch"
+          else
+            git checkout -b "$branch"
+          fi
           git add game-data.js sync.js styles.css assets 2>/dev/null || git add game-data.js sync.js styles.css
           if git diff --cached --quiet; then
             echo "Development and Production application files already match."
             exit 0
           fi
           git commit -m "Promote verified Development build to Production"
-          git push origin "$branch"
-          gh pr create \
-            --repo Str8kryptic/Duo-Dungeon \
-            --base main \
-            --head "$branch" \
-            --title "Promote shared assets from verified Development build" \
-            --body "Automated proposal containing environment-neutral shared assets only.\n\nDevelopment commit: $SOURCE_SHA\n\nEnvironment-specific files (auth.js, app.js, index.html, setup.html, and developer tools) are deliberately excluded. Review before merging; Production deployment remains a separate, explicit action."
+          git push --force-with-lease origin "$branch"
+          body="Automated proposal containing environment-neutral shared assets only.
+
+          Development commit: $SOURCE_SHA
+
+          Environment-specific files (auth.js, app.js, index.html, setup.html, and developer tools) are deliberately excluded. Review before merging; Production deployment remains a separate, explicit action."
+          existing_pr="$(gh pr list --repo Str8kryptic/Duo-Dungeon --state open --head "$branch" --json number --jq '.[0].number // empty')"
+          if [ -n "$existing_pr" ]; then
+            gh pr edit "$existing_pr" --repo Str8kryptic/Duo-Dungeon \
+              --title "Promote shared assets from verified Development build" \
+              --body "$body"
+            echo "Updated existing Production promotion PR #$existing_pr."
+          else
+            gh pr create --repo Str8kryptic/Duo-Dungeon --base main --head "$branch" \
+              --title "Promote shared assets from verified Development build" \
+              --body "$body"
+          fi
