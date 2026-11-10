@@ -46,6 +46,9 @@ jobs:
           grep -q 'app.js?v=20261110huntprofile1' index.html
           grep -q 'rpg-combat.js?v=20261110rpgcombat1' index.html
           grep -q 'rpg-combat.css?v=20261110huntprofile1' index.html
+          grep -q 'data-title-picker' app.js
+          grep -q 's.earnedTitles=Array.from(new Set(s.earnedTitles))' app.js
+          grep -q 'function collapsibleSection' rpg-combat.js
           grep -q 'data-page="combat"' index.html
           grep -q 'health-connect.js?v=20261110androidhealthconnect1' index.html
           grep -q 'READ_STEPS' scripts/prepare-android-health.mjs
