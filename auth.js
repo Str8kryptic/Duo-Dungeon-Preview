@@ -90,12 +90,24 @@ form.addEventListener("submit",async function(e){
   }else{var login=await client.auth.signInWithPassword({email:email,password:password});if(login.error)throw login.error;await loadAccount(login.data.user)}
  }catch(err){message(err&&err.message?err.message:"Authentication failed. Please try again.")}finally{setBusy(false)}
 });
+var recoveryHandled=false;
+function enterPasswordRecovery(session){
+ if(recoveryHandled||!session||!session.user)return;
+ recoveryHandled=true;user=session.user;mode="recovery";showPasswordRecovery();
+}
 async function boot(){
  try{
   if(!window.supabase||!window.supabase.createClient)throw new Error("The account service did not load. Refresh and try again.");
+  var recoveryUrl=new URLSearchParams(location.search).get("resetPassword")==="1"||new URLSearchParams(location.hash.replace(/^#/,"")).get("type")==="recovery";
   client=window.supabase.createClient(PROJECT_URL,PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:{getItem:function(k){return (staySignedIn?localStorage:sessionStorage).getItem(k)},setItem:function(k,v){(staySignedIn?localStorage:sessionStorage).setItem(k,v)},removeItem:function(k){localStorage.removeItem(k);sessionStorage.removeItem(k)}}}});
+  // Handle recovery links even when the redirect URL flag is missing or the
+  // recovery session is established after the initial page load.
+  client.auth.onAuthStateChange(function(event,session){
+   if(event==="PASSWORD_RECOVERY")enterPasswordRecovery(session);
+  });
   var session=await client.auth.getSession();if(session.error)throw session.error;
-  if(new URLSearchParams(location.search).get("resetPassword")==="1"&&session.data.session){user=session.data.session.user;mode="recovery";showPasswordRecovery();return}
+  if(recoveryHandled)return;
+  if(recoveryUrl&&session.data.session){enterPasswordRecovery(session.data.session);return}
   if(session.data.session){await loadAccount(session.data.session.user)}else{mode="pending";root.classList.remove("hidden")}
  }catch(e){mode="guest";initialSave=null;root.classList.remove("hidden");message("Account service unavailable: "+e.message+". You can still continue as a guest.");resolveReady()}
 }
