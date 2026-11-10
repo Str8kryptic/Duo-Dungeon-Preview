@@ -50,6 +50,8 @@ jobs:
           grep -q 'THE GUILD HALL' guild.js
           grep -q 'data-guild-claim' guild.js
           grep -q 'guildStats.kills++' app.js
+          grep -q 'home-quick-tabs' app.js
+          grep -q 'home-quick-tabs' styles.css
           grep -q 'guildStats.crafts++' app.js
           grep -q 'data-page=\"guild\"' app.js
           grep -q 'rpg-combat.js?v=20261110rpgcombat1' index.html
