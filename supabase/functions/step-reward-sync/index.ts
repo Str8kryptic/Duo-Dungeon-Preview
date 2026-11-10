@@ -134,6 +134,7 @@ Deno.serve(async (req: Request) => {
           deltaSteps: reward.delta,
           rewardDelta: reward.rewardDelta,
           currentRevision: result.current_revision,
+          saveData: reward.save,
           alreadyCurrent: reward.alreadyCurrent || result.already_current,
           coins: reward.coins,
           xp: reward.xp,
