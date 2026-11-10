@@ -264,10 +264,10 @@ try {
   defeat("cave-stalker");
   assert.equal(bountyRpg.bounties.progress["stalker-contract"], 3, "three stalker victories should complete the first contract");
   const xpBeforeClaim = bountyRpg.xp;
-  const herbsBeforeClaim = bountyRpg.inventory.materials.bitter_herb || 0;
+  const levelBeforeClaim = bountyRpg.level;
   combat.handleAction(bountyState, "claim-bounty:stalker-contract", hooks);
   assert.ok(bountyRpg.bounties.claimed.includes("stalker-contract"));
-  assert.ok(bountyRpg.xp > xpBeforeClaim, "claiming a bounty should award combat XP");
+  assert.ok(bountyRpg.xp > xpBeforeClaim || bountyRpg.level > levelBeforeClaim, "claiming a bounty should award combat XP, including XP converted into a level-up");
   assert.equal((bountyRpg.inventory.materials.cave_chitin || 0) >= 3, true, "claim should award listed material supplies");
   const claimedHerbs = bountyRpg.inventory.materials.bitter_herb || 0;
   combat.handleAction(bountyState, "claim-bounty:stalker-contract", hooks);
