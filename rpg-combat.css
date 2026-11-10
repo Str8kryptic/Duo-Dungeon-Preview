@@ -1,0 +1,101 @@
+/* Separate RPG combat layer. Intentionally scoped so Descent styling remains untouched. */
+.main-nav { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.rpg-page { display:flex; flex-direction:column; gap:14px; padding:2px 0 110px; color:var(--cream,#f4e5c8); }
+.rpg-hero { position:relative; display:flex; align-items:center; justify-content:space-between; overflow:hidden; min-height:150px; padding:22px; border:1px solid #80618a; border-radius:18px; background:radial-gradient(circle at 85% 15%,#76503d66,transparent 38%),linear-gradient(135deg,#2b1d34,#17111e 72%); box-shadow:inset 0 0 0 1px #f4d79a0c; }
+.rpg-hero-copy { position:relative; z-index:1; max-width:540px; }
+.rpg-eyebrow { color:#d8b477; font-size:9px; font-weight:900; letter-spacing:1.35px; text-transform:uppercase; }
+.rpg-hero h1 { margin:8px 0 6px; color:#ffe0a0; font:700 clamp(22px,5vw,31px)/1.05 Georgia,serif; letter-spacing:.3px; }
+.rpg-hero p { max-width:440px; margin:0; color:#c8b9d0; font-size:12px; line-height:1.5; }
+.rpg-hero-tags { display:flex; flex-wrap:wrap; gap:7px; margin-top:13px; }
+.rpg-hero-tags span,.rpg-count { padding:5px 8px; border:1px solid #755c78; border-radius:7px; color:#e4c68c; font-size:8px; font-weight:900; letter-spacing:.8px; }
+.rpg-hero-sigil { flex:none; display:grid; place-items:center; width:76px; height:76px; margin-left:12px; border:1px solid #c69a5d88; border-radius:50%; color:#e6b76c; background:#211725aa; font-size:37px; box-shadow:0 0 32px #d89d4b22,inset 0 0 18px #d89d4b12; }
+.rpg-resource-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; }
+.rpg-resource-grid article { min-width:0; padding:13px; border:1px solid #604b69; border-radius:12px; background:linear-gradient(145deg,#261b30,#17111e); }
+.rpg-resource-grid small { display:block; color:#b6a4bf; font-size:8px; font-weight:900; letter-spacing:1px; }
+.rpg-resource-grid strong { display:block; margin:6px 0 8px; color:#ffe0a0; font-size:20px; font-variant-numeric:tabular-nums; }
+.rpg-resource-grid strong i { color:#a99ab1; font-size:10px; font-style:normal; }
+.rpg-resource-grid article>span { display:block; margin-top:7px; color:#a99ab1; font-size:9px; line-height:1.35; }
+.rpg-meter { height:6px; overflow:hidden; border-radius:8px; background:#0e0a13; box-shadow:inset 0 0 0 1px #ffffff0c; }
+.rpg-meter i { display:block; height:100%; border-radius:8px; transition:width .25s ease; background:linear-gradient(90deg,#98704b,#e4c17d); }
+.rpg-meter.rpg-hp i { background:linear-gradient(90deg,#8d3e4c,#e16e70); }
+.rpg-meter.rpg-enemy-hp i { background:linear-gradient(90deg,#7b3440,#e45b56); }
+.rpg-meter.rpg-stamina i { background:linear-gradient(90deg,#3f8c75,#8fd2a4); }
+.rpg-meter.rpg-xp i { background:linear-gradient(90deg,#6555a2,#b5a0ed); }
+.rpg-subpanel,.rpg-battle-panel { min-width:0; padding:16px; border:1px solid #604b69; border-radius:14px; background:linear-gradient(145deg,#241a2d,#17111e); }
+.rpg-section-head,.rpg-battle-heading { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.rpg-section-head h2,.rpg-section-head h3,.rpg-battle-heading h2 { margin:4px 0 0; color:#f7dfb1; font:700 19px/1.15 Georgia,serif; }
+.rpg-section-hint { margin:8px 0 13px; color:#b9aabe; font-size:11px; line-height:1.5; }
+.rpg-monster-list { display:flex; flex-direction:column; gap:9px; }
+.rpg-monster-card { display:flex; align-items:center; gap:11px; padding:11px; border:1px solid #66516c; border-radius:11px; background:#110d18a8; }
+.rpg-monster-card.is-locked { opacity:.55; border-style:dashed; }
+.rpg-monster-symbol { flex:none; display:grid; place-items:center; width:43px; height:43px; border-radius:10px; border:1px solid #866a76; background:linear-gradient(145deg,#443044,#211724); color:#e8bd83; font-size:22px; }
+.rpg-monster-copy { flex:1; min-width:0; }
+.rpg-monster-copy h3 { margin:3px 0; color:#f4e1c0; font:700 15px Georgia,serif; }
+.rpg-monster-copy p { margin:0 0 6px; color:#a99ab1; font-size:10px; line-height:1.35; }
+.rpg-monster-meta { display:flex; flex-wrap:wrap; gap:7px; color:#c8b9d0; font-size:8px; font-weight:800; letter-spacing:.4px; }
+.rpg-hunt-button,.rpg-gear-row button { flex:none; border:1px solid #a27a4c; border-radius:8px; padding:9px 10px; color:#ffe0a0; background:linear-gradient(135deg,#4a3035,#302137); font-size:9px; font-weight:900; letter-spacing:.6px; }
+.rpg-hunt-button:disabled,.rpg-action-grid button:disabled,.rpg-craft-button:disabled,.rpg-gear-row button:disabled { opacity:.38; cursor:not-allowed; filter:saturate(.5); }
+.rpg-battle-panel { border-color:#9b6e53; background:radial-gradient(circle at 50% 0,#5b3b3b44,transparent 48%),linear-gradient(145deg,#2a1b2d,#17111e); }
+.rpg-battle-heading { align-items:flex-start; }
+.rpg-battle-heading h2 { font-size:23px; }
+.rpg-battle-heading p { max-width:420px; margin:6px 0 0; color:#bbaec1; font-size:10px; line-height:1.45; }
+.rpg-live-mark { flex:none; padding:5px 8px; border:1px solid #a64e55; border-radius:6px; color:#f09b94; background:#54252d55; font-size:8px; font-weight:900; letter-spacing:1px; }
+.rpg-combatants { display:grid; grid-template-columns:1fr 34px 1fr; align-items:center; gap:8px; margin:17px 0 13px; }
+.rpg-combatant { min-width:0; padding:12px; border:1px solid #68536d; border-radius:11px; background:#130e19bb; }
+.rpg-combatant-icon { display:block; margin-bottom:7px; color:#e7c184; font-size:22px; }
+.rpg-combatant small { display:block; color:#ad9db6; font-size:8px; font-weight:900; letter-spacing:.9px; }
+.rpg-combatant>b { display:block; margin:3px 0 8px; color:#f4dfb7; font-size:12px; }
+.rpg-combatant>strong { display:block; margin:6px 0; color:#f5e5ce; font-size:12px; font-variant-numeric:tabular-nums; }
+.rpg-combatant>small:last-child { margin-top:7px; color:#b9aabe; font-size:8px; }
+.rpg-versus { color:#b99b70; font:700 12px Georgia,serif; text-align:center; }
+.rpg-action-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; }
+.rpg-action-grid button,.rpg-action-primary { min-width:0; border:1px solid #80657f; border-radius:9px; padding:11px 6px; color:#f0dfc5; background:linear-gradient(145deg,#39293e,#241a2d); font-size:9px; font-weight:900; letter-spacing:.4px; }
+.rpg-action-grid button small { display:block; margin-top:4px; color:#b9aabe; font-size:7px; }
+.rpg-action-grid .rpg-action-primary,.rpg-action-primary { border-color:#b28a54; color:#24151a; background:linear-gradient(110deg,#bd8050,#e7c27a); }
+.rpg-battle-footer { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:12px; color:#a99ab1; font-size:9px; }
+.rpg-text-button { border:0; padding:5px 0; color:#e4a29a; background:none; font-size:9px; font-weight:900; letter-spacing:.8px; }
+.rpg-log { margin-top:13px; padding:11px; border:1px solid #49384f; border-radius:9px; background:#100c15aa; }
+.rpg-log p { margin:6px 0 0; color:#c9bccc; font-size:9px; line-height:1.4; }
+.rpg-two-column { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.rpg-recipe-row { display:flex; flex-wrap:wrap; gap:7px; margin:11px 0; }
+.rpg-recipe-row span { padding:6px 8px; border:1px solid #5d4963; border-radius:7px; color:#ddc9a8; font-size:9px; }
+.rpg-craft-button { width:100%; margin-top:3px; padding:11px; font-size:9px; letter-spacing:.6px; }
+.rpg-equipped-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0 8px; }
+.rpg-equipped-grid>div { display:flex; flex-direction:column; gap:5px; padding:10px; border:1px solid #55415d; border-radius:9px; background:#130e19aa; }
+.rpg-equipped-grid small { color:#b39fb9; font-size:8px; font-weight:900; letter-spacing:.8px; }
+.rpg-equipped-grid b { color:#f3dfbd; font-size:10px; }
+.rpg-stat-line { display:flex; gap:16px; color:#b9aabe; font-size:9px; font-weight:800; }
+.rpg-stat-line b { color:#f3d7a5; }
+.rpg-divider { height:1px; margin:13px 0; background:#55415d; }
+.rpg-gear-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 0; border-bottom:1px solid #443449; }
+.rpg-gear-row>div { display:flex; flex-direction:column; gap:3px; min-width:0; }
+.rpg-gear-row small { color:#c9a76e; font-size:8px; font-weight:900; text-transform:uppercase; }
+.rpg-gear-row b { color:#f0dfc5; font-size:11px; }
+.rpg-gear-row span { color:#b9aabe; font-size:9px; }
+.rpg-material-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; margin-top:10px; }
+.rpg-material-chip { display:flex; flex-direction:column; gap:3px; padding:9px; border:1px solid #55415d; border-radius:8px; background:#130e19aa; }
+.rpg-material-chip b { color:#e8c889; font-size:15px; }
+.rpg-material-chip span { color:#b9aabe; font-size:8px; line-height:1.3; }
+.rpg-empty-copy,.rpg-footnote { color:#a99ab1; font-size:10px; line-height:1.5; }
+.rpg-footnote { margin:0; text-align:center; }
+@media(max-width:560px) {
+  .rpg-page { gap:10px; padding-bottom:104px; }
+  .rpg-hero { min-height:132px; padding:16px; }
+  .rpg-hero-sigil { width:54px; height:54px; font-size:27px; }
+  .rpg-resource-grid { gap:6px; }
+  .rpg-resource-grid article { padding:9px; }
+  .rpg-resource-grid strong { font-size:16px; }
+  .rpg-resource-grid article>span { font-size:8px; }
+  .rpg-monster-card { flex-wrap:wrap; gap:8px; }
+  .rpg-monster-copy { flex:1 1 calc(100% - 54px); }
+  .rpg-hunt-button { width:100%; }
+  .rpg-action-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .rpg-two-column { grid-template-columns:1fr; }
+  .rpg-combatants { grid-template-columns:1fr 24px 1fr; gap:5px; }
+  .rpg-combatant { padding:9px; }
+  .rpg-combatant>strong { font-size:10px; }
+  .rpg-battle-heading { flex-direction:column; }
+  .rpg-material-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .main-nav button { font-size:15px; }
+  .main-nav small { font-size:7px; letter-spacing:.35px; }
+}
