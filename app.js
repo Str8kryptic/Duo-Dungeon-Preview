@@ -155,23 +155,14 @@ function stepSyncDialog(total,date){
  dlg.querySelector("[data-step-confirm]").addEventListener("click",async function(){
   var btn=this;btn.disabled=true;btn.textContent="CONTACTING THE LEDGER…";
   var result=await applyStepTotal(total,date);
-  if(!result){btn.disabled=false;btn.textContent="CONFIRM & SYNC TO DUNGEON";return}
-  var rewards=result.items.map(function(x){return '<li>'+esc(x.name)+' <b>+'+x.count+'</b></li>'}).join("")+
-   result.relics.map(function(x){return '<li>Relic: '+esc(x)+' <b>NEW</b></li>'}).join("");
-  dlg.querySelector("[data-sync-eyebrow]").textContent="DUNGEON LEDGER · SYNC COMPLETE";
-  dlg.querySelector("[data-sync-title]").textContent=result.alreadyCurrent?"ALREADY COUNTED":"REWARDS PROCESSED";
-  dlg.querySelector("[data-total-label]").textContent="HEALTH TOTAL RECORDED";
-  dlg.querySelector("[data-sync-quip]").innerHTML="“"+(result.alreadyCurrent?"Already counted. The dungeon's accounting department remains undefeated.":quip)+"”<small>— THE SYSTEM</small>";
-  dlg.querySelector("[data-sync-note]").textContent=result.alreadyCurrent?"This reading was already processed. No duplicate rewards were issued.":"Your steps have been credited. Here's what the dungeon awarded.";
-  dlg.querySelector("[data-reward-delta]").textContent=result.delta.toLocaleString();
-  dlg.querySelector("[data-reward-banked]").textContent=result.bankedAdded.toLocaleString();
-  dlg.querySelector("[data-reward-xp]").textContent="+"+result.xp.toLocaleString()+" XP";
-  dlg.querySelector("[data-reward-coins]").textContent="+"+result.coins.toLocaleString()+" ◈";
-  dlg.querySelector("[data-reward-items]").innerHTML='<small>ITEMS &amp; MATERIALS EARNED</small>'+
-   (rewards?'<ul>'+rewards+'</ul>':'<p>'+(result.alreadyCurrent?"No new steps to reward. The dungeon refuses duplicate invoices.":"No bonus materials this time. Your legs did the work; the loot department was on break.")+'</p>');
-  var actions=dlg.querySelector("[data-sync-actions]");
-  actions.innerHTML='<button class="action primary" type="button" data-step-return>BACK TO THE DUNGEON</button>';
-  actions.querySelector("[data-step-return]").addEventListener("click",close);
+  if(!result){
+   btn.disabled=false;btn.textContent="RETRY SYNC";
+   dlg.querySelector("[data-sync-eyebrow]").textContent="DUNGEON LEDGER · ATTENTION REQUIRED";
+   dlg.querySelector("[data-sync-title]").textContent="SYNC FAILED";
+   dlg.querySelector("[data-sync-note]").textContent="The dungeon could not record this reading. Your rewards were not applied. Check your connection and try again.";
+   return;
+  }
+  close();
  });
  if(typeof dlg.showModal==="function")dlg.showModal();else dlg.setAttribute("open","");
 }
