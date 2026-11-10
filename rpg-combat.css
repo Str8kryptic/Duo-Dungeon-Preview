@@ -148,3 +148,23 @@
   .main-nav button { font-size:15px; }
   .main-nav small { font-size:7px; letter-spacing:.35px; }
 }
+.rpg-bounty-board { padding:14px; border:1px solid #8a7045; border-radius:13px; background:linear-gradient(145deg,#30251b,#17111b); }
+.rpg-bounty-list { display:flex; flex-direction:column; gap:9px; }
+.rpg-bounty-card { display:flex; align-items:center; gap:12px; padding:11px; border:1px solid #725b42; border-radius:10px; background:linear-gradient(120deg,#35291eaa,#19131d); }
+.rpg-bounty-card.is-ready { border-color:#b58d4e; box-shadow:inset 0 0 0 1px #c99c4b22; }
+.rpg-bounty-card.is-claimed { opacity:.65; border-color:#506d5c; }
+.rpg-bounty-copy { flex:1; min-width:0; }
+.rpg-bounty-copy h3 { margin:3px 0; color:#f2d9a7; font:700 15px Georgia,serif; }
+.rpg-bounty-copy p { margin:0 0 7px; color:#c2b3a3; font-size:10px; line-height:1.4; }
+.rpg-bounty-copy>small { display:block; margin-top:7px; color:#d8b77b; font-size:8px; line-height:1.4; }
+.rpg-bounty-progress { display:flex; align-items:center; gap:8px; color:#d8c4a5; font-size:8px; font-weight:900; letter-spacing:.5px; }
+.rpg-bounty-progress .rpg-meter { flex:1; min-width:55px; }
+.rpg-meter.rpg-bounty-meter i { background:linear-gradient(90deg,#9b713e,#e5c27d); }
+.rpg-bounty-card.is-ready .rpg-meter.rpg-bounty-meter i { background:linear-gradient(90deg,#4b9068,#9bd0a8); }
+.rpg-bounty-button { flex:none; min-width:112px; border-color:#987344; color:#f6dfb4; background:linear-gradient(135deg,#5a4029,#34241e); }
+.rpg-bounty-button:disabled { opacity:.52; }
+@media(max-width:560px) {
+  .rpg-bounty-card { flex-wrap:wrap; }
+  .rpg-bounty-copy { flex:1 1 100%; }
+  .rpg-bounty-button { width:100%; }
+}
