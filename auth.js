@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 var PROJECT_URL="https://xuxwwpfeenaaxzfspiiq.supabase.co",PUBLISHABLE_KEY="sb_publishable_h_Dw5OeqfUQ856jYriSMRg_iFg-_pzS";
-var SAVE_KEY="duo-dungeon-save-v2",CLAIM_KEY="duo-dungeon-claim-guest",client=null,user=null,mode="pending",initialSave=null,crawlerNumber=null,saveRevision=null,persistQueue=Promise.resolve(),resolveReady,staySignedIn=localStorage.getItem("duo-dungeon-stay-signed-in")!=="false";
+var SAVE_KEY="duo-dungeon-save-v2",CLAIM_KEY="duo-dungeon-claim-guest",client=null,user=null,mode="pending",initialSave=null,crawlerNumber=null,saveRevision=null,saveBlocked=false,persistQueue=Promise.resolve(),resolveReady,staySignedIn=localStorage.getItem("duo-dungeon-stay-signed-in")!=="false";
 var ready=new Promise(function(resolve){resolveReady=resolve});
 var root=document.createElement("div");root.className="auth-overlay";root.id="auth-overlay";
 root.innerHTML='<section class="auth-card"><h1 class="auth-title">DUO DUNGEON</h1><p class="auth-sub">YOUR NEXT QUESTIONABLE DECISION AWAITS</p><div class="auth-buttons"><button type="button" data-mode="signup" class="active">CREATE ACCOUNT</button><button type="button" data-mode="login">LOG IN</button></div><form id="auth-form"><label for="auth-email">EMAIL ADDRESS</label><input id="auth-email" type="email" autocomplete="email" required placeholder="crawler@example.com"><label for="auth-password">PASSWORD</label><input id="auth-password" type="password" autocomplete="new-password" minlength="12" required placeholder="At least 12 characters"><label class="stay-label"><input id="stay-signed-in" type="checkbox" checked> <span><b>Stay signed in on this device</b><small>Uncheck on a shared or public device.</small></span></label><button class="auth-wide primary" id="auth-submit" type="submit">CREATE ACCOUNT</button></form><button type="button" class="auth-forgot" id="auth-forgot" style="display:none">FORGOT PASSWORD?</button><p class="auth-message" id="auth-message">Create an account to protect your crawler, or enter as a guest.</p><div class="auth-divider">OR</div><button type="button" class="auth-wide" id="guest-button">CONTINUE AS GUEST</button><button type="button" class="auth-wide" id="auth-back" style="display:none">BACK TO GAME</button><button type="button" class="auth-wide" id="auth-signout" style="display:none">SIGN OUT</button><button type="button" class="auth-wide" id="auth-resend" style="display:none" disabled>RESEND CONFIRMATION</button><p class="auth-small">Guest progress stays on this device until you create an account.</p></section>';
@@ -18,10 +18,10 @@ function readLegacy(){try{var x=JSON.parse(localStorage.getItem("duo-dungeon-sav
 function migrateLegacy(old){if(!old)return null;var data=window.DUO_DATA||{},folds=Math.max(0,Number(old.folds)||0),earned=(data.achievements||[]).filter(function(x){return folds>=Number(x.at||Infinity)}),lifeCoins=earned.reduce(function(n,x){return n+Number(x.coins||0)},0),lifeXP=earned.reduce(function(n,x){return n+Number(x.xp||0)},0),inventory=Array.isArray(old.inventory)?old.inventory:[],gear=old.equipped&&typeof old.equipped==="object"?old.equipped:{},materials=old.materials&&typeof old.materials==="object"?old.materials:{};return {name:String(old.playerName||old.name||"").slice(0,20),number:Number(old.crawlerNumber||old.number)||100000+Math.floor(Math.random()*900000),coins:Math.max(0,folds*2+lifeCoins+Number(old.bankedDailyCoins||0)+Number(old.bonusCoins||0)-Number(old.spentCoins||0)),xp:Math.max(0,folds*10+lifeXP+Number(old.bankedDailyXP||0)+Number(old.bonusXP||0)),dust:Number(materials.hingeDust||0),bag:inventory.map(function(x){return typeof x==="string"?x:x&&x.id}).filter(Boolean),gear:{weapon:gear.weapon||null,armor:gear.armor||null,companion:gear.companion||null,title:gear.title||null},materials:{hingeDust:Number(materials.hingeDust||0),mimicShards:Number(materials.mimicShards||0),dragonScales:Number(materials.dragonScales||0),herbs:Number(materials.herbs||0)},relics:Object.keys(old.relics||{}).filter(function(k){return !!old.relics[k]}),upgrades:old.upgrades||{},activePotions:Array.isArray(old.activePotions)?old.activePotions:[],companionXP:Number(old.companionXP||0),title:String(gear.title||""),stepsToday:0,healthStepsToday:0,stepDate:"",stepLifetime:0,legacyArchive:{version:1,folds:folds,todayFolds:Number(old.todayFolds||0),dayKey:String(old.dayKey||""),earned:Array.isArray(old.earned)?old.earned:[],dailyClaimed:Array.isArray(old.dailyClaimed)?old.dailyClaimed:[],fullSave:old}}}
 function fresh(){return {name:"",number:100000+Math.floor(Math.random()*900000),coins:250,dust:0,xp:0,bag:[],gear:{}}}
 async function persist(save){
- if(!user||!client)return;
+ if(!user||!client||saveBlocked)return;
  var payload=JSON.parse(JSON.stringify(save));
  persistQueue=persistQueue.then(async function(){
-  if(!user||!client)return;
+  if(!user||!client||saveBlocked)return;
   var now=new Date().toISOString(),result;
   if(saveRevision===null){
    result=await client.from("player_saves").insert({user_id:user.id,save_data:payload,revision:1,updated_at:now}).select("revision").maybeSingle();
@@ -31,6 +31,7 @@ async function persist(save){
    result=await client.from("player_saves").update({save_data:payload,revision:expected+1,updated_at:now}).eq("user_id",user.id).eq("revision",expected).select("revision").maybeSingle();
    if(!result.error&&result.data)saveRevision=Number(result.data.revision);
    else if(!result.error&&!result.data){
+    saveBlocked=true;
     message("Save conflict detected. Your newer server progress was protected; reload the game to continue.");
     console.warn("Duo Dungeon save revision conflict; stale write was blocked.");
     return;
@@ -47,10 +48,10 @@ async function loadAccount(u,afterSignup){
  if(p.error)throw p.error;crawlerNumber=p.data.crawler_number;
  var r=await client.from("player_saves").select("save_data,revision").eq("user_id",u.id).maybeSingle();
  if(r.error)throw r.error;
- if(r.data&&r.data.save_data){initialSave=r.data.save_data;saveRevision=Number(r.data.revision||0);localStorage.removeItem(CLAIM_KEY)}
+ if(r.data&&r.data.save_data){initialSave=r.data.save_data;saveRevision=Number(r.data.revision||0);saveBlocked=false;localStorage.removeItem(CLAIM_KEY)}
  else{
   var claim=localStorage.getItem(CLAIM_KEY)==="1",guestSave=claim?readLocal():null,legacySave=!guestSave?migrateLegacy(readLegacy()):null;
-  initialSave=guestSave||legacySave||fresh();saveRevision=null;
+  initialSave=guestSave||legacySave||fresh();saveRevision=null;saveBlocked=false;
   if(guestSave&&guestSave.number){
    var up=await client.from("player_profiles").update({crawler_number:guestSave.number,display_name:String(guestSave.name||"NEW CRAWLER").slice(0,20),updated_at:new Date().toISOString()}).eq("id",u.id).select("crawler_number").maybeSingle();
    if(up.error){if(up.error.code==="23505")throw new Error("That crawler name or number is already in use. Choose a different identity.");throw up.error}if(up.data)crawlerNumber=up.data.crawler_number;
