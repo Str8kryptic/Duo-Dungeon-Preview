@@ -273,7 +273,7 @@ try {
   combat.handleAction(bountyState, "claim-bounty:stalker-contract", hooks);
   assert.equal(bountyRpg.inventory.materials.bitter_herb || 0, claimedHerbs, "daily bounty cannot be claimed twice");
 
-  bountyState.descent.depth = 3;
+  bountyState.descent.depth = 6;
   defeat("crypt-reaver");
   defeat("ash-knight");
   assert.equal(bountyRpg.bounties.progress["elite-contract"], 2, "elite hunts should progress the elite contract");
