@@ -28,6 +28,12 @@
     { id: "void-archive", name: "The Void Archive", depth: 9, key: "void_key", bossId: "void-archive-keeper", stamina: 48, reward: "Starfall Relics", description: "A library outside time. The books are bound in things that once had names." }
   ];
 
+  var bountyCatalog = [
+    { id: "stalker-contract", title: "Pest Control", target: "stalker", goal: 3, description: "Put three Cave Stalkers out of your misery.", xp: 85, rewards: { cave_chitin: 3, bitter_herb: 2 } },
+    { id: "elite-contract", title: "Problem Solvers", target: "elite", goal: 2, description: "Defeat two elite monsters anywhere in the dungeon.", xp: 180, rewards: { infernal_hide: 2, cursed_essence: 2 } },
+    { id: "boss-contract", title: "Head of the Problem", target: "boss", goal: 1, description: "Defeat one dungeon boss or secret-chamber guardian.", xp: 300, rewards: { warden_seal: 2, fire_core: 2 } }
+  ];
+
   var gearCatalog = [
     { id: "gravemantle_blade", name: "Gravemantle Blade", slot: "weapon", attack: 17, defense: 0, rarity: "Legendary", depth: 3, bossOnly: true, desc: "A vault relic etched with the names of forgotten kings." },
     { id: "gravemantle_guard", name: "Gravemantle Guard", slot: "armor", attack: 0, defense: 16, rarity: "Legendary", depth: 3, bossOnly: true, desc: "Stone-forged armor that remembers every blow it has endured." },
@@ -101,6 +107,11 @@
     return Math.max(1, Number(state && state.descent && state.descent.depth) || 1);
   }
 
+  function localDayKey() {
+    var now = new Date();
+    return now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
+  }
+
   function ensure(state) {
     if (!state || typeof state !== "object") return null;
     var r = state.rpgCombat;
@@ -130,6 +141,13 @@
     r.chambers.discovered = Array.isArray(r.chambers.discovered) ? r.chambers.discovered.filter(function (id) { return chambers.some(function (room) { return room.id === id; }); }) : [];
     r.chambers.cleared = r.chambers.cleared && typeof r.chambers.cleared === "object" ? r.chambers.cleared : {};
     chambers.forEach(function (room) { r.chambers.cleared[room.id] = Math.max(0, Math.floor(Number(r.chambers.cleared[room.id]) || 0)); });
+    var today = localDayKey();
+    if (!r.bounties || typeof r.bounties !== "object" || r.bounties.day !== today) {
+      r.bounties = { day: today, progress: {}, claimed: [] };
+    }
+    r.bounties.progress = r.bounties.progress && typeof r.bounties.progress === "object" ? r.bounties.progress : {};
+    r.bounties.claimed = Array.isArray(r.bounties.claimed) ? r.bounties.claimed.filter(function (id) { return bountyCatalog.some(function (bounty) { return bounty.id === id; }); }) : [];
+    bountyCatalog.forEach(function (bounty) { r.bounties.progress[bounty.id] = Math.max(0, Math.floor(Number(r.bounties.progress[bounty.id]) || 0)); });
     r.log = Array.isArray(r.log) ? r.log.slice(-8) : [];
     r.battle = r.battle && typeof r.battle === "object" ? r.battle : null;
     ["weapon", "armor"].forEach(function (slot) {
@@ -228,11 +246,37 @@
     }
   }
 
+  function recordBountyProgress(r, monster) {
+    bountyCatalog.forEach(function (bounty) {
+      var matches = bounty.target === "stalker" ? monster.id === "cave-stalker" :
+        bounty.target === "elite" ? !!monster.elite :
+        bounty.target === "boss" ? !!monster.boss : false;
+      if (matches) r.bounties.progress[bounty.id] = Math.min(bounty.goal, (Number(r.bounties.progress[bounty.id]) || 0) + 1);
+    });
+  }
+
+  function claimBounty(r, bountyId, hooks) {
+    var bounty = bountyCatalog.find(function (item) { return item.id === bountyId; });
+    if (!bounty) { notify(hooks, "That contract is not on today's board."); return; }
+    if (r.bounties.claimed.indexOf(bounty.id) >= 0) { notify(hooks, "That contract has already been claimed today."); return; }
+    if ((Number(r.bounties.progress[bounty.id]) || 0) < bounty.goal) { notify(hooks, "Contract incomplete. Finish the objective before claiming its reward."); return; }
+    Object.keys(bounty.rewards).forEach(function (materialId) {
+      r.inventory.materials[materialId] = (Number(r.inventory.materials[materialId]) || 0) + bounty.rewards[materialId];
+    });
+    r.bounties.claimed.push(bounty.id);
+    r.xp += bounty.xp;
+    log(r, "BOUNTY CLAIMED: " + bounty.title + ". +" + bounty.xp + " XP and supply rewards.");
+    levelUp(r, hooks);
+    notify(hooks, bounty.title + " claimed. +" + bounty.xp + " combat XP.");
+    refresh(hooks);
+  }
+
   function winBattle(state, r, hooks) {
     var battle = r.battle;
     var monster = monsterById(battle && battle.monsterId);
     if (!monster) { r.battle = null; return; }
     r.kills[monster.id] = (Number(r.kills[monster.id]) || 0) + 1;
+    recordBountyProgress(r, monster);
     r.xp += monster.xp;
     var drops = awardDrops(r, monster);
     if (monster.chamberId) {
@@ -432,6 +476,7 @@
     if (!r || !action) return;
     if (action.indexOf("hunt:") === 0) { startBattle(state, action.slice(5), hooks); return; }
     if (action.indexOf("chamber:") === 0) { enterChamber(state, action.slice(8), hooks); return; }
+    if (action.indexOf("claim-bounty:") === 0) { claimBounty(r, action.slice(13), hooks); return; }
     if (action.indexOf("forge:") === 0) {
       var forgeRecipe = forgeRecipes.find(function (recipe) { return recipe.gear === action.slice(6); });
       if (!forgeRecipe) { notify(hooks, "That forge blueprint does not exist."); return; }
@@ -637,6 +682,17 @@
     }).join("") + '</div></section>';
   }
 
+  function renderBounties(r) {
+    var claimed = r.bounties.claimed;
+    var completed = bountyCatalog.filter(function (bounty) { return (Number(r.bounties.progress[bounty.id]) || 0) >= bounty.goal; }).length;
+    return '<section class="rpg-bounty-board"><div class="rpg-section-head"><div><div class="rpg-eyebrow">DAILY CONTRACTS · RESETS AT LOCAL MIDNIGHT</div><h2>Bounty Board</h2></div><span class="rpg-count">' + completed + ' / ' + bountyCatalog.length + ' COMPLETE</span></div><p class="rpg-section-hint">The guild has work. You have questionable judgment. Progress is earned from victories, and each contract can be claimed once per day.</p><div class="rpg-bounty-list">' + bountyCatalog.map(function (bounty) {
+      var progress = Math.min(bounty.goal, Number(r.bounties.progress[bounty.id]) || 0);
+      var isClaimed = claimed.indexOf(bounty.id) >= 0;
+      var ready = progress >= bounty.goal && !isClaimed;
+      return '<article class="rpg-bounty-card ' + (isClaimed ? "is-claimed" : ready ? "is-ready" : "") + '"><div class="rpg-bounty-copy"><div class="rpg-eyebrow">' + (isClaimed ? "REWARD CLAIMED" : ready ? "OBJECTIVE COMPLETE" : "GUILD CONTRACT") + '</div><h3>' + esc(bounty.title) + '</h3><p>' + esc(bounty.description) + '</p><div class="rpg-bounty-progress"><span>' + progress + ' / ' + bounty.goal + ' VICTORIES</span>' + bar(progress, bounty.goal, "rpg-bounty-meter") + '</div><small>REWARD · ' + bounty.xp + ' XP + ' + Object.keys(bounty.rewards).map(function (id) { return bounty.rewards[id] + " " + (materialNames[id] || id); }).join(" · ") + '</small></div><button class="rpg-hunt-button rpg-bounty-button" data-rpg-action="claim-bounty:' + bounty.id + '" ' + (!ready ? "disabled" : "") + '>' + (isClaimed ? "CLAIMED" : ready ? "CLAIM REWARD" : "IN PROGRESS") + '</button></article>';
+    }).join("") + '</div></section>';
+  }
+
   function renderBosses(state, r) {
     var depth = depthOf(state);
     return '<section class="rpg-boss-board"><div class="rpg-section-head"><div><div class="rpg-eyebrow">ELITE HUNTS · HIGH RISK / HIGH REWARD</div><h2>Dungeon Bosses</h2></div><span class="rpg-count">3 ENCOUNTERS</span></div><p class="rpg-section-hint">Bosses have multiple phases, telegraphed heavy attacks, guaranteed trophy materials, and a unique relic on your first victory.</p><div class="rpg-boss-list">' + bosses.map(function (boss) {
@@ -699,7 +755,7 @@
     var potionReady = materialCount(r, "bitter_herb") >= 2 && materialCount(r, "venom_gland") >= 1;
     return '<div class="rpg-page"><section class="rpg-hero"><div class="rpg-hero-copy"><div class="rpg-eyebrow">DUO DUNGEON · COMBAT DIVISION</div><h1>THE HUNTING GROUNDS</h1><p>Descent reveals the prey. Your preparation decides whether you become the meal.</p><div class="rpg-hero-tags"><span>FLOOR ' + depth + ' REACHED</span><span>COMBAT LEVEL ' + r.level + '</span></div></div><div class="rpg-hero-sigil">⚔</div></section>' +
       '<section class="rpg-resource-grid"><article><small>STAMINA</small><strong>' + r.stamina + '<i> / ' + r.maxStamina + '</i></strong>' + bar(r.stamina, r.maxStamina, "rpg-stamina") + '<span>Regenerates 1 every 5 minutes.</span></article><article><small>HEALTH</small><strong>' + r.hp + '<i> / ' + r.maxHp + '</i></strong>' + bar(r.hp, r.maxHp, "rpg-hp") + '<span>Healing Draughts restore up to 45 HP.</span></article><article><small>COMBAT EXPERIENCE</small><strong>' + r.xp + '<i> / ' + r.xpNext + ' XP</i></strong>' + bar(r.xp, r.xpNext, "rpg-xp") + '<span>Level-ups improve your combat stats.</span></article></section>' +
-      (r.battle ? renderBattle(r) : '<section class="rpg-subpanel rpg-hunt-board"><div class="rpg-section-head"><div><div class="rpg-eyebrow">AVAILABLE TARGETS</div><h2>Hunt Board</h2></div><span class="rpg-count">' + monsters.filter(function (m) { return depth >= m.depth; }).length + ' / ' + monsters.length + ' CREATURES</span></div><p class="rpg-section-hint">Hunt ordinary monsters for crafting materials, or challenge a boss for a multi-phase fight and unique relic.</p><div class="rpg-monster-list">' + renderMonsters(state, r) + '</div></section>' + renderBosses(state, r)) +
+      renderBounties(r) + (r.battle ? renderBattle(r) : '<section class="rpg-subpanel rpg-hunt-board"><div class="rpg-section-head"><div><div class="rpg-eyebrow">AVAILABLE TARGETS</div><h2>Hunt Board</h2></div><span class="rpg-count">' + monsters.filter(function (m) { return depth >= m.depth; }).length + ' / ' + monsters.length + ' CREATURES</span></div><p class="rpg-section-hint">Hunt ordinary monsters for crafting materials, or challenge a boss for a multi-phase fight and unique relic.</p><div class="rpg-monster-list">' + renderMonsters(state, r) + '</div></section>' + renderBosses(state, r)) +
       renderChambers(state, r) + renderForge(state, r) + renderAlchemy(state, r) +
       '<section class="rpg-subpanel"><div class="rpg-section-head"><div><div class="rpg-eyebrow">REWARD CACHE</div><h3>Sealed Loot</h3></div><span class="rpg-count">' + r.inventory.lootBoxes + ' CACHES</span></div><p class="rpg-section-hint">Monster loot caches contain equipment appropriate to your deepest unlocked floor.</p><button class="rpg-action-primary rpg-craft-button" data-rpg-action="open-cache" ' + (r.inventory.lootBoxes > 0 ? "" : "disabled") + '>◇ OPEN LOOT CACHE</button></section>' +
       renderInventory(r) + '<p class="rpg-footnote">Combat uses stamina, never Step Power. Basic attacks run automatically while this page is open; you control special attacks, guarding, and healing.</p></div>';
