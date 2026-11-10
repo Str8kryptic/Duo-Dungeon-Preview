@@ -51,16 +51,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Only environment-neutral assets are eligible for automatic staging.
+          # app.js, auth.js, index.html, setup.html, and dev-tools files remain
+          # environment-specific until a dedicated production-safe build step exists.
           files=(
-            app.js
-            auth.js
             game-data.js
             sync.js
             styles.css
-            setup.html
-            index.html
-            dev-tools.js
-            dev-tools.css
           )
           for file in "${files[@]}"; do
             test -f "development/$file"
@@ -87,7 +84,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$branch"
-          git add app.js auth.js game-data.js sync.js styles.css setup.html index.html dev-tools.js dev-tools.css assets 2>/dev/null || git add app.js auth.js game-data.js sync.js styles.css setup.html index.html dev-tools.js dev-tools.css
+          git add game-data.js sync.js styles.css assets 2>/dev/null || git add game-data.js sync.js styles.css
           if git diff --cached --quiet; then
             echo "Development and Production application files already match."
             exit 0
@@ -98,5 +95,5 @@ jobs:
             --repo Str8kryptic/Duo-Dungeon \
             --base main \
             --head "$branch" \
-            --title "Promote verified Development build to Production" \
-            --body "Automated promotion proposal created after successful Development Preview deployment.\n\nDevelopment commit: $SOURCE_SHA\n\nReview this PR before merging. Production deployment remains a separate, explicit action."
+            --title "Promote shared assets from verified Development build" \
+            --body "Automated proposal containing environment-neutral shared assets only.\n\nDevelopment commit: $SOURCE_SHA\n\nEnvironment-specific files (auth.js, app.js, index.html, setup.html, and developer tools) are deliberately excluded. Review before merging; Production deployment remains a separate, explicit action."
