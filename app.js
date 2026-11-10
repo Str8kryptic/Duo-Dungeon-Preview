@@ -135,14 +135,20 @@ function stepSyncDialog(total,date){
  function close(){dlg.close()}
  dlg.innerHTML=
   '<button class="close" type="button" data-step-close aria-label="Close">×</button>'+
-  '<div class="eyebrow" data-sync-eyebrow>DUNGEON STEP LEDGER · INCOMING REPORT</div>'+
+  '<div class="eyebrow" data-sync-eyebrow>DUNGEON LEDGER · INCOMING REPORT</div>'+
   '<h2 data-sync-title>CONFIRM STEP SYNC</h2>'+
   '<div class="step-sync-player"><small>CRAWLER</small><strong>'+esc(player)+'</strong></div>'+
   '<div class="step-sync-total"><small data-total-label>APPLE HEALTH TOTAL</small><strong>'+Number(total).toLocaleString()+'</strong><span>steps recorded today</span></div>'+
   '<blockquote class="step-sync-quip" data-sync-quip>“'+quip+'”<small>— THE SYSTEM</small></blockquote>'+
-  '<p class="manual-note" data-sync-note>Ready to record this Health reading? Only steps beyond your previous successful sync earn rewards.</p>'+
-  '<section class="step-sync-rewards" data-sync-rewards hidden style="display:none"><div class="step-reward-grid" data-reward-grid></div><div class="step-sync-items" data-reward-items></div></section>'+
-  '<div class="step-sync-actions" data-sync-actions><button class="action secondary" type="button" data-step-close>CANCEL</button><button class="action primary" type="button" data-step-confirm>CONFIRM &amp; SYNC TO DUNGEON</button></div>';
+  '<p class="manual-note" data-sync-note>Confirm once to send this reading to the dungeon. Only steps beyond your last successful sync earn rewards.</p>'+
+  '<div class="step-reward-grid" data-reward-grid>'+
+   '<div><small>NEW STEPS</small><b data-reward-delta>—</b></div>'+
+   '<div><small>ADDED TO RESERVE</small><b data-reward-banked>—</b></div>'+
+   '<div><small>EXPERIENCE</small><b data-reward-xp>—</b></div>'+
+   '<div><small>COINS</small><b data-reward-coins>—</b></div>'+
+  '</div>'+
+  '<div class="step-sync-items" data-reward-items><small>ITEMS &amp; MATERIALS EARNED</small><p>Rewards will appear here after confirmation.</p></div>'+
+  '<div class="step-sync-actions" data-sync-actions><button class="action primary" type="button" data-step-confirm>CONFIRM &amp; SYNC TO DUNGEON</button></div>';
  dlg.querySelectorAll("[data-step-close]").forEach(function(b){b.addEventListener("click",close)});
  dlg.querySelector("[data-step-confirm]").addEventListener("click",async function(){
   var btn=this;btn.disabled=true;btn.textContent="CONTACTING THE LEDGER…";
@@ -155,15 +161,12 @@ function stepSyncDialog(total,date){
   dlg.querySelector("[data-total-label]").textContent="HEALTH TOTAL RECORDED";
   dlg.querySelector("[data-sync-quip]").innerHTML="“"+(result.alreadyCurrent?"Already counted. The dungeon's accounting department remains undefeated.":quip)+"”<small>— THE SYSTEM</small>";
   dlg.querySelector("[data-sync-note]").textContent=result.alreadyCurrent?"This reading was already processed. No duplicate rewards were issued.":"Your steps have been credited. Here's what the dungeon awarded.";
-  dlg.querySelector("[data-reward-grid]").innerHTML=
-   '<div><small>NEW STEPS</small><b>'+result.delta.toLocaleString()+'</b></div>'+
-   '<div><small>ADDED TO RESERVE</small><b>'+result.bankedAdded.toLocaleString()+'</b></div>'+
-   '<div><small>EXPERIENCE</small><b>+'+result.xp.toLocaleString()+' XP</b></div>'+
-   '<div><small>COINS</small><b>+'+result.coins.toLocaleString()+' ◈</b></div>';
+  dlg.querySelector("[data-reward-delta]").textContent=result.delta.toLocaleString();
+  dlg.querySelector("[data-reward-banked]").textContent=result.bankedAdded.toLocaleString();
+  dlg.querySelector("[data-reward-xp]").textContent="+"+result.xp.toLocaleString()+" XP";
+  dlg.querySelector("[data-reward-coins]").textContent="+"+result.coins.toLocaleString()+" ◈";
   dlg.querySelector("[data-reward-items]").innerHTML='<small>ITEMS &amp; MATERIALS EARNED</small>'+
    (rewards?'<ul>'+rewards+'</ul>':'<p>'+(result.alreadyCurrent?"No new steps to reward. The dungeon refuses duplicate invoices.":"No bonus materials this time. Your legs did the work; the loot department was on break.")+'</p>');
-  var rewardSection=dlg.querySelector("[data-sync-rewards]");
-  rewardSection.hidden=false;rewardSection.style.display="block";
   var actions=dlg.querySelector("[data-sync-actions]");
   actions.innerHTML='<button class="action primary" type="button" data-step-return>BACK TO THE DUNGEON</button>';
   actions.querySelector("[data-step-return]").addEventListener("click",close);
