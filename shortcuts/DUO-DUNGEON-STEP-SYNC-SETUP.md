@@ -1,6 +1,6 @@
 # Duo Dungeon — Official Apple Health Step Sync
 
-**Official Shortcut:** [Add Sync Duo Dungeon Steps](https://www.icloud.com/shortcuts/19860a7f85334e649d5c5a984a9e3cea)
+**Official Shortcut:** [Add Sync Duo Dungeon Steps](https://www.icloud.com/shortcuts/6be17152bd3049c49af226017fb765ff)
 
 ## First-time setup
 
