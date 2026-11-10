@@ -4,10 +4,10 @@ import { resolve } from 'node:path';
 const manifestPath = resolve('android/app/src/main/AndroidManifest.xml');
 const variablesPath = resolve('android/variables.gradle');
 let variables = readFileSync(variablesPath, 'utf8');
-const minSdk = variables.match(/minSdkVersion\\s*=\\s*(\\d+)/);
+const minSdk = variables.match(/minSdkVersion\s*=\s*(\d+)/);
 if (!minSdk) throw new Error('Could not locate minSdkVersion in android/variables.gradle.');
 if (Number(minSdk[1]) < 26) {
-  variables = variables.replace(/minSdkVersion\\s*=\\s*\\d+/, 'minSdkVersion = 26');
+  variables = variables.replace(/minSdkVersion\s*=\s*\d+/, 'minSdkVersion = 26');
   writeFileSync(variablesPath, variables);
   console.log('Raised Android minSdkVersion to 26 for Health Connect compatibility.');
 }
