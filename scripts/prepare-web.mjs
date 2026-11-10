@@ -8,9 +8,6 @@ const webExtensions = new Set([
   '.webp', '.gif', '.ico', '.woff', '.woff2', '.ttf', '.otf'
 ]);
 const assetDirectories = new Set(['assets', 'images', 'fonts', 'icons']);
-const excludedDirectories = new Set([
-  '.git', '.github', 'node_modules', 'www', 'android', 'ios', 'scripts'
-]);
 
 rmSync(output, { recursive: true, force: true });
 mkdirSync(output, { recursive: true });
