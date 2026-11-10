@@ -33,6 +33,9 @@ jobs:
           grep -q 'health_connect' setup.html
           grep -q 'health_connect' auth.js
           grep -q 'step_platform' auth.js
+          grep -q 'selectedStepPlatform===\"health_connect\"' app.js
+          grep -q 'ANDROID HEALTH CONNECT' app.js
+          grep -q 'android-sync-status' styles.css
           grep -q 'app.js?v=20261110devhealthshortcut1' index.html
 
   deploy:
