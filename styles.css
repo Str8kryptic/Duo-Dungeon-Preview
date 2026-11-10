@@ -761,3 +761,30 @@ body.account-fallback-active::before{content:"";position:fixed;inset:0;z-index:1
  .first-descent-actions{margin-top:6px!important}
  .first-descent-actions button{min-height:24px!important;font-size:7px!important}
 }
+
+
+/* All first-visit tab guides use the same compact blue field-guide callout */
+.section-guide-popover{
+ position:fixed!important;z-index:1402!important;left:12px;top:12px;
+ width:min(290px,calc(100vw - 24px))!important;max-width:calc(100vw - 24px)!important;
+ padding:9px 11px!important;border:1px solid #55c9ff!important;border-radius:11px!important;
+ background:linear-gradient(145deg,#123b59f5,#071a2df7 88%)!important;
+ color:#effaff!important;box-shadow:0 8px 28px #000b,0 0 0 1px #9ce6ff35 inset,0 0 22px #23baff55!important;
+ font-family:system-ui,-apple-system,sans-serif!important;
+}
+.section-guide-kicker{padding-right:22px!important;color:#8ee0ff!important;font-size:7px!important;font-weight:900!important;letter-spacing:.9px!important}
+.section-guide-popover>b{display:block;margin:0 0 4px!important;color:#a8e9ff!important;font:800 14px/1.15 system-ui,sans-serif!important;letter-spacing:.25px}
+.section-guide-popover p{margin:0!important;color:#f0faff!important;font:500 10px/1.35 system-ui,sans-serif!important}
+.section-guide-close{right:6px!important;top:4px!important;color:#d9f5ff!important;font-size:19px!important}
+.section-guide-done{width:100%!important;min-height:26px!important;margin-top:7px!important;border:1px solid #5bcfff!important;border-radius:7px!important;background:linear-gradient(135deg,#72d8ff,#1689c9)!important;color:#031521!important;font-size:7px!important;font-weight:950!important;letter-spacing:.4px!important;cursor:pointer}
+.section-guide-focus{
+ position:relative!important;z-index:1301!important;outline:3px solid #52d5ff!important;outline-offset:4px!important;
+ box-shadow:0 0 0 9999px #020b14c9,0 0 0 8px #49caff44,0 0 30px 10px #36c9ff!important;
+ border-radius:10px!important;filter:brightness(1.28) saturate(1.25)!important;
+}
+@media(max-width:520px){
+ .section-guide-popover{width:min(260px,calc(100vw - 24px))!important;padding:8px 9px!important}
+ .section-guide-popover>b{font-size:12px!important}
+ .section-guide-popover p{font-size:9px!important;line-height:1.3!important}
+ .section-guide-done{min-height:24px!important;font-size:7px!important}
+}
