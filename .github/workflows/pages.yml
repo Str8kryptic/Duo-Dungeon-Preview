@@ -3,6 +3,8 @@ name: Deploy Duo Dungeon Preview
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -33,9 +35,14 @@ jobs:
           grep -q 'health_connect' setup.html
           grep -q 'health_connect' auth.js
           grep -q 'step_platform' auth.js
-          grep -q 'app.js?v=20261110devhealthshortcut1' index.html
+          grep -q 'selectedStepPlatform==="health_connect"' app.js
+          grep -q 'ANDROID HEALTH CONNECT' app.js
+          grep -q 'android-sync-status' styles.css
+          grep -q 'styles.css?v=20261110androidhealth1' index.html
+          grep -q 'app.js?v=20261110androidhealth1' index.html
 
   deploy:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     needs: verify
     environment:
       name: github-pages
