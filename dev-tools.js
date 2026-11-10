@@ -1,6 +1,6 @@
 (function(){
 "use strict";
-var DEV_HOST="str8kryptic.github.io",DEV_PATH="/Duo-Dungeon-Preview",ADMIN_ID="14515572-ab11-432e-adc6-bb24c53c5277";
+var DEV_HOST="str8kryptic.github.io",DEV_PATH="/Duo-Dungeon-Preview",ADMIN_ID="94333a65-3233-44b2-a63b-0956fd0a355d";
 if(location.hostname!==DEV_HOST||!location.pathname.startsWith(DEV_PATH))return;
 var auth=window.DUO_AUTH;if(!auth||!auth.ready)return;
 auth.ready.then(function(){
