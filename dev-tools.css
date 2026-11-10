@@ -86,3 +86,7 @@ header .brand{display:inline-flex;align-items:center;white-space:nowrap}
 /* Keep the refresh control physically attached to the title for reliable header layout */
 header .brand{gap:7px;text-decoration:none}
 header .brand .dev-page-refresh{flex:none;vertical-align:middle}
+
+/* Always-visible control on the Preview site only */
+.dev-page-refresh{display:inline-grid!important;place-items:center;flex:0 0 30px;width:30px;height:30px;margin:0 8px;border:1px solid #80668a;border-radius:9px;background:#2b1e35;color:#f3c56b;font-size:21px;line-height:1;cursor:pointer;vertical-align:middle;position:relative;z-index:5}
+.dev-page-refresh:hover,.dev-page-refresh:focus-visible{border-color:#f3c56b;background:#463050;outline:2px solid #f3c56b55}
