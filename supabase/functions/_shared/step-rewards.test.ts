@@ -75,7 +75,8 @@ Deno.test("step potion bonuses apply and step charges are consumed", () => {
   save.activePotions = [{ kind: "steps", remainingSteps: 100, effect: { coins: .5, xp: .1 } }];
   const r = run(save, 100);
   assertEquals(r.coins, 15);
-  assertEquals(r.save.activePotions.length, 0);
+  assertEquals(r.save.activePotions.length, 1);
+  assertEquals(r.save.activePotions[0].remainingSteps, 0);
 });
 
 Deno.test("treasury overflow converts into marks using the crawler's efficiency upgrade", () => {
