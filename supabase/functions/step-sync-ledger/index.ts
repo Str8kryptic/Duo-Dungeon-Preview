@@ -17,11 +17,9 @@ function json(body: unknown, status = 200) {
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
-
   try {
     const authorization = req.headers.get("Authorization");
     if (!authorization?.startsWith("Bearer ")) return json({ error: "Sign in is required." }, 401);
-
     const url = Deno.env.get("SUPABASE_URL");
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -29,7 +27,6 @@ Deno.serve(async (req: Request) => {
       console.error("Required Supabase function environment is unavailable.");
       return json({ error: "Step sync is temporarily unavailable." }, 503);
     }
-
     const token = authorization.slice(7);
     const userClient = createClient(url, anonKey, {
       auth: { persistSession: false, autoRefreshToken: false },
@@ -37,20 +34,15 @@ Deno.serve(async (req: Request) => {
     });
     const { data: authData, error: authError } = await userClient.auth.getUser(token);
     if (authError || !authData.user) return json({ error: "Your session could not be verified. Please sign in again." }, 401);
-
     let body: { total?: unknown; date?: unknown };
-    try {
-      body = await req.json();
-    } catch {
-      return json({ error: "Invalid step-sync request." }, 400);
-    }
+    try { body = await req.json(); }
+    catch { return json({ error: "Invalid step-sync request." }, 400); }
     const total = body?.total;
     const date = body?.date;
     if (!Number.isSafeInteger(total) || (total as number) < 0 || (total as number) > 100000 ||
-        typeof date !== "string" || !/^\\d{4}-\\d{2}-\\d{2}$/.test(date)) {
+        typeof date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       return json({ error: "That step reading is invalid." }, 400);
     }
-
     const admin = createClient(url, serviceKey, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
