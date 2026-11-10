@@ -239,6 +239,8 @@ const bountyState = { descent: { depth: 1 } };
 const bountyRpg = combat.ensure(bountyState);
 const bountyBoard = combat.render(bountyState);
 assert.match(bountyBoard, /Bounty Board/);
+assert.equal((bountyBoard.match(/<details class="rpg-collapsible"/g) || []).length, 8, "each independent Hunt section should render as a collapsible panel");
+["DAILY BOUNTIES", "HUNT BOARD", "DUNGEON BOSSES", "SECRET CHAMBERS", "THE FORGE", "ALCHEMY LAB", "SEALED LOOT", "EQUIPMENT &amp; MATERIALS"].forEach(label => assert.ok(bountyBoard.includes(">" + label + "</span>"), "missing collapsible Hunt section: " + label));
 assert.match(bountyBoard, /Pest Control/);
 assert.match(bountyBoard, /Problem Solvers/);
 assert.match(bountyBoard, /Head of the Problem/);
@@ -296,4 +298,4 @@ try {
   Math.random = bountyRandom;
 }
 
-console.log("RPG combat, crafting, bosses, secret chambers, and daily bounty tests passed.");
+console.log("RPG combat, crafting, bosses, secret chambers, daily bounties, and Hunt accordion tests passed.");

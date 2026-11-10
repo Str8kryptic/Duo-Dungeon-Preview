@@ -746,21 +746,27 @@
     return '<section class="rpg-subpanel"><div class="rpg-section-head"><div><div class="rpg-eyebrow">CHARACTER LOADOUT</div><h3>Equipment</h3></div></div><div class="rpg-equipped-grid"><div><small>WEAPON</small><b>' + esc(weapon ? weapon.name : "Unarmed") + '</b></div><div><small>ARMOR</small><b>' + esc(armor ? armor.name : "Unarmored") + '</b></div></div><div class="rpg-stat-line"><span>ATTACK <b>' + stats(r).attack + '</b></span><span>DEFENSE <b>' + stats(r).defense + '</b></span></div><div class="rpg-divider"></div><div class="rpg-section-head"><div><div class="rpg-eyebrow">FIELD PACK</div><h3>Equipment found</h3></div><span class="rpg-count">' + gear.length + ' ITEMS</span></div>' + gearMarkup + '<div class="rpg-divider"></div><div class="rpg-section-head"><div><div class="rpg-eyebrow">MONSTER COMPONENTS</div><h3>Materials</h3></div></div><div class="rpg-material-grid">' + materialMarkup + '</div></section>';
   }
 
+  function collapsibleSection(label, content, openByDefault) {
+    return '<details class="rpg-collapsible" ' + (openByDefault ? 'open' : '') + '><summary><span>' + esc(label) + '</span><span class="rpg-collapse-indicator" aria-hidden="true">⌄</span></summary><div class="rpg-collapsible-content">' + content + '</div></details>';
+  }
+
   function render(state) {
     var r = ensure(state);
     if (!r) return '<section class="rpg-page"><h1>COMBAT UNAVAILABLE</h1></section>';
-    var player = stats(r);
     var depth = depthOf(state);
-    var xpPct = clamp(r.xp / r.xpNext * 100, 0, 100);
-    var potionReady = materialCount(r, "bitter_herb") >= 2 && materialCount(r, "venom_gland") >= 1;
     return '<div class="rpg-page"><section class="rpg-hero"><div class="rpg-hero-copy"><div class="rpg-eyebrow">DUO DUNGEON · COMBAT DIVISION</div><h1>THE HUNTING GROUNDS</h1><p>Descent reveals the prey. Your preparation decides whether you become the meal.</p><div class="rpg-hero-tags"><span>FLOOR ' + depth + ' REACHED</span><span>COMBAT LEVEL ' + r.level + '</span></div></div><div class="rpg-hero-sigil">⚔</div></section>' +
       '<section class="rpg-resource-grid"><article><small>STAMINA</small><strong>' + r.stamina + '<i> / ' + r.maxStamina + '</i></strong>' + bar(r.stamina, r.maxStamina, "rpg-stamina") + '<span>Regenerates 1 every 5 minutes.</span></article><article><small>HEALTH</small><strong>' + r.hp + '<i> / ' + r.maxHp + '</i></strong>' + bar(r.hp, r.maxHp, "rpg-hp") + '<span>Healing Draughts restore up to 45 HP.</span></article><article><small>COMBAT EXPERIENCE</small><strong>' + r.xp + '<i> / ' + r.xpNext + ' XP</i></strong>' + bar(r.xp, r.xpNext, "rpg-xp") + '<span>Level-ups improve your combat stats.</span></article></section>' +
-      renderBounties(r) + (r.battle ? renderBattle(r) : '<section class="rpg-subpanel rpg-hunt-board"><div class="rpg-section-head"><div><div class="rpg-eyebrow">AVAILABLE TARGETS</div><h2>Hunt Board</h2></div><span class="rpg-count">' + monsters.filter(function (m) { return depth >= m.depth; }).length + ' / ' + monsters.length + ' CREATURES</span></div><p class="rpg-section-hint">Hunt ordinary monsters for crafting materials, or challenge a boss for a multi-phase fight and unique relic.</p><div class="rpg-monster-list">' + renderMonsters(state, r) + '</div></section>' + renderBosses(state, r)) +
-      renderChambers(state, r) + renderForge(state, r) + renderAlchemy(state, r) +
-      '<section class="rpg-subpanel"><div class="rpg-section-head"><div><div class="rpg-eyebrow">REWARD CACHE</div><h3>Sealed Loot</h3></div><span class="rpg-count">' + r.inventory.lootBoxes + ' CACHES</span></div><p class="rpg-section-hint">Monster loot caches contain equipment appropriate to your deepest unlocked floor.</p><button class="rpg-action-primary rpg-craft-button" data-rpg-action="open-cache" ' + (r.inventory.lootBoxes > 0 ? "" : "disabled") + '>◇ OPEN LOOT CACHE</button></section>' +
-      renderInventory(r) + '<p class="rpg-footnote">Combat uses stamina, never Step Power. Basic attacks run automatically while this page is open; you control special attacks, guarding, and healing.</p></div>';
+      collapsibleSection("DAILY BOUNTIES", renderBounties(r), true) +
+      (r.battle ? renderBattle(r) :
+        collapsibleSection("HUNT BOARD", '<section class="rpg-subpanel rpg-hunt-board"><div class="rpg-section-head"><div><div class="rpg-eyebrow">AVAILABLE TARGETS</div><h2>Hunt Board</h2></div><span class="rpg-count">' + monsters.filter(function (m) { return depth >= m.depth; }).length + ' / ' + monsters.length + ' CREATURES</span></div><p class="rpg-section-hint">Hunt ordinary monsters for crafting materials, or challenge a boss for a multi-phase fight and unique relic.</p><div class="rpg-monster-list">' + renderMonsters(state, r) + '</div></section>', true) +
+        collapsibleSection("DUNGEON BOSSES", renderBosses(state, r), false)) +
+      collapsibleSection("SECRET CHAMBERS", renderChambers(state, r), false) +
+      collapsibleSection("THE FORGE", renderForge(state, r), false) +
+      collapsibleSection("ALCHEMY LAB", renderAlchemy(state, r), false) +
+      collapsibleSection("SEALED LOOT", '<section class="rpg-subpanel"><div class="rpg-section-head"><div><div class="rpg-eyebrow">REWARD CACHE</div><h3>Sealed Loot</h3></div><span class="rpg-count">' + r.inventory.lootBoxes + ' CACHES</span></div><p class="rpg-section-hint">Monster loot caches contain equipment appropriate to your deepest unlocked floor.</p><button class="rpg-action-primary rpg-craft-button" data-rpg-action="open-cache" ' + (r.inventory.lootBoxes > 0 ? "" : "disabled") + '>◇ OPEN LOOT CACHE</button></section>', false) +
+      collapsibleSection("EQUIPMENT & MATERIALS", renderInventory(r), false) +
+      '<p class="rpg-footnote">Combat uses stamina, never Step Power. Basic attacks run automatically while this page is open; you control special attacks, guarding, and healing.</p></div>';
   }
-
   window.DUO_RPG_COMBAT = {
     ensure: ensure,
     render: render,

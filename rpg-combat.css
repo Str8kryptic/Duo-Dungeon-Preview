@@ -168,3 +168,28 @@
   .rpg-bounty-copy { flex:1 1 100%; }
   .rpg-bounty-button { width:100%; }
 }
+
+/* Hunt section accordion layout */
+.rpg-collapsible { overflow:hidden; border:1px solid #604b69; border-radius:14px; background:linear-gradient(145deg,#241a2d,#17111e); }
+.rpg-collapsible>summary { display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:54px; padding:14px 16px; color:#f7dfb1; cursor:pointer; list-style:none; font:700 16px Georgia,serif; }
+.rpg-collapsible>summary::-webkit-details-marker { display:none; }
+.rpg-collapsible>summary::marker { content:""; }
+.rpg-collapsible>summary:focus-visible { outline:2px solid #e4c17d; outline-offset:-3px; border-radius:12px; }
+.rpg-collapse-indicator { flex:none; display:grid; place-items:center; width:27px; height:27px; border:1px solid #755c78; border-radius:8px; color:#e4c17d; font:700 17px/1 Arial,sans-serif; transition:transform .18s ease; }
+.rpg-collapsible[open]>summary { border-bottom:1px solid #55415d; }
+.rpg-collapsible[open]>summary .rpg-collapse-indicator { transform:rotate(180deg); }
+.rpg-collapsible-content { display:flex; flex-direction:column; gap:10px; padding:10px; }
+.rpg-collapsible-content>.rpg-bounty-board,.rpg-collapsible-content>.rpg-boss-board,.rpg-collapsible-content>.rpg-chamber-board,.rpg-collapsible-content>.rpg-subpanel { margin:0; }
+.rpg-collapsible-content>.rpg-subpanel { border:0; padding:4px; background:transparent; }
+.rpg-collapsible-content>.rpg-bounty-board { border:0; padding:4px; background:transparent; }
+.rpg-collapsible-content>.rpg-boss-board,.rpg-collapsible-content>.rpg-chamber-board { border:0; padding:4px; background:transparent; }
+.rpg-page>.rpg-collapsible { width:100%; }
+@media(max-width:560px) { .rpg-collapsible>summary { min-height:50px; padding:12px; font-size:15px; } .rpg-collapsible-content { padding:8px; } }
+
+/* Single current-title display in Profile */
+.current-title-panel { text-align:left; }
+.current-title-display { display:block; margin:5px 0 15px; color:#ffe0a0; font:700 clamp(21px,5vw,27px) Georgia,serif; overflow-wrap:anywhere; }
+.current-title-label { display:block; margin:0 0 7px; color:#bdaac8; font-size:8px; font-weight:900; letter-spacing:.8px; }
+.current-title-select { width:100%; min-height:43px; padding:10px 12px; border:1px solid #80638a; border-radius:9px; color:#f3dfbd; background:#17111e; font:600 12px Arial,sans-serif; }
+.current-title-select:focus-visible { outline:2px solid #e4c17d; outline-offset:2px; }
+.current-title-panel .muted-copy { margin:10px 0 0; }
