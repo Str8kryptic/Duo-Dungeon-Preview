@@ -46,7 +46,7 @@ jobs:
           grep -q 'android-sync-status' styles.css
           grep -q 'styles.css?v=20261110aifloat2' index.html
           grep -q 'guild.js?v=20261110guild1' index.html
-          grep -q 'app.js?v=20261110guild1' index.html
+          grep -q 'app.js?v=20261110guildtabs1' index.html
           grep -q 'THE GUILD HALL' guild.js
           grep -q 'data-guild-claim' guild.js
           grep -q 'guildStats.kills++' app.js
