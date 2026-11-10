@@ -4,7 +4,10 @@
   var monsters = [
     { id: "cave-stalker", name: "Cave Stalker", kind: "ARACHNID", depth: 1, hp: 72, attack: 9, defense: 2, stamina: 10, xp: 28, lootChance: 0.14, drops: [{ id: "bitter_herb", min: 1, max: 2, chance: 1 }, { id: "cave_chitin", min: 1, max: 2, chance: 0.8 }, { id: "venom_gland", min: 1, max: 1, chance: 0.38 }], flavor: "A patient hunter with too many legs and absolutely no respect for personal space." },
     { id: "crypt-guardian", name: "Crypt Guardian", kind: "UNDEAD", depth: 3, hp: 156, attack: 16, defense: 6, stamina: 18, xp: 62, lootChance: 0.2, drops: [{ id: "ancient_bone", min: 1, max: 2, chance: 1 }, { id: "cursed_essence", min: 1, max: 1, chance: 0.48 }, { id: "rusted_fragment", min: 1, max: 2, chance: 0.75 }], flavor: "The previous occupants are still unhappy with the dungeon's management." },
-    { id: "infernal-beast", name: "Infernal Beast", kind: "DEMONIC", depth: 6, hp: 285, attack: 27, defense: 10, stamina: 28, xp: 118, lootChance: 0.28, drops: [{ id: "infernal_hide", min: 1, max: 2, chance: 1 }, { id: "fire_core", min: 1, max: 1, chance: 0.5 }, { id: "demon_horn", min: 1, max: 1, chance: 0.32 }], flavor: "A walking furnace with anger-management issues and excellent loot prospects." }
+    { id: "infernal-beast", name: "Infernal Beast", kind: "DEMONIC", depth: 6, hp: 285, attack: 27, defense: 10, stamina: 28, xp: 118, lootChance: 0.28, drops: [{ id: "infernal_hide", min: 1, max: 2, chance: 1 }, { id: "fire_core", min: 1, max: 1, chance: 0.5 }, { id: "demon_horn", min: 1, max: 1, chance: 0.32 }], flavor: "A walking furnace with anger-management issues and excellent loot prospects." },
+    { id: "crypt-reaver", name: "Crypt Reaver", kind: "ELITE · UNDEAD", depth: 3, hp: 230, attack: 21, defense: 8, stamina: 24, xp: 105, lootChance: 0.45, elite: true, drops: [{ id: "ancient_bone", min: 2, max: 3, chance: 1 }, { id: "cursed_essence", min: 1, max: 2, chance: 0.8 }, { id: "crypt_key", min: 1, max: 1, chance: 0.24 }], flavor: "A former tomb raider who kept the key and forgot the exit." },
+    { id: "ash-knight", name: "Ashen Knight", kind: "ELITE · INFERNAL", depth: 6, hp: 410, attack: 32, defense: 13, stamina: 34, xp: 190, lootChance: 0.5, elite: true, drops: [{ id: "infernal_hide", min: 2, max: 3, chance: 1 }, { id: "fire_core", min: 1, max: 2, chance: 0.8 }, { id: "ember_key", min: 1, max: 1, chance: 0.2 }], flavor: "A knight still guarding a treasury that burned down three centuries ago." },
+    { id: "void-stalker", name: "Void Stalker", kind: "ELITE · ABYSSAL", depth: 9, hp: 590, attack: 43, defense: 17, stamina: 42, xp: 310, lootChance: 0.6, elite: true, drops: [{ id: "demon_horn", min: 2, max: 3, chance: 1 }, { id: "void_heart", min: 1, max: 1, chance: 0.75 }, { id: "void_key", min: 1, max: 1, chance: 0.16 }], flavor: "It hunts by stepping between shadows. Unfortunately, yours is delicious." }
   ];
 
   var bosses = [
@@ -13,7 +16,25 @@
     { id: "abyssal-dragon", name: "The Abyssal Dragon", kind: "DUNGEON BOSS", depth: 9, hp: 1200, attack: 50, defense: 20, stamina: 60, xp: 720, lootChance: 1, boss: true, relicGear: "dragonfang", relicArmor: "voidscale_aegis", relicMaterial: "void_heart", drops: [{ id: "infernal_hide", min: 4, max: 6, chance: 1 }, { id: "demon_horn", min: 2, max: 3, chance: 1 }, { id: "void_heart", min: 1, max: 2, chance: 1 }], flavor: "The thing beneath the dungeon. It remembers every crawler who came before you." }
   ];
 
+  var chamberBosses = [
+    { id: "crypt-vault-sentinel", name: "The Vault Sentinel", kind: "CHAMBER MINI-BOSS", depth: 3, hp: 310, attack: 24, defense: 9, stamina: 28, xp: 145, lootChance: 1, boss: true, chamberId: "crypt-vault", relicGear: "gravemantle_blade", relicArmor: "gravemantle_guard", relicMaterial: "crypt_key", drops: [{ id: "ancient_bone", min: 3, max: 4, chance: 1 }, { id: "cursed_essence", min: 2, max: 3, chance: 1 }], flavor: "A stone sentinel with a very strict interpretation of trespassing." },
+    { id: "ashen-treasury-knight", name: "The Cinderbound Knight", kind: "CHAMBER MINI-BOSS", depth: 6, hp: 540, attack: 38, defense: 14, stamina: 38, xp: 260, lootChance: 1, boss: true, chamberId: "ashen-treasury", relicGear: "sunforged_glaive", relicArmor: "ashen_crownplate", relicMaterial: "ember_key", drops: [{ id: "infernal_hide", min: 3, max: 4, chance: 1 }, { id: "fire_core", min: 2, max: 3, chance: 1 }], flavor: "The treasury's last guard, still polishing armor nobody can afford." },
+    { id: "void-archive-keeper", name: "The Hollow Archivist", kind: "CHAMBER MINI-BOSS", depth: 9, hp: 850, attack: 48, defense: 18, stamina: 48, xp: 420, lootChance: 1, boss: true, chamberId: "void-archive", relicGear: "starfall_edge", relicArmor: "archivist_shroud", relicMaterial: "void_key", drops: [{ id: "demon_horn", min: 3, max: 4, chance: 1 }, { id: "void_heart", min: 2, max: 3, chance: 1 }], flavor: "It has catalogued every failed crawler. Your file is already open." }
+  ];
+
+  var chambers = [
+    { id: "crypt-vault", name: "The Forgotten Crypt Vault", depth: 3, key: "crypt_key", bossId: "crypt-vault-sentinel", stamina: 28, reward: "Gravemantle Relics", description: "A sealed vault beneath the old crypt. Something heavy is moving behind the door." },
+    { id: "ashen-treasury", name: "The Ashen Treasury", depth: 6, key: "ember_key", bossId: "ashen-treasury-knight", stamina: 38, reward: "Sunforged Relics", description: "A scorched treasury filled with treasures that refused to melt." },
+    { id: "void-archive", name: "The Void Archive", depth: 9, key: "void_key", bossId: "void-archive-keeper", stamina: 48, reward: "Starfall Relics", description: "A library outside time. The books are bound in things that once had names." }
+  ];
+
   var gearCatalog = [
+    { id: "gravemantle_blade", name: "Gravemantle Blade", slot: "weapon", attack: 17, defense: 0, rarity: "Legendary", depth: 3, bossOnly: true, desc: "A vault relic etched with the names of forgotten kings." },
+    { id: "gravemantle_guard", name: "Gravemantle Guard", slot: "armor", attack: 0, defense: 16, rarity: "Legendary", depth: 3, bossOnly: true, desc: "Stone-forged armor that remembers every blow it has endured." },
+    { id: "sunforged_glaive", name: "Sunforged Glaive", slot: "weapon", attack: 25, defense: 0, rarity: "Legendary", depth: 6, bossOnly: true, desc: "A treasury weapon that burns brighter in the dark." },
+    { id: "ashen_crownplate", name: "Ashen Crownplate", slot: "armor", attack: 0, defense: 23, rarity: "Legendary", depth: 6, bossOnly: true, desc: "The last armor worn by the treasury's crowned champion." },
+    { id: "starfall_edge", name: "Starfall Edge", slot: "weapon", attack: 36, defense: 0, rarity: "Mythic", depth: 9, bossOnly: true, desc: "A blade forged from a fallen star and a missing hour." },
+    { id: "archivist_shroud", name: "Archivist's Shroud", slot: "armor", attack: 0, defense: 31, rarity: "Mythic", depth: 9, bossOnly: true, desc: "A cloak woven from pages that describe the future." },
     { id: "warden_oath", name: "Warden's Oath", slot: "weapon", attack: 13, defense: 0, rarity: "Legendary", depth: 3, bossOnly: true, desc: "A crypt-forged oath that refuses to be broken." },
     { id: "warden_aegis", name: "Warden's Aegis", slot: "armor", attack: 0, defense: 12, rarity: "Legendary", depth: 3, bossOnly: true, desc: "The Warden's own shield, reforged as armor." },
     { id: "tyrant_brand", name: "Tyrant's Brand", slot: "weapon", attack: 21, defense: 0, rarity: "Legendary", depth: 6, bossOnly: true, desc: "A blade branded in the heart of a living inferno." },
@@ -29,6 +50,9 @@
   ];
 
   var materialNames = {
+    crypt_key: "Crypt Vault Keys",
+    ember_key: "Ashen Treasury Keys",
+    void_key: "Void Archive Keys",
     bitter_herb: "Bitter Herbs",
     cave_chitin: "Cave Chitin",
     venom_gland: "Venom Glands",
@@ -102,6 +126,10 @@
     r.buffs.powerUntil = Math.max(0, Number(r.buffs.powerUntil) || 0);
     r.buffs.wardUntil = Math.max(0, Number(r.buffs.wardUntil) || 0);
     r.kills = r.kills && typeof r.kills === "object" ? r.kills : {};
+    r.chambers = r.chambers && typeof r.chambers === "object" ? r.chambers : {};
+    r.chambers.discovered = Array.isArray(r.chambers.discovered) ? r.chambers.discovered.filter(function (id) { return chambers.some(function (room) { return room.id === id; }); }) : [];
+    r.chambers.cleared = r.chambers.cleared && typeof r.chambers.cleared === "object" ? r.chambers.cleared : {};
+    chambers.forEach(function (room) { r.chambers.cleared[room.id] = Math.max(0, Math.floor(Number(r.chambers.cleared[room.id]) || 0)); });
     r.log = Array.isArray(r.log) ? r.log.slice(-8) : [];
     r.battle = r.battle && typeof r.battle === "object" ? r.battle : null;
     ["weapon", "armor"].forEach(function (slot) {
@@ -158,7 +186,8 @@
 
   function monsterById(id) {
     return monsters.find(function (monster) { return monster.id === id; }) ||
-      bosses.find(function (monster) { return monster.id === id; }) || null;
+      bosses.find(function (monster) { return monster.id === id; }) ||
+      chamberBosses.find(function (monster) { return monster.id === id; }) || null;
   }
 
   function randInt(min, max) {
@@ -206,6 +235,10 @@
     r.kills[monster.id] = (Number(r.kills[monster.id]) || 0) + 1;
     r.xp += monster.xp;
     var drops = awardDrops(r, monster);
+    if (monster.chamberId) {
+      r.chambers.cleared[monster.chamberId] = (Number(r.chambers.cleared[monster.chamberId]) || 0) + 1;
+      log(r, "SECRET CHAMBER CLEARED. The journal records " + monster.chamberId + ".");
+    }
     if (monster.boss && monster.relicGear) {
       [monster.relicGear, monster.relicArmor].filter(Boolean).forEach(function (relicId) {
         var relic = itemById(relicId);
@@ -284,10 +317,11 @@
     if (r.hp <= 0) loseBattle(r, hooks);
   }
 
-  function startBattle(state, id, hooks) {
+  function startBattle(state, id, hooks, chamberEntry) {
     var r = ensure(state);
     var monster = monsterById(id);
     if (!r || !monster) return;
+    if (monster.chamberId && !chamberEntry) { notify(hooks, "Use the matching secret chamber key to enter."); return; }
     if (r.battle) { notify(hooks, "Finish your current fight before choosing another target."); return; }
     if (depthOf(state) < monster.depth) { notify(hooks, "That creature is deeper in the dungeon. Descend further to unlock it."); return; }
     if (r.stamina < monster.stamina) { notify(hooks, "Not enough stamina. This hunt requires " + monster.stamina + "."); return; }
@@ -309,6 +343,20 @@
     };
     log(r, "Hunt started: " + monster.name + ". " + monster.flavor);
     refresh(hooks);
+  }
+
+  function enterChamber(state, chamberId, hooks) {
+    var r = ensure(state);
+    var chamber = chambers.find(function (room) { return room.id === chamberId; });
+    if (!r || !chamber) { notify(hooks, "That chamber is not on the map."); return; }
+    if (r.battle) { notify(hooks, "Finish your current fight before entering a chamber."); return; }
+    if (depthOf(state) < chamber.depth) { notify(hooks, "Reach Descent floor " + chamber.depth + " to reveal this chamber."); return; }
+    if (materialCount(r, chamber.key) < 1) { notify(hooks, "You need a " + materialNames[chamber.key] + " to unlock this door."); return; }
+    if (r.stamina < chamber.stamina) { notify(hooks, "This chamber guardian requires " + chamber.stamina + " stamina."); return; }
+    r.inventory.materials[chamber.key] -= 1;
+    if (r.chambers.discovered.indexOf(chamber.id) < 0) r.chambers.discovered.push(chamber.id);
+    log(r, "SECRET CHAMBER DISCOVERED: " + chamber.name + ". The door seals behind you.");
+    startBattle(state, chamber.bossId, hooks, true);
   }
 
   function craftPotion(r, hooks) {
@@ -383,6 +431,7 @@
     var r = ensure(state);
     if (!r || !action) return;
     if (action.indexOf("hunt:") === 0) { startBattle(state, action.slice(5), hooks); return; }
+    if (action.indexOf("chamber:") === 0) { enterChamber(state, action.slice(8), hooks); return; }
     if (action.indexOf("forge:") === 0) {
       var forgeRecipe = forgeRecipes.find(function (recipe) { return recipe.gear === action.slice(6); });
       if (!forgeRecipe) { notify(hooks, "That forge blueprint does not exist."); return; }
@@ -572,6 +621,22 @@
     }).join("");
   }
 
+  function renderChambers(state, r) {
+    var depth = depthOf(state);
+    var discoveredCount = r.chambers.discovered.length;
+    var clearedCount = chambers.filter(function (room) { return (Number(r.chambers.cleared[room.id]) || 0) > 0; }).length;
+    return '<section class="rpg-chamber-board"><div class="rpg-section-head"><div><div class="rpg-eyebrow">HIDDEN ROOMS · KEY REQUIRED</div><h2>Secret Chambers</h2></div><span class="rpg-count">' + discoveredCount + ' / ' + chambers.length + ' FOUND · ' + clearedCount + ' CLEARED</span></div><p class="rpg-section-hint">Elite monsters sometimes carry sealed keys. Spend one to enter a hidden room, defeat its guardian, and claim a chamber-only relic set. Keys are consumed when the door opens.</p><div class="rpg-chamber-list">' + chambers.map(function (room) {
+      var unlocked = depth >= room.depth;
+      var keys = materialCount(r, room.key);
+      var discovered = r.chambers.discovered.indexOf(room.id) >= 0;
+      var clears = Number(r.chambers.cleared[room.id]) || 0;
+      var guardian = monsterById(room.bossId);
+      var relicWeapon = itemById(guardian.relicGear);
+      var relicArmor = itemById(guardian.relicArmor);
+      return '<article class="rpg-chamber-card ' + (unlocked ? "" : "is-locked") + '"><div class="rpg-chamber-seal">' + (clears ? "✦" : discovered ? "◇" : "⌑") + '</div><div class="rpg-chamber-copy"><div class="rpg-eyebrow">' + (clears ? "CLEARED " + clears + "×" : discovered ? "DISCOVERED" : unlocked ? "SIGNAL DETECTED" : "FLOOR " + room.depth + " REQUIRED") + '</div><h3>' + esc(room.name) + '</h3><p>' + esc(unlocked ? room.description : "Descend to floor " + room.depth + " to uncover its location.") + '</p><div class="rpg-monster-meta"><span>KEYS ' + keys + '</span><span>GUARDIAN HP ' + guardian.hp + '</span><span>' + room.stamina + ' STAMINA</span></div><small class="rpg-chamber-reward">RELIC SET · ' + esc(relicWeapon.name) + ' + ' + esc(relicArmor.name) + '</small></div><button class="rpg-hunt-button rpg-chamber-button" data-rpg-action="chamber:' + room.id + '" ' + (!unlocked || keys < 1 || !!r.battle || r.stamina < room.stamina ? "disabled" : "") + '>' + (!unlocked ? "LOCKED" : keys < 1 ? "KEY REQUIRED" : r.stamina < room.stamina ? "NEED STAMINA" : "UNLOCK & ENTER") + '</button></article>';
+    }).join("") + '</div></section>';
+  }
+
   function renderBosses(state, r) {
     var depth = depthOf(state);
     return '<section class="rpg-boss-board"><div class="rpg-section-head"><div><div class="rpg-eyebrow">ELITE HUNTS · HIGH RISK / HIGH REWARD</div><h2>Dungeon Bosses</h2></div><span class="rpg-count">3 ENCOUNTERS</span></div><p class="rpg-section-hint">Bosses have multiple phases, telegraphed heavy attacks, guaranteed trophy materials, and a unique relic on your first victory.</p><div class="rpg-boss-list">' + bosses.map(function (boss) {
@@ -635,7 +700,7 @@
     return '<div class="rpg-page"><section class="rpg-hero"><div class="rpg-hero-copy"><div class="rpg-eyebrow">DUO DUNGEON · COMBAT DIVISION</div><h1>THE HUNTING GROUNDS</h1><p>Descent reveals the prey. Your preparation decides whether you become the meal.</p><div class="rpg-hero-tags"><span>FLOOR ' + depth + ' REACHED</span><span>COMBAT LEVEL ' + r.level + '</span></div></div><div class="rpg-hero-sigil">⚔</div></section>' +
       '<section class="rpg-resource-grid"><article><small>STAMINA</small><strong>' + r.stamina + '<i> / ' + r.maxStamina + '</i></strong>' + bar(r.stamina, r.maxStamina, "rpg-stamina") + '<span>Regenerates 1 every 5 minutes.</span></article><article><small>HEALTH</small><strong>' + r.hp + '<i> / ' + r.maxHp + '</i></strong>' + bar(r.hp, r.maxHp, "rpg-hp") + '<span>Healing Draughts restore up to 45 HP.</span></article><article><small>COMBAT EXPERIENCE</small><strong>' + r.xp + '<i> / ' + r.xpNext + ' XP</i></strong>' + bar(r.xp, r.xpNext, "rpg-xp") + '<span>Level-ups improve your combat stats.</span></article></section>' +
       (r.battle ? renderBattle(r) : '<section class="rpg-subpanel rpg-hunt-board"><div class="rpg-section-head"><div><div class="rpg-eyebrow">AVAILABLE TARGETS</div><h2>Hunt Board</h2></div><span class="rpg-count">' + monsters.filter(function (m) { return depth >= m.depth; }).length + ' / ' + monsters.length + ' CREATURES</span></div><p class="rpg-section-hint">Hunt ordinary monsters for crafting materials, or challenge a boss for a multi-phase fight and unique relic.</p><div class="rpg-monster-list">' + renderMonsters(state, r) + '</div></section>' + renderBosses(state, r)) +
-      renderForge(state, r) + renderAlchemy(state, r) +
+      renderChambers(state, r) + renderForge(state, r) + renderAlchemy(state, r) +
       '<section class="rpg-subpanel"><div class="rpg-section-head"><div><div class="rpg-eyebrow">REWARD CACHE</div><h3>Sealed Loot</h3></div><span class="rpg-count">' + r.inventory.lootBoxes + ' CACHES</span></div><p class="rpg-section-hint">Monster loot caches contain equipment appropriate to your deepest unlocked floor.</p><button class="rpg-action-primary rpg-craft-button" data-rpg-action="open-cache" ' + (r.inventory.lootBoxes > 0 ? "" : "disabled") + '>◇ OPEN LOOT CACHE</button></section>' +
       renderInventory(r) + '<p class="rpg-footnote">Combat uses stamina, never Step Power. Basic attacks run automatically while this page is open; you control special attacks, guarding, and healing.</p></div>';
   }
