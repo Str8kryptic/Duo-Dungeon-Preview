@@ -1,13 +1,13 @@
 # Duo Dungeon — Official Apple Health Step Sync
 
-**Official Shortcut:** [Add Sync Duo Dungeon Steps](https://www.icloud.com/shortcuts/6be17152bd3049c49af226017fb765ff)
+**Official Shortcut:** [Add Sync Duo Dungeon – DEV](https://www.icloud.com/shortcuts/48368457de7143509c83d8e3cdc40fa8)
 
 ## First-time setup
 
 1. Open the official iCloud link on your iPhone.
 2. In Apple Shortcuts, review it and tap **Add Shortcut**.
 3. Return to Duo Dungeon in Safari and sign in to the account that should receive your steps.
-4. Run **Sync Duo Dungeon Steps** from the Shortcuts app.
+4. Run **Sync Duo Dungeon – DEV** from the Shortcuts app.
 5. Allow access to Apple Health **Steps** when prompted.
 6. Check the crawler/account and today's step total in Duo Dungeon.
 7. Tap **Confirm Step Sync**.
