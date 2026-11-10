@@ -49,7 +49,7 @@ if (!bundledHtml.includes(healthBridgeTag)) {
   throw new Error('Android bundle is missing the Health Connect bridge script tag.');
 }
 if (!bundledHtml.includes('<script src="capacitor.js"></script>')) {
-  bundledHtml = bundledHtml.replace(healthBridgeTag, '<script src="capacitor.js"></script>\\n' + healthBridgeTag);
+  bundledHtml = bundledHtml.replace(healthBridgeTag, '<script src="capacitor.js"></script>\n' + healthBridgeTag);
 }
 writeFileSync(bundledIndex, bundledHtml);
 
