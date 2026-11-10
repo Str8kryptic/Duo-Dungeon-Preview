@@ -29,6 +29,7 @@ jobs:
           node --check health-connect.js
           node --check rpg-combat.js
           node scripts/test-health-connect.mjs
+          node scripts/test-rpg-combat.mjs
       - name: Verify platform step-sync onboarding
         run: |
           grep -q 'CHOOSE YOUR STEP-SYNC METHOD' app.js
