@@ -46,6 +46,46 @@ jobs:
           path: production
           fetch-depth: 1
 
+      - name: Verify Development and Production account isolation
+        if: steps.freshness.outputs.skip != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          dev_auth = Path("development/auth.js").read_text()
+          prod_auth = Path("production/auth.js").read_text()
+
+          def project_url(source, label):
+              match = re.search(r'PROJECT_URL\\s*=\\s*"([^"]+)"', source)
+              if not match:
+                  raise SystemExit(f"BLOCKED: {label} Supabase project URL is missing.")
+              return match.group(1)
+
+          dev_url = project_url(dev_auth, "Development")
+          prod_url = project_url(prod_auth, "Production")
+
+          expected_dev = "https://xuxwwpfeenaaxzfspiiq.supabase.co"
+          expected_prod = "https://cbndsdcotvnfkhfjrxst.supabase.co"
+
+          if dev_url != expected_dev:
+              raise SystemExit("BLOCKED: Development auth.js is not pointed at the approved Development project.")
+          if prod_url != expected_prod:
+              raise SystemExit("BLOCKED: Production auth.js is not pointed at the approved Production project.")
+          if dev_url == prod_url:
+              raise SystemExit("BLOCKED: Development and Production share the same Supabase project.")
+
+          if "duo-dungeon-dev-auth-token-v1" not in dev_auth:
+              raise SystemExit("BLOCKED: Development auth storage namespace is missing.")
+          if "duo-dungeon-dev-auth-token-v1" in prod_auth:
+              raise SystemExit("BLOCKED: Development auth storage namespace leaked into Production.")
+
+          print("PASS: Development and Production use distinct, approved Supabase projects.")
+          print("PASS: Development auth storage namespace is isolated.")
+          PY
+
       - name: Stage approved application files
         if: steps.freshness.outputs.skip != 'true'
         shell: bash
