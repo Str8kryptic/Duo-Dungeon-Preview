@@ -8,9 +8,9 @@
   ];
 
   var bosses = [
-    { id: "crypt-warden", name: "The Crypt Warden", kind: "DUNGEON BOSS", depth: 3, hp: 380, attack: 22, defense: 10, stamina: 30, xp: 180, lootChance: 1, boss: true, relicGear: "warden_oath", relicMaterial: "warden_seal", drops: [{ id: "ancient_bone", min: 3, max: 5, chance: 1 }, { id: "cursed_essence", min: 2, max: 3, chance: 1 }, { id: "warden_seal", min: 1, max: 2, chance: 1 }], flavor: "The crypt's keeper has mistaken your heartbeat for a noise complaint." },
-    { id: "infernal-tyrant", name: "The Infernal Tyrant", kind: "DUNGEON BOSS", depth: 6, hp: 720, attack: 36, defense: 15, stamina: 45, xp: 390, lootChance: 1, boss: true, relicGear: "tyrant_brand", relicMaterial: "tyrant_core", drops: [{ id: "infernal_hide", min: 3, max: 5, chance: 1 }, { id: "fire_core", min: 2, max: 3, chance: 1 }, { id: "tyrant_core", min: 1, max: 2, chance: 1 }], flavor: "A crowned furnace that has never once heard the word no." },
-    { id: "abyssal-dragon", name: "The Abyssal Dragon", kind: "DUNGEON BOSS", depth: 9, hp: 1200, attack: 50, defense: 20, stamina: 60, xp: 720, lootChance: 1, boss: true, relicGear: "dragonfang", relicMaterial: "void_heart", drops: [{ id: "infernal_hide", min: 4, max: 6, chance: 1 }, { id: "demon_horn", min: 2, max: 3, chance: 1 }, { id: "void_heart", min: 1, max: 2, chance: 1 }], flavor: "The thing beneath the dungeon. It remembers every crawler who came before you." }
+    { id: "crypt-warden", name: "The Crypt Warden", kind: "DUNGEON BOSS", depth: 3, hp: 380, attack: 22, defense: 10, stamina: 30, xp: 180, lootChance: 1, boss: true, relicGear: "warden_oath", relicArmor: "warden_aegis", relicMaterial: "warden_seal", drops: [{ id: "ancient_bone", min: 3, max: 5, chance: 1 }, { id: "cursed_essence", min: 2, max: 3, chance: 1 }, { id: "warden_seal", min: 1, max: 2, chance: 1 }], flavor: "The crypt's keeper has mistaken your heartbeat for a noise complaint." },
+    { id: "infernal-tyrant", name: "The Infernal Tyrant", kind: "DUNGEON BOSS", depth: 6, hp: 720, attack: 36, defense: 15, stamina: 45, xp: 390, lootChance: 1, boss: true, relicGear: "tyrant_brand", relicArmor: "tyrant_cinderplate", relicMaterial: "tyrant_core", drops: [{ id: "infernal_hide", min: 3, max: 5, chance: 1 }, { id: "fire_core", min: 2, max: 3, chance: 1 }, { id: "tyrant_core", min: 1, max: 2, chance: 1 }], flavor: "A crowned furnace that has never once heard the word no." },
+    { id: "abyssal-dragon", name: "The Abyssal Dragon", kind: "DUNGEON BOSS", depth: 9, hp: 1200, attack: 50, defense: 20, stamina: 60, xp: 720, lootChance: 1, boss: true, relicGear: "dragonfang", relicArmor: "voidscale_aegis", relicMaterial: "void_heart", drops: [{ id: "infernal_hide", min: 4, max: 6, chance: 1 }, { id: "demon_horn", min: 2, max: 3, chance: 1 }, { id: "void_heart", min: 1, max: 2, chance: 1 }], flavor: "The thing beneath the dungeon. It remembers every crawler who came before you." }
   ];
 
   var gearCatalog = [
@@ -207,15 +207,17 @@
     r.xp += monster.xp;
     var drops = awardDrops(r, monster);
     if (monster.boss && monster.relicGear) {
-      var relic = itemById(monster.relicGear);
-      var ownedRelic = r.inventory.gear.indexOf(monster.relicGear) >= 0 || r.equipment[relic.slot] === monster.relicGear;
-      if (!ownedRelic) {
-        r.inventory.gear.push(monster.relicGear);
-        drops += ", UNIQUE RELIC: " + relic.name;
-      } else {
-        r.inventory.materials[monster.relicMaterial] = (Number(r.inventory.materials[monster.relicMaterial]) || 0) + 2;
-        drops += ", 2 bonus " + materialNames[monster.relicMaterial];
-      }
+      [monster.relicGear, monster.relicArmor].filter(Boolean).forEach(function (relicId) {
+        var relic = itemById(relicId);
+        var ownedRelic = r.inventory.gear.indexOf(relicId) >= 0 || r.equipment[relic.slot] === relicId;
+        if (!ownedRelic) {
+          r.inventory.gear.push(relicId);
+          drops += ", UNIQUE RELIC: " + relic.name;
+        } else {
+          r.inventory.materials[monster.relicMaterial] = (Number(r.inventory.materials[monster.relicMaterial]) || 0) + 2;
+          drops += ", 2 bonus " + materialNames[monster.relicMaterial];
+        }
+      });
     }
     log(r, monster.name + " defeated. +" + monster.xp + " combat XP. Loot: " + drops + ".");
     r.battle = null;
@@ -576,8 +578,12 @@
       var unlocked = depth >= boss.depth;
       var kills = Number(r.kills[boss.id]) || 0;
       var relic = itemById(boss.relicGear);
-      var ownsRelic = r.inventory.gear.indexOf(boss.relicGear) >= 0 || r.equipment[relic.slot] === boss.relicGear;
-      return '<article class="rpg-boss-card ' + (unlocked ? "" : "is-locked") + '"><div class="rpg-boss-mark">♛</div><div class="rpg-boss-copy"><div class="rpg-eyebrow">' + (unlocked ? "BOSS UNLOCKED" : "FLOOR " + boss.depth + " REQUIRED") + ' · ' + esc(boss.kind) + '</div><h3>' + esc(boss.name) + '</h3><p>' + esc(unlocked ? boss.flavor : "Reach Descent floor " + boss.depth + " to challenge this boss.") + '</p><div class="rpg-monster-meta"><span>HP ' + boss.hp + '</span><span>ATK ' + boss.attack + '</span><span>DEF ' + boss.defense + '</span><span>' + kills + ' VICTORIES</span></div><small class="rpg-boss-relic">' + (ownsRelic ? "RELIC CLAIMED · " : "FIRST VICTORY RELIC · ") + esc(relic.name) + '</small></div><button class="rpg-hunt-button rpg-boss-button" data-rpg-action="hunt:' + boss.id + '" ' + (!unlocked || !!r.battle || r.stamina < boss.stamina ? "disabled" : "") + '>' + (!unlocked ? "LOCKED" : r.stamina < boss.stamina ? "NEED STAMINA" : "CHALLENGE") + '</button></article>';
+      var relicArmor = itemById(boss.relicArmor);
+      var ownsRelic = [boss.relicGear, boss.relicArmor].every(function (id) {
+        var item = itemById(id);
+        return r.inventory.gear.indexOf(id) >= 0 || r.equipment[item.slot] === id;
+      });
+      return '<article class="rpg-boss-card ' + (unlocked ? "" : "is-locked") + '"><div class="rpg-boss-mark">♛</div><div class="rpg-boss-copy"><div class="rpg-eyebrow">' + (unlocked ? "BOSS UNLOCKED" : "FLOOR " + boss.depth + " REQUIRED") + ' · ' + esc(boss.kind) + '</div><h3>' + esc(boss.name) + '</h3><p>' + esc(unlocked ? boss.flavor : "Reach Descent floor " + boss.depth + " to challenge this boss.") + '</p><div class="rpg-monster-meta"><span>HP ' + boss.hp + '</span><span>ATK ' + boss.attack + '</span><span>DEF ' + boss.defense + '</span><span>' + kills + ' VICTORIES</span></div><small class="rpg-boss-relic">' + (ownsRelic ? "RELICS CLAIMED · " : "FIRST VICTORY RELICS · ") + esc(relic.name) + ' + ' + esc(relicArmor.name) + '</small></div><button class="rpg-hunt-button rpg-boss-button" data-rpg-action="hunt:' + boss.id + '" ' + (!unlocked || !!r.battle || r.stamina < boss.stamina ? "disabled" : "") + '>' + (!unlocked ? "LOCKED" : r.stamina < boss.stamina ? "NEED STAMINA" : "CHALLENGE") + '</button></article>';
     }).join("") + '</div></section>';
   }
 
