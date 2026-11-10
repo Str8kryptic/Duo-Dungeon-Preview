@@ -28,3 +28,26 @@
 - Repeating the same reading grants no duplicate rewards; lower readings are rejected.
 - Existing Apple Shortcut sync and all iOS account/save flows pass regression tests.
 - Android changes ship to Development only until separately approved for Production.
+
+
+## Build the Android Development shell
+
+Requirements: Node.js 22, Android Studio, and an Android SDK installation.
+
+From the repository root:
+
+```bash
+npm install
+npm run android:add
+```
+
+For later web-code changes, use:
+
+```bash
+npm run android:sync
+npm run android:open
+```
+
+The pull-request workflow also generates a fresh Android project and builds a debug APK on GitHub Actions. The APK is uploaded as the `duo-dungeon-android-development` artifact for 14 days. This is a Development test build, not a Play Store release.
+
+The generated `www/` bundle and local Android build output are ignored by Git. The app's source web files remain the source of truth.
