@@ -40,7 +40,7 @@ assert.equal(status.authorized, true);
 assert.deepEqual(JSON.parse(JSON.stringify(authorizationOptions)), { read: ['steps'], write: [] });
 const reading = await health.today();
 assert.equal(reading.total, 1625);
-assert.match(reading.date, /^\\d{4}-\\d{2}-\\d{2}$/);
+assert.match(reading.date, /^\d{4}-\d{2}-\d{2}$/);
 assert.equal(typeof reading.timeZone, 'string');
 assert.equal(aggregateOptions.dataType, 'steps');
 assert.equal(aggregateOptions.bucket, 'day');
