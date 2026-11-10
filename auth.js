@@ -99,7 +99,7 @@ async function boot(){
  try{
   if(!window.supabase||!window.supabase.createClient)throw new Error("The account service did not load. Refresh and try again.");
   var recoveryUrl=new URLSearchParams(location.search).get("resetPassword")==="1"||new URLSearchParams(location.hash.replace(/^#/,"")).get("type")==="recovery";
-  client=window.supabase.createClient(PROJECT_URL,PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:{getItem:function(k){return (staySignedIn?localStorage:sessionStorage).getItem(k)},setItem:function(k,v){(staySignedIn?localStorage:sessionStorage).setItem(k,v)},removeItem:function(k){localStorage.removeItem(k);sessionStorage.removeItem(k)}}}});
+  client=window.supabase.createClient(PROJECT_URL,PUBLISHABLE_KEY,{auth:{storageKey:"duo-dungeon-dev-auth-token-v1",persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:{getItem:function(k){return (staySignedIn?localStorage:sessionStorage).getItem(k)},setItem:function(k,v){(staySignedIn?localStorage:sessionStorage).setItem(k,v)},removeItem:function(k){localStorage.removeItem(k);sessionStorage.removeItem(k)}}}});
   // Handle recovery links even when the redirect URL flag is missing or the
   // recovery session is established after the initial page load.
   client.auth.onAuthStateChange(function(event,session){
