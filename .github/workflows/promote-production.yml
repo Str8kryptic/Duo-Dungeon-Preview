@@ -59,7 +59,7 @@ jobs:
           prod_auth = Path("production/auth.js").read_text()
 
           def project_url(source, label):
-              match = re.search(r'PROJECT_URL\s*=\s*"([^"]+)"', source)
+              match = re.search(r'PROJECT_URL\\s*=\\s*"([^"]+)"', source)
               if not match:
                   raise SystemExit(f"BLOCKED: {label} Supabase project URL is missing.")
               return match.group(1)
@@ -91,6 +91,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          cd production
+          # Switch to the stable promotion branch BEFORE copying any files.
+          # This avoids Git refusing the checkout because staged preview files
+          # would otherwise be overwritten.
+          branch="promotion/development-latest"
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+            git fetch origin "$branch"
+            git checkout -B "$branch" "origin/$branch"
+          else
+            git checkout -b "$branch"
+          fi
+
+          cd ..
           # Only environment-neutral assets are eligible for automatic staging.
           # app.js, auth.js, index.html, setup.html, and dev-tools files remain
           # environment-specific until a dedicated production-safe build step exists.
@@ -119,17 +132,9 @@ jobs:
         run: |
           set -euo pipefail
           cd production
-          # Reuse one stable branch so each verified Development build refreshes
-          # the same review request instead of creating a new PR.
           branch="promotion/development-latest"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
-            git fetch origin "$branch"
-            git checkout -B "$branch" "origin/$branch"
-          else
-            git checkout -b "$branch"
-          fi
           git add game-data.js sync.js styles.css assets 2>/dev/null || git add game-data.js sync.js styles.css
           if git diff --cached --quiet; then
             echo "Development and Production application files already match."
