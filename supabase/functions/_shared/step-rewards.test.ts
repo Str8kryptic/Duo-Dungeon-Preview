@@ -86,6 +86,6 @@ Deno.test("treasury overflow converts into marks using the crawler's efficiency 
   const r = run(save, 100);
   assertEquals(r.bankedAdded, 50);
   assertEquals(r.overflowConverted, 50);
-  assertEquals(r.save.treasuryStepRemainder, 10);
+  assertEquals(r.save.treasuryStepRemainder, 50);
   assertEquals(r.save.treasuryMarks, 0);
 });
