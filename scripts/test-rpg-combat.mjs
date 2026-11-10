@@ -88,10 +88,10 @@ forgeRpg.inventory.materials.cursed_essence = 2;
 combat.handleAction(forgeState, "brew:power", hooks);
 assert.equal(forgeRpg.inventory.consumables.power, 1, "Brutal Tonic should be craftable");
 combat.handleAction(forgeState, "hunt:cave-stalker", hooks);
-const attackBeforeTonic = forgeRpg.battle ? 12 : 12;
 combat.handleAction(forgeState, "use-power-tonic", hooks);
 assert.equal(forgeRpg.inventory.consumables.power, 0, "using a tonic should consume one charge");
 assert.equal(forgeRpg.buffs.powerUntil > Date.now(), true, "tonic should apply a timed buff");
+assert.match(combat.render(forgeState), /ATK 17/, "Brutal Tonic should increase combat attack by five");
 
 // Warden's Elixir and the stamina stimulant consume their recipes correctly.
 forgeRpg.inventory.materials.ancient_bone = 1;
@@ -100,6 +100,7 @@ combat.handleAction(forgeState, "brew:ward", hooks);
 assert.equal(forgeRpg.inventory.consumables.ward, 1, "Warden's Elixir should be craftable");
 combat.handleAction(forgeState, "use-ward-tonic", hooks);
 assert.ok(forgeRpg.buffs.wardUntil > Date.now(), "Warden's Elixir should apply a timed defense buff");
+assert.match(combat.render(forgeState), /DEF 10/, "Warden's Elixir should increase combat defense by five");
 forgeRpg.battle = null;
 forgeState.descent.depth = 6;
 forgeRpg.stamina = 50;
