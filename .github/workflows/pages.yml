@@ -27,7 +27,9 @@ jobs:
           node --check app.js
           node --check auth.js
           node --check health-connect.js
+          node --check rpg-combat.js
           node scripts/test-health-connect.mjs
+          node scripts/test-rpg-combat.mjs
       - name: Verify platform step-sync onboarding
         run: |
           grep -q 'CHOOSE YOUR STEP-SYNC METHOD' app.js
@@ -41,7 +43,9 @@ jobs:
           grep -q 'ANDROID HEALTH CONNECT' app.js
           grep -q 'android-sync-status' styles.css
           grep -q 'styles.css?v=20261110androidhealth1' index.html
-          grep -q 'app.js?v=20261110androidhealthconnect2' index.html
+          grep -q 'app.js?v=20261110rpgcombat1' index.html
+          grep -q 'rpg-combat.js?v=20261110rpgcombat1' index.html
+          grep -q 'data-page="combat"' index.html
           grep -q 'health-connect.js?v=20261110androidhealthconnect1' index.html
           grep -q 'READ_STEPS' scripts/prepare-android-health.mjs
           grep -q 'capacitor.js' scripts/prepare-web.mjs
