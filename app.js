@@ -162,7 +162,8 @@ function stepSyncDialog(total,date){
    dlg.querySelector("[data-sync-note]").textContent="The dungeon could not record this reading. Your rewards were not applied. Check your connection and try again.";
    return;
   }
-  close();
+  try{if(dlg.open)dlg.close()}catch(e){}
+  dlg.remove();
  });
  if(typeof dlg.showModal==="function")dlg.showModal();else dlg.setAttribute("open","");
 }
