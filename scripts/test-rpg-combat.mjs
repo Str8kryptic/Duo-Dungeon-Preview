@@ -127,8 +127,8 @@ assert.equal(bossRpg.battle, null, "bosses must remain locked until the required
 bossState.descent.depth = 3;
 const unlockedBossView = combat.render(bossState);
 assert.match(unlockedBossView, /Dungeon Bosses/);
-assert.match(unlockedBossView, /Warden's Oath/);
-assert.match(unlockedBossView, /Warden's Aegis/);
+assert.match(unlockedBossView, /Warden&#39;s Oath/);
+assert.match(unlockedBossView, /Warden&#39;s Aegis/);
 combat.handleAction(bossState, "hunt:crypt-warden", hooks);
 assert.equal(bossRpg.battle.monsterId, "crypt-warden");
 assert.equal(bossRpg.stamina, 70, "boss encounter should spend its separate stamina cost");
