@@ -20,7 +20,7 @@ export function localDateInTimeZone(timeZone: string, now: number | Date = Date.
 }
 
 export function validateLocalStepDate(date: unknown, timeZone: unknown, now: number | Date = Date.now()): string {
-  if (typeof date !== "string" || !/^\\d{4}-\\d{2}-\\d{2}$/.test(date)) {
+  if (typeof date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     throw new Error("invalid_step_date");
   }
   const parsed = new Date(date + "T00:00:00.000Z");
