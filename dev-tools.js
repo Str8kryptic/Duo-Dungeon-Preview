@@ -2,11 +2,13 @@
 "use strict";
 var DEV_HOST="str8kryptic.github.io",DEV_PATH="/Duo-Dungeon-Preview",ADMIN_ID="94333a65-3233-44b2-a63b-0956fd0a355d";
 if(location.hostname!==DEV_HOST||!location.pathname.startsWith(DEV_PATH))return;
+/* Page refresh belongs to the Preview build, not the authenticated admin panel. */
+(function(){var header=document.querySelector("header"),brand=header&&header.querySelector(".brand");if(!header||!brand||document.getElementById("dev-page-refresh"))return;var b=document.createElement("button");b.type="button";b.id="dev-page-refresh";b.className="dev-page-refresh";b.textContent="↻";b.setAttribute("aria-label","Refresh development page");b.title="Refresh development page";b.addEventListener("click",function(){window.location.reload()});brand.insertAdjacentElement("afterend",b)})();
 var auth=window.DUO_AUTH;if(!auth||!auth.ready)return;
 auth.ready.then(function(){
  if(!auth.user||auth.user.id!==ADMIN_ID)return;
  var nav=document.querySelector(".main-nav"),root=document.getElementById("app");if(!nav||!root)return;
- var brand=document.querySelector("header .brand");if(brand&&!document.getElementById("dev-page-refresh")){var refreshButton=document.createElement("button");refreshButton.type="button";refreshButton.id="dev-page-refresh";refreshButton.className="dev-page-refresh";refreshButton.setAttribute("aria-label","Refresh development page");refreshButton.title="Refresh development page";refreshButton.textContent="↻";refreshButton.addEventListener("click",function(){window.location.reload()});brand.appendChild(refreshButton)}
+
  var tab=document.createElement("button");tab.type="button";tab.id="dev-tools-tab";tab.innerHTML='⚙<small>DEV TOOLS</small>';nav.appendChild(tab);
  var users=[],summary={},loading=false,errorText="",filter="all",search="",selectedId="",generatedAt=null,draft={version:"",title:"",intro:"",features:"",changes:"",fixes:"",patches:"",other:""},previewHtml="",previewReady=false,previewLoading=false,publishLoading=false,publishResult="",requestId="";
  function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
