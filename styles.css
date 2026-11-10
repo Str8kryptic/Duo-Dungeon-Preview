@@ -788,3 +788,7 @@ body.account-fallback-active::before{content:"";position:fixed;inset:0;z-index:1
  .section-guide-popover p{font-size:9px!important;line-height:1.3!important}
  .section-guide-done{min-height:24px!important;font-size:7px!important}
 }
+
+
+/* Account deletion is intentionally separated from routine account controls. */
+.account-danger-zone{margin-top:24px;padding:18px;border:1px solid rgba(210,72,91,.45);border-radius:14px;background:linear-gradient(145deg,rgba(93,22,37,.18),rgba(20,13,27,.72))}.account-danger-zone h3{margin:6px 0 8px;color:#f0b0b8;font-family:inherit;font-size:1rem;letter-spacing:.12em}.account-danger-zone .account-feedback{color:#c7b9c0;line-height:1.5}.account-danger-zone input{width:100%;box-sizing:border-box;margin:7px 0 12px}.account-delete-button{width:100%;border:1px solid rgba(226,91,111,.7)!important;background:linear-gradient(135deg,#692b3a,#381923)!important;color:#ffe8eb!important;margin-top:8px}.account-delete-button:disabled{opacity:.55;cursor:wait}
