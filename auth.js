@@ -19,16 +19,16 @@ function migrateLegacy(old){if(!old)return null;var data=window.DUO_DATA||{},fol
 function fresh(){return {name:"",number:100000+Math.floor(Math.random()*900000),coins:250,dust:0,xp:0,bag:[],gear:{}}}
 async function persist(save){
  if(!user||!client||saveBlocked)return;
- var payload=JSON.parse(JSON.stringify(save));
+ var targetUser=user,payload=JSON.parse(JSON.stringify(save));
  persistQueue=persistQueue.then(async function(){
-  if(!user||!client||saveBlocked)return;
+  if(!user||user.id!==targetUser.id||!client||saveBlocked)return;
   var now=new Date().toISOString(),result;
   if(saveRevision===null){
-   result=await client.from("player_saves").insert({user_id:user.id,save_data:payload,revision:1,updated_at:now}).select("revision").maybeSingle();
+   result=await client.from("player_saves").insert({user_id:targetUser.id,save_data:payload,revision:1,updated_at:now}).select("revision").maybeSingle();
    if(!result.error&&result.data)saveRevision=Number(result.data.revision);
   }else{
    var expected=saveRevision;
-   result=await client.from("player_saves").update({save_data:payload,revision:expected+1,updated_at:now}).eq("user_id",user.id).eq("revision",expected).select("revision").maybeSingle();
+   result=await client.from("player_saves").update({save_data:payload,revision:expected+1,updated_at:now}).eq("user_id",targetUser.id).eq("revision",expected).select("revision").maybeSingle();
    if(!result.error&&result.data)saveRevision=Number(result.data.revision);
    else if(!result.error&&!result.data){
     saveBlocked=true;
@@ -38,7 +38,7 @@ async function persist(save){
    }
   }
   if(result.error){console.error("Duo Dungeon save failed:",result.error.message);message("Save warning: "+result.error.message);return}
-  if(payload.name)await client.from("player_profiles").update({display_name:String(payload.name).slice(0,20),updated_at:now}).eq("id",user.id);
+  if(payload.name&&user&&user.id===targetUser.id)await client.from("player_profiles").update({display_name:String(payload.name).slice(0,20),updated_at:now}).eq("id",targetUser.id);
  }).catch(function(error){console.error("Duo Dungeon save queue failed:",error);message("Save warning: your latest changes could not be saved.")});
  return persistQueue;
 }
