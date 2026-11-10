@@ -234,4 +234,66 @@ try {
   Math.random = originalRandom;
 }
 
-console.log("RPG combat, crafting, bosses, and secret chamber tests passed.");
+// Daily bounty contracts track victories, pay out once, and roll over safely.
+const bountyState = { descent: { depth: 1 } };
+const bountyRpg = combat.ensure(bountyState);
+const bountyBoard = combat.render(bountyState);
+assert.match(bountyBoard, /Bounty Board/);
+assert.match(bountyBoard, /Pest Control/);
+assert.match(bountyBoard, /Problem Solvers/);
+assert.match(bountyBoard, /Head of the Problem/);
+const bountyRandom = Math.random;
+Math.random = () => 0;
+try {
+  const defeat = (monsterId) => {
+    bountyRpg.stamina = bountyRpg.maxStamina;
+    combat.handleAction(bountyState, "hunt:" + monsterId, hooks);
+    assert.ok(bountyRpg.battle, "bounty test monster should be huntable: " + monsterId);
+    bountyRpg.battle.hp = 1;
+    bountyRpg.battle.quickReadyAt = 0;
+    combat.handleAction(bountyState, "quick-strike", hooks);
+    assert.equal(bountyRpg.battle, null, "test victory should finish encounter");
+  };
+
+  const initialHerbs = bountyRpg.inventory.materials.bitter_herb || 0;
+  combat.handleAction(bountyState, "claim-bounty:stalker-contract", hooks);
+  assert.equal(bountyRpg.bounties.claimed.includes("stalker-contract"), false, "incomplete bounty cannot be claimed");
+  defeat("cave-stalker");
+  defeat("cave-stalker");
+  assert.equal(bountyRpg.bounties.progress["stalker-contract"], 2);
+  defeat("cave-stalker");
+  assert.equal(bountyRpg.bounties.progress["stalker-contract"], 3, "three stalker victories should complete the first contract");
+  const xpBeforeClaim = bountyRpg.xp;
+  const levelBeforeClaim = bountyRpg.level;
+  combat.handleAction(bountyState, "claim-bounty:stalker-contract", hooks);
+  assert.ok(bountyRpg.bounties.claimed.includes("stalker-contract"));
+  assert.ok(bountyRpg.xp > xpBeforeClaim || bountyRpg.level > levelBeforeClaim, "claiming a bounty should award combat XP, including XP converted into a level-up");
+  assert.equal((bountyRpg.inventory.materials.cave_chitin || 0) >= 3, true, "claim should award listed material supplies");
+  const claimedHerbs = bountyRpg.inventory.materials.bitter_herb || 0;
+  combat.handleAction(bountyState, "claim-bounty:stalker-contract", hooks);
+  assert.equal(bountyRpg.inventory.materials.bitter_herb || 0, claimedHerbs, "daily bounty cannot be claimed twice");
+
+  bountyState.descent.depth = 6;
+  defeat("crypt-reaver");
+  defeat("ash-knight");
+  assert.equal(bountyRpg.bounties.progress["elite-contract"], 2, "elite hunts should progress the elite contract");
+  combat.handleAction(bountyState, "claim-bounty:elite-contract", hooks);
+  assert.ok(bountyRpg.bounties.claimed.includes("elite-contract"));
+
+  defeat("crypt-warden");
+  assert.equal(bountyRpg.bounties.progress["boss-contract"], 1, "boss victory should complete the boss contract");
+  combat.handleAction(bountyState, "claim-bounty:boss-contract", hooks);
+  assert.ok(bountyRpg.bounties.claimed.includes("boss-contract"));
+
+  const bountySnapshot = JSON.stringify(bountyRpg.bounties);
+  combat.ensure(bountyState);
+  assert.equal(JSON.stringify(bountyRpg.bounties), bountySnapshot, "daily bounty progress should survive normalization");
+  bountyRpg.bounties.day = "2000-01-01";
+  combat.ensure(bountyState);
+  assert.equal(bountyRpg.bounties.claimed.length, 0, "a new local day should reset claimed contracts");
+  assert.equal(bountyRpg.bounties.progress["stalker-contract"], 0, "a new local day should reset progress");
+} finally {
+  Math.random = bountyRandom;
+}
+
+console.log("RPG combat, crafting, bosses, secret chambers, and daily bounty tests passed.");
