@@ -280,9 +280,9 @@
     }).join("");
   }
 
-  function craftGear(r, recipe, hooks) {
+  function craftGear(state, r, recipe, hooks) {
     var item = itemById(recipe.gear);
-    if (!item || depthOf(activeState || {}) < recipe.depth) { notify(hooks, "Descend further to unlock this blueprint."); return; }
+    if (!item || depthOf(state) < recipe.depth) { notify(hooks, "Descend further to unlock this blueprint."); return; }
     if (r.inventory.gear.indexOf(item.id) >= 0 || r.equipment[item.slot] === item.id) { notify(hooks, "You already own this blueprint's equipment."); return; }
     if (!canAfford(r, recipe.costs)) { notify(hooks, "You are missing materials for " + item.name + "."); return; }
     Object.keys(recipe.costs).forEach(function (id) { r.inventory.materials[id] -= recipe.costs[id]; });
@@ -330,13 +330,23 @@
     if (action.indexOf("forge:") === 0) {
       var forgeRecipe = forgeRecipes.find(function (recipe) { return recipe.gear === action.slice(6); });
       if (!forgeRecipe) { notify(hooks, "That forge blueprint does not exist."); return; }
-      craftGear(r, forgeRecipe, hooks);
+      craftGear(state, r, forgeRecipe, hooks);
       return;
     }
     if (action.indexOf("brew:") === 0) {
       var brewRecipe = alchemyRecipes.find(function (recipe) { return recipe.id === action.slice(5); });
       if (!brewRecipe) { notify(hooks, "That alchemy recipe does not exist."); return; }
       if (depthOf(state) < brewRecipe.depth) { notify(hooks, "Reach Descent floor " + brewRecipe.depth + " to unlock this recipe."); return; }
+      if (brewRecipe.id === "stamina") {
+        if (!canAfford(r, brewRecipe.costs)) { notify(hooks, "You are missing materials for " + brewRecipe.name + "."); return; }
+        Object.keys(brewRecipe.costs).forEach(function (id) { r.inventory.materials[id] -= brewRecipe.costs[id]; });
+        var restored = Math.min(25, r.maxStamina - r.stamina);
+        r.stamina += restored;
+        log(r, brewRecipe.name + " restores " + restored + " stamina.");
+        notify(hooks, restored + " stamina restored.");
+        refresh(hooks);
+        return;
+      }
       craftConsumable(r, brewRecipe, hooks);
       return;
     }
