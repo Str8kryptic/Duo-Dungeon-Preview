@@ -39,12 +39,18 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Prepare bundled game assets
         run: npm run build:web
+      - name: Check JavaScript and Android build scripts
+        run: node --check app.js && node --check health-connect.js && node --check scripts/prepare-android-health.mjs && node --check scripts/verify-android-health-manifest.mjs && node scripts/test-health-connect.mjs
       - name: Generate Android project
         run: npx cap add android
+      - name: Restrict Health Connect permissions to steps only
+        run: npm run android:configure
       - name: Build Android debug APK
         run: |
           cd android
           ./gradlew assembleDebug
+      - name: Verify merged Health Connect permissions
+        run: npm run android:verify
       - name: Upload Development APK
         uses: actions/upload-artifact@v4
         with:

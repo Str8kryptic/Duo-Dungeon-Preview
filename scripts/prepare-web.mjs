@@ -1,8 +1,9 @@
-import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { extname, join } from 'node:path';
 
 const root = process.cwd();
 const output = join(root, 'www');
+const capacitorRuntime = join(root, 'node_modules/@capacitor/core/dist/capacitor.js');
 const webExtensions = new Set([
   '.html', '.js', '.css', '.json', '.svg', '.png', '.jpg', '.jpeg',
   '.webp', '.gif', '.ico', '.woff', '.woff2', '.ttf', '.otf'
@@ -35,5 +36,21 @@ for (const required of ['app.js', 'auth.js', 'game-data.js', 'styles.css']) {
     throw new Error('Web bundle is missing required file: ' + required);
   }
 }
+
+if (!existsSync(capacitorRuntime)) {
+  throw new Error('Capacitor runtime is missing; install dependencies before preparing the Android web bundle.');
+}
+cpSync(capacitorRuntime, join(output, 'capacitor.js'));
+
+const bundledIndex = join(output, 'index.html');
+let bundledHtml = readFileSync(bundledIndex, 'utf8');
+const healthBridgeTag = '<script src="health-connect.js?v=20261110androidhealthconnect1"></script>';
+if (!bundledHtml.includes(healthBridgeTag)) {
+  throw new Error('Android bundle is missing the Health Connect bridge script tag.');
+}
+if (!bundledHtml.includes('<script src="capacitor.js"></script>')) {
+  bundledHtml = bundledHtml.replace(healthBridgeTag, '<script src="capacitor.js"></script>\n' + healthBridgeTag);
+}
+writeFileSync(bundledIndex, bundledHtml);
 
 console.log('Prepared Duo Dungeon web bundle in ./www');

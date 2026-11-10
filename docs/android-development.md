@@ -10,6 +10,19 @@
 - GitHub Actions can generate a clean Android project, build a Development debug APK, and retain it as a downloadable workflow artifact.
 - The browser-only GitHub Pages site cannot request Android Health Connect permissions. A native Android container/bridge is required.
 
+## Android Health Connect implementation
+
+The current Development branch now includes the first native step-sync implementation:
+
+- Uses the Capacitor 8-compatible `@capgo/capacitor-health` bridge.
+- Requests `read: ['steps']` only and requests no write access.
+- The plugin's upstream Android manifest declares additional health scopes, so the generated app manifest explicitly removes every other Health Connect permission. CI verifies that the merged manifest contains exactly `android.permission.health.READ_STEPS`.
+- Reads today's local-day aggregate total (not individual records) and sends only the total, local date, and device time-zone through the existing authenticated `step-reward-sync` flow.
+- Sync remains an explicit user action. No background collection is enabled.
+- The Android privacy rationale is available at `privacypolicy.html`.
+
+The bridge and permission-scope tests run in the Android Development workflow. A successful CI build proves the Android project compiles; real-device permission, aggregation, and reward regression tests are still required before Android sync is considered production-ready.
+
 ## Target Android implementation
 
 1. Use the Capacitor 8 shell (`capacitor.config.ts`) to package the existing web game without changing its game/save data model. The Android project is generated from this config during CI (`npx cap add android`) rather than committing generated Android Studio files yet.
