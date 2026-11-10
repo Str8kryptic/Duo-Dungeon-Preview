@@ -1,48 +1,25 @@
-DUO DUNGEON — APPLE HEALTH STEP SYNC
-=====================================
+DUO DUNGEON — OFFICIAL APPLE HEALTH STEP SYNC
+================================================
 
+Official Shortcut: https://www.icloud.com/shortcuts/19860a7f85334e649d5c5a984a9e3cea
 Shortcut name: Sync Duo Dungeon Steps
 
-Create these actions in Apple Shortcuts, in this order:
+FIRST-TIME SETUP
+1. Open the official iCloud link above on your iPhone.
+2. In Apple Shortcuts, review it and tap Add Shortcut.
+3. Return to Duo Dungeon in Safari and sign in to the account that should receive your steps.
+4. Run “Sync Duo Dungeon Steps” from the Shortcuts app.
+5. Allow access to Apple Health Steps when prompted.
+6. Check the crawler/account and today's step total in Duo Dungeon.
+7. Tap Confirm Step Sync.
 
-1. FIND HEALTH SAMPLES
-   - Health Type: Steps
-   - Start Date: Today
-   - (If available) Sort by Start Date, newest first
-   - Do not add a limit.
+HOW IT WORKS
+- The Shortcut reads today's Apple Health step total and opens Duo Dungeon with that total and today's date.
+- Steps are credited to the account currently signed in when the game opens.
+- Always verify the correct crawler before confirming, especially on a shared device.
+- The game compares the total with your last successful sync and rewards only the increase. Re-running the same total does not pay twice.
+- Keep the Shortcut installed and run it whenever you want to sync.
+- If the game opens signed out, sign in first and run the Shortcut again.
 
-2. CALCULATE STATISTICS
-   - Operation: Sum
-   - Input: Health Samples from action 1
-
-3. FORMAT DATE
-   - Date: Current Date
-   - Format: Custom
-   - Custom Format: yyyy-MM-dd
-
-4. TEXT
-   Enter this URL, replacing the bracketed placeholders with Shortcuts Magic Variables:
-   https://str8kryptic.github.io/Duo-Dungeon-Preview/?duoSteps=[SUM]&duoDate=[DATE]
-   [SUM] = result from Calculate Statistics
-   [DATE] = result from Format Date
-
-5. OPEN URLS
-   - Input: Text from action 4
-
-6. RUN THE SHORTCUT
-   - Allow access to Apple Health when prompted.
-   - Confirm the correct Duo Dungeon account when the game asks.
-
-IMPORTANT
-- Duo Dungeon credits steps to the account currently signed in on the device.
-- The game asks for confirmation and refuses Health sync while signed out or in guest mode.
-- The Shortcut itself does not store account credentials or choose an account.
-- On a shared device, sign out before handing the device to another player.
-- This Shortcut sends today's total. Re-running it does not pay rewards twice; only the increase since the last successful sync is rewarded.
-
-NOTE
-Apple Shortcuts action labels can vary slightly by iOS version. This is an action-by-action setup guide, not an installable Apple-signed .shortcut package. An iCloud install link can be added after the Shortcut is created and shared from the Shortcuts app.
-
-
-DEV TESTING NOTE
-Use the Preview URL above while testing. Once the update is approved and promoted to the live site, change only the domain/path in the Text action to https://duodungeon.com/.
+DEVELOPMENT
+This Shortcut is configured for the Development Preview while the game is being tested. Do not edit the Shortcut URL manually unless a new official Shortcut is provided.
