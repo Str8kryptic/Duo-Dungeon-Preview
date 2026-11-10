@@ -120,7 +120,7 @@ export function calculateStepRewards(options: RewardOptions): StepRewardResult {
   const now = options.now ?? Date.now();
   const random = options.random ?? Math.random;
   if (!Number.isSafeInteger(total) || total < 0 || total > 100000) throw new Error("invalid_step_total");
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error("invalid_step_date");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(Date.parse(date)) || new Date(date + "T00:00:00.000Z").toISOString().slice(0, 10) !== date) throw new Error("invalid_step_date");
 
   const s = clone(options.save || {});
   s.gear = s.gear || {};
