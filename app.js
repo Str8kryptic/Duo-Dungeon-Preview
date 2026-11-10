@@ -155,8 +155,7 @@ function stepSyncDialog(total,date){
   dlg.querySelector("[data-sync-title]").textContent=result.alreadyCurrent?"ALREADY COUNTED":"REWARDS PROCESSED";
   dlg.querySelector(".step-sync-total small").textContent="HEALTH TOTAL RECORDED";
   dlg.querySelector("[data-sync-note]").textContent=result.alreadyCurrent?"This reading was already processed. No duplicate rewards were issued.":"Your steps have been credited. Here's what the dungeon awarded.";
-  dlg.querySelector("[data-sync-actions]").hidden=true;
-  dlg.querySelector("[data-sync-results]").hidden=false;
+  var syncActions=dlg.querySelector("[data-sync-actions]"),syncResults=dlg.querySelector("[data-sync-results]");syncActions.hidden=true;syncActions.style.display="none";syncResults.hidden=false;syncResults.style.display="block";
   dlg.querySelector("[data-reward-grid]").innerHTML=
    '<div><small>NEW STEPS</small><b>'+result.delta.toLocaleString()+'</b></div>'+
    '<div><small>ADDED TO RESERVE</small><b>'+result.bankedAdded.toLocaleString()+'</b></div>'+
