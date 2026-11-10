@@ -1,0 +1,54 @@
+name: Android Development Build
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "package.json"
+      - "capacitor.config.ts"
+      - "scripts/**"
+      - "docs/**"
+      - "*.html"
+      - "*.js"
+      - "*.css"
+      - "assets/**"
+      - "images/**"
+      - "fonts/**"
+      - ".github/workflows/android-preview.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android-debug-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Development source
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Install Capacitor dependencies
+        run: npm install --no-audit --no-fund
+      - name: Prepare bundled game assets
+        run: npm run build:web
+      - name: Generate Android project
+        run: npx cap add android
+      - name: Build Android debug APK
+        run: |
+          cd android
+          ./gradlew assembleDebug
+      - name: Upload Development APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: duo-dungeon-android-development
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
