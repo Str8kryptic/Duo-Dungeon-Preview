@@ -1,0 +1,102 @@
+name: Propose Production promotion after successful Development deploy
+
+on:
+  workflow_run:
+    workflows: ["Deploy Duo Dungeon Preview"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: propose-production-promotion
+  cancel-in-progress: true
+
+jobs:
+  propose-production:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the exact Development commit
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: development
+          fetch-depth: 1
+
+      - name: Skip stale preview deployments
+        id: freshness
+        shell: bash
+        run: |
+          if [ "$(git -C development rev-parse HEAD)" != "${{ github.event.workflow_run.head_sha }}" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "A newer Development commit exists; waiting for its Preview deployment."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check out Production
+        if: steps.freshness.outputs.skip != 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: Str8kryptic/Duo-Dungeon
+          ref: main
+          token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
+          path: production
+          fetch-depth: 1
+
+      - name: Stage approved application files
+        if: steps.freshness.outputs.skip != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            app.js
+            auth.js
+            game-data.js
+            sync.js
+            styles.css
+            setup.html
+            index.html
+            dev-tools.js
+            dev-tools.css
+          )
+          for file in "${files[@]}"; do
+            test -f "development/$file"
+            cp "development/$file" "production/$file"
+          done
+          if [ -d development/assets ]; then
+            mkdir -p production/assets
+            cp -R development/assets/. production/assets/
+          fi
+          # Production's Pages workflow, domain configuration, and repository
+          # settings are deliberately not copied from Development.
+
+      - name: Create a Production promotion pull request
+        if: steps.freshness.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
+          RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
+          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd production
+          branch="promotion/development-${RUN_NUMBER}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add app.js auth.js game-data.js sync.js styles.css setup.html index.html dev-tools.js dev-tools.css assets 2>/dev/null || git add app.js auth.js game-data.js sync.js styles.css setup.html index.html dev-tools.js dev-tools.css
+          if git diff --cached --quiet; then
+            echo "Development and Production application files already match."
+            exit 0
+          fi
+          git commit -m "Promote verified Development build to Production"
+          git push origin "$branch"
+          gh pr create \
+            --repo Str8kryptic/Duo-Dungeon \
+            --base main \
+            --head "$branch" \
+            --title "Promote verified Development build to Production" \
+            --body "Automated promotion proposal created after successful Development Preview deployment.\n\nDevelopment commit: $SOURCE_SHA\n\nReview this PR before merging. Production deployment remains a separate, explicit action."
