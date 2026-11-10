@@ -7,7 +7,19 @@
     { id: "infernal-beast", name: "Infernal Beast", kind: "DEMONIC", depth: 6, hp: 285, attack: 27, defense: 10, stamina: 28, xp: 118, lootChance: 0.28, drops: [{ id: "infernal_hide", min: 1, max: 2, chance: 1 }, { id: "fire_core", min: 1, max: 1, chance: 0.5 }, { id: "demon_horn", min: 1, max: 1, chance: 0.32 }], flavor: "A walking furnace with anger-management issues and excellent loot prospects." }
   ];
 
+  var bosses = [
+    { id: "crypt-warden", name: "The Crypt Warden", kind: "DUNGEON BOSS", depth: 3, hp: 380, attack: 22, defense: 10, stamina: 30, xp: 180, lootChance: 1, boss: true, relicGear: "warden_oath", relicArmor: "warden_aegis", relicMaterial: "warden_seal", drops: [{ id: "ancient_bone", min: 3, max: 5, chance: 1 }, { id: "cursed_essence", min: 2, max: 3, chance: 1 }, { id: "warden_seal", min: 1, max: 2, chance: 1 }], flavor: "The crypt's keeper has mistaken your heartbeat for a noise complaint." },
+    { id: "infernal-tyrant", name: "The Infernal Tyrant", kind: "DUNGEON BOSS", depth: 6, hp: 720, attack: 36, defense: 15, stamina: 45, xp: 390, lootChance: 1, boss: true, relicGear: "tyrant_brand", relicArmor: "tyrant_cinderplate", relicMaterial: "tyrant_core", drops: [{ id: "infernal_hide", min: 3, max: 5, chance: 1 }, { id: "fire_core", min: 2, max: 3, chance: 1 }, { id: "tyrant_core", min: 1, max: 2, chance: 1 }], flavor: "A crowned furnace that has never once heard the word no." },
+    { id: "abyssal-dragon", name: "The Abyssal Dragon", kind: "DUNGEON BOSS", depth: 9, hp: 1200, attack: 50, defense: 20, stamina: 60, xp: 720, lootChance: 1, boss: true, relicGear: "dragonfang", relicArmor: "voidscale_aegis", relicMaterial: "void_heart", drops: [{ id: "infernal_hide", min: 4, max: 6, chance: 1 }, { id: "demon_horn", min: 2, max: 3, chance: 1 }, { id: "void_heart", min: 1, max: 2, chance: 1 }], flavor: "The thing beneath the dungeon. It remembers every crawler who came before you." }
+  ];
+
   var gearCatalog = [
+    { id: "warden_oath", name: "Warden's Oath", slot: "weapon", attack: 13, defense: 0, rarity: "Legendary", depth: 3, bossOnly: true, desc: "A crypt-forged oath that refuses to be broken." },
+    { id: "warden_aegis", name: "Warden's Aegis", slot: "armor", attack: 0, defense: 12, rarity: "Legendary", depth: 3, bossOnly: true, desc: "The Warden's own shield, reforged as armor." },
+    { id: "tyrant_brand", name: "Tyrant's Brand", slot: "weapon", attack: 21, defense: 0, rarity: "Legendary", depth: 6, bossOnly: true, desc: "A blade branded in the heart of a living inferno." },
+    { id: "tyrant_cinderplate", name: "Tyrant's Cinderplate", slot: "armor", attack: 0, defense: 20, rarity: "Legendary", depth: 6, bossOnly: true, desc: "Blackened plate that turns the Tyrant's fire against its enemies." },
+    { id: "dragonfang", name: "Abyssal Dragonfang", slot: "weapon", attack: 32, defense: 0, rarity: "Mythic", depth: 9, bossOnly: true, desc: "A fang torn from the oldest thing beneath the dungeon." },
+    { id: "voidscale_aegis", name: "Voidscale Aegis", slot: "armor", attack: 0, defense: 28, rarity: "Mythic", depth: 9, bossOnly: true, desc: "Scales that remember the shape of the void." },
     { id: "stalker_fang", name: "Stalker Fang", slot: "weapon", attack: 4, defense: 0, rarity: "Uncommon", depth: 1, desc: "A sharp trophy from a very persistent spider." },
     { id: "chitin_vest", name: "Chitin Vest", slot: "armor", attack: 0, defense: 4, rarity: "Uncommon", depth: 1, desc: "Layered cave chitin. Surprisingly fashionable. Mostly." },
     { id: "cryptbone_blade", name: "Cryptbone Blade", slot: "weapon", attack: 8, defense: 0, rarity: "Rare", depth: 3, desc: "A cold blade reinforced with ancient bone." },
@@ -25,7 +37,10 @@
     rusted_fragment: "Rusted Fragments",
     infernal_hide: "Infernal Hide",
     fire_core: "Fire Cores",
-    demon_horn: "Demon Horns"
+    demon_horn: "Demon Horns",
+    warden_seal: "Warden Seals",
+    tyrant_core: "Tyrant Cores",
+    void_heart: "Void Hearts"
   };
 
   var forgeRecipes = [
@@ -142,7 +157,8 @@
   }
 
   function monsterById(id) {
-    return monsters.find(function (monster) { return monster.id === id; }) || null;
+    return monsters.find(function (monster) { return monster.id === id; }) ||
+      bosses.find(function (monster) { return monster.id === id; }) || null;
   }
 
   function randInt(min, max) {
@@ -190,6 +206,19 @@
     r.kills[monster.id] = (Number(r.kills[monster.id]) || 0) + 1;
     r.xp += monster.xp;
     var drops = awardDrops(r, monster);
+    if (monster.boss && monster.relicGear) {
+      [monster.relicGear, monster.relicArmor].filter(Boolean).forEach(function (relicId) {
+        var relic = itemById(relicId);
+        var ownedRelic = r.inventory.gear.indexOf(relicId) >= 0 || r.equipment[relic.slot] === relicId;
+        if (!ownedRelic) {
+          r.inventory.gear.push(relicId);
+          drops += ", UNIQUE RELIC: " + relic.name;
+        } else {
+          r.inventory.materials[monster.relicMaterial] = (Number(r.inventory.materials[monster.relicMaterial]) || 0) + 2;
+          drops += ", 2 bonus " + materialNames[monster.relicMaterial];
+        }
+      });
+    }
     log(r, monster.name + " defeated. +" + monster.xp + " combat XP. Loot: " + drops + ".");
     r.battle = null;
     levelUp(r, hooks);
@@ -212,6 +241,16 @@
     var damage = Math.max(1, Math.round(player.attack * multiplier + randInt(-2, 3) - monster.defense));
     r.battle.hp = Math.max(0, r.battle.hp - damage);
     log(r, label + " deals " + damage + " damage to " + monster.name + ".");
+    if (monster.boss && r.battle.hp > 0) {
+      var ratio = r.battle.hp / r.battle.maxHp;
+      var phase = ratio <= 0.3 ? 3 : ratio <= 0.65 ? 2 : 1;
+      if (phase > (Number(r.battle.phase) || 1)) {
+        r.battle.phase = phase;
+        r.battle.telegraph = false;
+        log(r, monster.name + " enters PHASE " + phase + ". " + (phase === 2 ? "The arena shakes as its power rises." : "Its final form awakens. Brace yourself."));
+        notify(hooks, monster.name + " has entered phase " + phase + "!");
+      }
+    }
     if (r.battle.hp <= 0) winBattle(state, r, hooks);
   }
 
@@ -220,14 +259,27 @@
     var monster = monsterById(r.battle.monsterId);
     if (!monster) { r.battle = null; return; }
     var player = stats(r);
-    var damage = Math.max(1, Math.round(monster.attack + randInt(-2, 2) - player.defense * 0.45));
+    var boss = !!monster.boss;
+    var phase = Number(r.battle.phase) || 1;
+    r.battle.enemyTurns = (Number(r.battle.enemyTurns) || 0) + 1;
+    if (boss && !r.battle.telegraph && r.battle.enemyTurns % 3 === 0) {
+      r.battle.telegraph = true;
+      r.battle.telegraphText = phase === 3 ? "DEVASTATING VOID STRIKE INCOMING — GUARD NOW" : phase === 2 ? "HEAVY BOSS ATTACK CHARGING — GUARD NOW" : "BOSS IS WINDING UP A HEAVY ATTACK — GUARD NOW";
+      log(r, monster.name + " is charging a devastating attack. Guard before it lands.");
+      return;
+    }
+    var heavy = boss && !!r.battle.telegraph;
+    var multiplier = heavy ? (phase === 3 ? 2.25 : phase === 2 ? 1.85 : 1.55) : (phase === 3 ? 1.45 : phase === 2 ? 1.2 : 1);
+    var damage = Math.max(1, Math.round((monster.attack * multiplier) + randInt(-2, 2) - player.defense * 0.45));
     if (r.battle.guarding) {
-      damage = Math.max(1, Math.floor(damage * 0.4));
+      damage = Math.max(1, Math.floor(damage * (heavy ? 0.25 : 0.4)));
       r.battle.guarding = false;
       log(r, "You brace behind your guard and reduce the incoming blow to " + damage + ".");
     } else {
-      log(r, monster.name + " hits you for " + damage + " damage.");
+      log(r, (heavy ? "DEVASTATING STRIKE: " : "") + monster.name + " hits you for " + damage + " damage.");
     }
+    r.battle.telegraph = false;
+    r.battle.telegraphText = "";
     r.hp = Math.max(0, r.hp - damage);
     if (r.hp <= 0) loseBattle(r, hooks);
   }
@@ -249,7 +301,11 @@
       nextPlayerAt: Date.now() + 1800,
       nextEnemyAt: Date.now() + 2800,
       guarding: false,
-      heavyReadyAt: 0
+      heavyReadyAt: 0,
+      phase: 1,
+      enemyTurns: 0,
+      telegraph: false,
+      telegraphText: ""
     };
     log(r, "Hunt started: " + monster.name + ". " + monster.flavor);
     refresh(hooks);
@@ -313,7 +369,7 @@
   function openLootBox(r, hooks, state) {
     if (r.inventory.lootBoxes < 1) { notify(hooks, "No loot caches to open."); return; }
     var availableDepth = depthOf(state);
-    var pool = gearCatalog.filter(function (item) { return item.depth <= availableDepth; });
+    var pool = gearCatalog.filter(function (item) { return !item.bossOnly && item.depth <= availableDepth; });
     if (!pool.length) pool = [gearCatalog[0]];
     var item = pool[randInt(0, pool.length - 1)];
     r.inventory.lootBoxes -= 1;
@@ -499,6 +555,7 @@
     var quickReady = Date.now() >= Number(battle.quickReadyAt || 0);
     var heavyReady = Date.now() >= Number(battle.heavyReadyAt || 0);
     return '<section class="rpg-battle-panel"><div class="rpg-battle-heading"><div><div class="rpg-eyebrow">ACTIVE ENCOUNTER · ' + esc(monster.kind) + '</div><h2>' + esc(monster.name) + '</h2><p>' + esc(monster.flavor) + '</p></div><span class="rpg-live-mark">IN COMBAT</span></div>' +
+      (monster.boss ? '<div class="rpg-boss-phase">BOSS PHASE ' + (Number(battle.phase) || 1) + ' / 3' + (battle.telegraph ? '<strong>' + esc(battle.telegraphText || "HEAVY ATTACK INCOMING — GUARD NOW") + '</strong>' : '<span>Watch for charged attacks and guard at the right moment.</span>') + '</div>' : '') +
       '<div class="rpg-combatants"><article class="rpg-combatant rpg-player-combatant"><span class="rpg-combatant-icon">♙</span><small>CRAWLER</small><b>LVL ' + r.level + '</b><strong>' + r.hp + ' / ' + r.maxHp + ' HP</strong>' + bar(r.hp, r.maxHp, "rpg-hp") + '<small>ATK ' + player.attack + ' · DEF ' + player.defense + '</small></article>' +
       '<div class="rpg-versus">VS</div><article class="rpg-combatant rpg-monster-combatant"><span class="rpg-combatant-icon">☠</span><small>HOSTILE</small><b>' + esc(monster.kind) + '</b><strong>' + battle.hp + ' / ' + battle.maxHp + ' HP</strong>' + bar(battle.hp, battle.maxHp, "rpg-enemy-hp") + '<small>ATK ' + monster.attack + ' · DEF ' + monster.defense + '</small></article></div>' +
       '<div class="rpg-action-grid"><button class="rpg-action-primary" data-rpg-action="quick-strike" ' + (quickReady ? "" : "disabled") + '>⚔ QUICK STRIKE</button><button data-rpg-action="heavy-strike" ' + (heavyReady && r.stamina >= 5 ? "" : "disabled") + '>✦ HEAVY STRIKE <small>5 STAMINA</small></button><button data-rpg-action="guard">⬟ GUARD</button><button data-rpg-action="use-potion" ' + (r.inventory.potions > 0 && r.hp < r.maxHp ? "" : "disabled") + '>✚ HEALING DRAUGHT <small>' + r.inventory.potions + ' READY</small></button><button data-rpg-action="use-power-tonic" ' + (r.inventory.consumables.power > 0 ? "" : "disabled") + '>✦ BRUTAL TONIC <small>' + r.inventory.consumables.power + ' READY</small></button><button data-rpg-action="use-ward-tonic" ' + (r.inventory.consumables.ward > 0 ? "" : "disabled") + '>⬡ WARDEN ELIXIR <small>' + r.inventory.consumables.ward + ' READY</small></button></div>' +
@@ -513,6 +570,21 @@
       var kills = Number(r.kills[monster.id]) || 0;
       return '<article class="rpg-monster-card ' + (unlocked ? "" : "is-locked") + '"><div class="rpg-monster-symbol">' + (monster.id === "cave-stalker" ? "♜" : monster.id === "crypt-guardian" ? "☠" : "♨") + '</div><div class="rpg-monster-copy"><div class="rpg-eyebrow">' + esc(monster.kind) + ' · ' + (unlocked ? "UNLOCKED" : "LOCKED") + '</div><h3>' + esc(monster.name) + '</h3><p>' + esc(unlocked ? monster.flavor : "Reach Descent floor " + monster.depth + " to reveal this target.") + '</p><div class="rpg-monster-meta"><span>HP ' + monster.hp + '</span><span>ATK ' + monster.attack + '</span><span>STAMINA ' + monster.stamina + '</span><span>' + kills + ' KILLS</span></div></div><button class="rpg-hunt-button" data-rpg-action="hunt:' + monster.id + '" ' + (!unlocked || !!r.battle || r.stamina < monster.stamina ? "disabled" : "") + '>' + (!unlocked ? "LOCKED" : r.stamina < monster.stamina ? "NEED STAMINA" : "HUNT") + '</button></article>';
     }).join("");
+  }
+
+  function renderBosses(state, r) {
+    var depth = depthOf(state);
+    return '<section class="rpg-boss-board"><div class="rpg-section-head"><div><div class="rpg-eyebrow">ELITE HUNTS · HIGH RISK / HIGH REWARD</div><h2>Dungeon Bosses</h2></div><span class="rpg-count">3 ENCOUNTERS</span></div><p class="rpg-section-hint">Bosses have multiple phases, telegraphed heavy attacks, guaranteed trophy materials, and a unique relic on your first victory.</p><div class="rpg-boss-list">' + bosses.map(function (boss) {
+      var unlocked = depth >= boss.depth;
+      var kills = Number(r.kills[boss.id]) || 0;
+      var relic = itemById(boss.relicGear);
+      var relicArmor = itemById(boss.relicArmor);
+      var ownsRelic = [boss.relicGear, boss.relicArmor].every(function (id) {
+        var item = itemById(id);
+        return r.inventory.gear.indexOf(id) >= 0 || r.equipment[item.slot] === id;
+      });
+      return '<article class="rpg-boss-card ' + (unlocked ? "" : "is-locked") + '"><div class="rpg-boss-mark">♛</div><div class="rpg-boss-copy"><div class="rpg-eyebrow">' + (unlocked ? "BOSS UNLOCKED" : "FLOOR " + boss.depth + " REQUIRED") + ' · ' + esc(boss.kind) + '</div><h3>' + esc(boss.name) + '</h3><p>' + esc(unlocked ? boss.flavor : "Reach Descent floor " + boss.depth + " to challenge this boss.") + '</p><div class="rpg-monster-meta"><span>HP ' + boss.hp + '</span><span>ATK ' + boss.attack + '</span><span>DEF ' + boss.defense + '</span><span>' + kills + ' VICTORIES</span></div><small class="rpg-boss-relic">' + (ownsRelic ? "RELICS CLAIMED · " : "FIRST VICTORY RELICS · ") + esc(relic.name) + ' + ' + esc(relicArmor.name) + '</small></div><button class="rpg-hunt-button rpg-boss-button" data-rpg-action="hunt:' + boss.id + '" ' + (!unlocked || !!r.battle || r.stamina < boss.stamina ? "disabled" : "") + '>' + (!unlocked ? "LOCKED" : r.stamina < boss.stamina ? "NEED STAMINA" : "CHALLENGE") + '</button></article>';
+    }).join("") + '</div></section>';
   }
 
   function renderForge(state, r) {
@@ -562,7 +634,7 @@
     var potionReady = materialCount(r, "bitter_herb") >= 2 && materialCount(r, "venom_gland") >= 1;
     return '<div class="rpg-page"><section class="rpg-hero"><div class="rpg-hero-copy"><div class="rpg-eyebrow">DUO DUNGEON · COMBAT DIVISION</div><h1>THE HUNTING GROUNDS</h1><p>Descent reveals the prey. Your preparation decides whether you become the meal.</p><div class="rpg-hero-tags"><span>FLOOR ' + depth + ' REACHED</span><span>COMBAT LEVEL ' + r.level + '</span></div></div><div class="rpg-hero-sigil">⚔</div></section>' +
       '<section class="rpg-resource-grid"><article><small>STAMINA</small><strong>' + r.stamina + '<i> / ' + r.maxStamina + '</i></strong>' + bar(r.stamina, r.maxStamina, "rpg-stamina") + '<span>Regenerates 1 every 5 minutes.</span></article><article><small>HEALTH</small><strong>' + r.hp + '<i> / ' + r.maxHp + '</i></strong>' + bar(r.hp, r.maxHp, "rpg-hp") + '<span>Healing Draughts restore up to 45 HP.</span></article><article><small>COMBAT EXPERIENCE</small><strong>' + r.xp + '<i> / ' + r.xpNext + ' XP</i></strong>' + bar(r.xp, r.xpNext, "rpg-xp") + '<span>Level-ups improve your combat stats.</span></article></section>' +
-      (r.battle ? renderBattle(r) : '<section class="rpg-subpanel rpg-hunt-board"><div class="rpg-section-head"><div><div class="rpg-eyebrow">AVAILABLE TARGETS</div><h2>Monster Board</h2></div><span class="rpg-count">' + monsters.filter(function (m) { return depth >= m.depth; }).length + ' / ' + monsters.length + ' UNLOCKED</span></div><p class="rpg-section-hint">Only creatures discovered through Descent can be hunted here. Each target has its own stamina cost and crafting materials.</p><div class="rpg-monster-list">' + renderMonsters(state, r) + '</div></section>') +
+      (r.battle ? renderBattle(r) : '<section class="rpg-subpanel rpg-hunt-board"><div class="rpg-section-head"><div><div class="rpg-eyebrow">AVAILABLE TARGETS</div><h2>Hunt Board</h2></div><span class="rpg-count">' + monsters.filter(function (m) { return depth >= m.depth; }).length + ' / ' + monsters.length + ' CREATURES</span></div><p class="rpg-section-hint">Hunt ordinary monsters for crafting materials, or challenge a boss for a multi-phase fight and unique relic.</p><div class="rpg-monster-list">' + renderMonsters(state, r) + '</div></section>' + renderBosses(state, r)) +
       renderForge(state, r) + renderAlchemy(state, r) +
       '<section class="rpg-subpanel"><div class="rpg-section-head"><div><div class="rpg-eyebrow">REWARD CACHE</div><h3>Sealed Loot</h3></div><span class="rpg-count">' + r.inventory.lootBoxes + ' CACHES</span></div><p class="rpg-section-hint">Monster loot caches contain equipment appropriate to your deepest unlocked floor.</p><button class="rpg-action-primary rpg-craft-button" data-rpg-action="open-cache" ' + (r.inventory.lootBoxes > 0 ? "" : "disabled") + '>◇ OPEN LOOT CACHE</button></section>' +
       renderInventory(r) + '<p class="rpg-footnote">Combat uses stamina, never Step Power. Basic attacks run automatically while this page is open; you control special attacks, guarding, and healing.</p></div>';

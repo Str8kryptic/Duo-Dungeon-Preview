@@ -115,4 +115,56 @@ assert.match(forgeView, /THE FORGE/);
 assert.match(forgeView, /THE ALCHEMY LAB/);
 assert.match(forgeView, /Infernal Edge/);
 
-console.log("RPG combat and crafting tests passed.");
+// Elite bosses: floor gates, three combat phases, telegraphs, and guaranteed paired relic rewards.
+const bossState = { descent: { depth: 2 } };
+const bossRpg = combat.ensure(bossState);
+const lockedBossView = combat.render(bossState);
+assert.match(lockedBossView, /The Crypt Warden/);
+assert.match(lockedBossView, /FLOOR 3 REQUIRED/);
+combat.handleAction(bossState, "hunt:crypt-warden", hooks);
+assert.equal(bossRpg.battle, null, "bosses must remain locked until the required Descent floor");
+
+bossState.descent.depth = 3;
+const unlockedBossView = combat.render(bossState);
+assert.match(unlockedBossView, /Dungeon Bosses/);
+assert.match(unlockedBossView, /Warden&#39;s Oath/);
+assert.match(unlockedBossView, /Warden&#39;s Aegis/);
+combat.handleAction(bossState, "hunt:crypt-warden", hooks);
+assert.equal(bossRpg.battle.monsterId, "crypt-warden");
+assert.equal(bossRpg.stamina, 70, "boss encounter should spend its separate stamina cost");
+assert.match(combat.render(bossState), /BOSS PHASE 1 \/ 3/);
+
+bossRpg.battle.hp = Math.floor(bossRpg.battle.maxHp * 0.64);
+bossRpg.battle.quickReadyAt = 0;
+combat.handleAction(bossState, "quick-strike", hooks);
+assert.equal(bossRpg.battle.phase, 2, "boss should enter phase two below 65% health");
+bossRpg.battle.hp = Math.floor(bossRpg.battle.maxHp * 0.29);
+bossRpg.battle.quickReadyAt = 0;
+combat.handleAction(bossState, "quick-strike", hooks);
+assert.equal(bossRpg.battle.phase, 3, "boss should enter final phase below 30% health");
+assert.match(combat.render(bossState), /BOSS PHASE 3 \/ 3/);
+
+bossRpg.battle.hp = 1;
+bossRpg.battle.quickReadyAt = 0;
+combat.handleAction(bossState, "quick-strike", hooks);
+assert.equal(bossRpg.battle, null, "defeated boss should end the encounter");
+assert.ok(bossRpg.inventory.gear.includes("warden_oath"), "first boss victory should award its unique weapon");
+assert.ok(bossRpg.inventory.gear.includes("warden_aegis"), "first boss victory should award its unique armor");
+assert.equal(bossRpg.kills["crypt-warden"], 1);
+
+combat.handleAction(bossState, "hunt:crypt-warden", hooks);
+bossRpg.battle.hp = 1;
+bossRpg.battle.quickReadyAt = 0;
+combat.handleAction(bossState, "quick-strike", hooks);
+assert.equal(bossRpg.inventory.gear.filter(id => id === "warden_oath").length, 1, "repeat victories should not duplicate unique relics");
+assert.ok(bossRpg.inventory.materials.warden_seal >= 5, "repeat victories should convert duplicate relic rewards into boss materials");
+
+bossState.descent.depth = 9;
+bossRpg.stamina = bossRpg.maxStamina;
+const finalBossBoard = combat.render(bossState);
+assert.match(finalBossBoard, /The Infernal Tyrant/);
+assert.match(finalBossBoard, /The Abyssal Dragon/);
+combat.handleAction(bossState, "hunt:abyssal-dragon", hooks);
+assert.equal(bossRpg.battle.monsterId, "abyssal-dragon", "final boss should unlock at Descent floor nine");
+
+console.log("RPG combat, crafting, and boss tests passed.");
