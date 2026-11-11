@@ -6,6 +6,8 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+  repository_dispatch:
+    types: [development-updated]
   schedule:
     - cron: '*/5 * * * *'
 
@@ -49,7 +51,7 @@ jobs:
           node scripts/test-health-connect.mjs
           node scripts/test-rpg-combat.mjs
   deploy:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'repository_dispatch' && github.event.action == 'development-updated')
     needs: verify
     environment:
       name: github-pages
