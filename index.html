@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#100c16">
 <title>Duo Dungeon</title>
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://str8kryptic.github.io/Duo-Dungeon-Preview/">
+<meta property="og:url" content="https://duodungeon.com/">
 <meta property="og:title" content="Duo Dungeon — Enter the Dungeon">
 <meta property="og:description" content="Your next questionable decision awaits. Join the adventure.">
 <meta property="og:image" content="https://duodungeon.com/assets/duo-dungeon-invite.jpg">
@@ -15,20 +15,19 @@
 <meta name="twitter:title" content="Duo Dungeon — Enter the Dungeon">
 <meta name="twitter:description" content="Your next questionable decision awaits. Join the adventure.">
 <meta name="twitter:image" content="https://duodungeon.com/assets/duo-dungeon-invite.jpg">
-<link rel="stylesheet" href="styles.css?v=20261110navgoldindividual1">
-<link rel="stylesheet" href="rpg-combat.css?v=20261110huntprofile1">
-<link rel="stylesheet" href="dev-tools.css?v=20261110devrefresh3">
+<link rel="stylesheet" href="styles.css?v=20261110guilds1">
+<link rel="stylesheet" href="dev-tools.css?v=20261109devsteps1">
 </head>
 <body>
 <div class="shell">
 <header><a class="brand">✦ DUO <b>DUNGEON</b></a><div class="wallet">◈ <b id="coins">250</b> <span>✧ <b id="dust">0</b></span> <button id="account-button" class="account-button">ACCOUNT</button></div></header>
 <nav class="main-nav" aria-label="Main navigation">
 <button data-page="home" class="active">⌂<small>HOME</small></button>
-<button data-page="combat">⚔<small>HUNT</small></button>
-<button data-page="quests">☷<small>QUESTS</small></button>
-<button data-page="guild">⚑<small>GUILD</small></button>
 <button data-page="facilities">✧<small>SANCTUM</small></button>
 <button data-page="profile">♙<small>PROFILE</small></button>
+<button data-page="quests">☷<small>QUESTS</small></button>
+<button data-page="rankings">🏆<small>RANKS</small></button>
+<button data-page="guilds">⚔<small>GUILDS</small></button>
 <button data-page="info">ⓘ<small>CODEX</small></button>
 </nav>
 <main id="app"><section class="panel"><h1>ENTERING THE DUNGEON…</h1><p>Preparing your fresh crawler.</p></section></main>
@@ -36,15 +35,11 @@
 <dialog id="detail"><button class="close" data-close>×</button><div id="detail-body"></div></dialog>
 <div id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="auth.js?v=20261110devsessionisolation2"></script>
-<script src="guild.js?v=20261110guild1"></script>
-<script src="adventurers-path.js?v=20261110path1"></script>
-<script src="game-data.js?v=20261109icons1" onerror="document.getElementById('app').innerHTML='<section class=&quot;panel&quot;><h1>DATA FILE FAILED</h1><p>Refresh this page.</p></section>'"></script>
+<script src="auth.js?v=20261110guilds1"></script>
+<script src="item-art.js?v=20261111assets1"></script>
+<script src="game-data.js?v=20261111assets1" onerror="document.getElementById('app').innerHTML='<section class=&quot;panel&quot;><h1>DATA FILE FAILED</h1><p>Refresh this page.</p></section>'"></script>
 <script src="sync.js?v=20261109steps2"></script>
-<script src="health-connect.js?v=20261110androidhealthconnect1"></script>
-<script src="rpg-combat.js?v=20261110rpgcombat1"></script>
-<script src="back-navigation.js?v=20261110universalback1"></script>
-<script src="app.js?v=20261110navredesign1" onerror="document.getElementById('app').innerHTML='<section class=&quot;panel&quot;><h1>GAME ENGINE FAILED</h1><p>Refresh this page.</p></section>'"></script>
-<script src="dev-tools.js?v=20261110navsingle2"></script>
+<script src="app.js?v=20261111assets2" onerror="document.getElementById('app').innerHTML='<section class=&quot;panel&quot;><h1>GAME ENGINE FAILED</h1><p>Refresh this page.</p></section>'"></script>
+<script src="dev-tools.js?v=20261109devsteps1"></script>
 </body>
 </html>
