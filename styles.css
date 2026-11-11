@@ -1385,3 +1385,7 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
  #dungeon-assistant-host.keyboard-open .assistant-header-dispatch{max-width:none!important}
  #dungeon-assistant-host.keyboard-open .assistant-online{display:none!important}
 }
+
+/* Idle System speech is transient; hidden between randomized transmissions. */
+.assistant-idle-quip{opacity:0!important;pointer-events:none!important;transition:opacity .22s ease,transform .22s ease!important}
+.assistant-idle-quip.is-visible{opacity:1!important;transform:translateY(0) scale(1)!important}
