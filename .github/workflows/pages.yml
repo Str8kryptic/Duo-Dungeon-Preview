@@ -22,6 +22,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Checkout latest Development source
+        uses: actions/checkout@v4
+        with:
+          repository: Str8kryptic/Duo-Dungeon
+          ref: promotion/development-latest
+          token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
+          path: development-source
+      - name: Stage Development web app for Preview verification
+        run: |
+          rsync -a --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' development-source/ ./
       - name: Check application syntax
         run: |
           node --check app.js
@@ -30,6 +40,8 @@ jobs:
           node scripts/test-adventurers-path.mjs
           node --check adventurers-path.js
           node --check auth.js
+          grep -q 'SEND TEST EMAIL TO ME' dev-tools.js
+          grep -q 'sendTestGameUpdate' auth.js
           node --check health-connect.js
           node --check rpg-combat.js
           node scripts/test-health-connect.mjs
@@ -109,6 +121,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Checkout latest Development source
+        uses: actions/checkout@v4
+        with:
+          repository: Str8kryptic/Duo-Dungeon
+          ref: promotion/development-latest
+          token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
+          path: development-source
+      - name: Stage Development web app for Preview deployment
+        run: |
+          rsync -a --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' development-source/ ./
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
