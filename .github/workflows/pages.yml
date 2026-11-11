@@ -83,8 +83,12 @@ jobs:
           grep -q 'function assistantAnswer' app.js
           grep -q 'dungeon-assistant-host' styles.css
           grep -q 'prefers-reduced-motion' styles.css
-          grep -q 'function assistantDispatchMarkup' app.js
-          grep -q 'assistant-launcher.has-unread' styles.css
+          grep -q 'data-assistant-notifications' app.js
+          grep -q 'assistant-notification-panel' app.js
+          grep -q 'assistant-notification-toggle.has-unread' styles.css
+          grep -q 'system-bell-ring' styles.css
+          ! grep -q 'function assistantDispatchMarkup' app.js
+          ! grep -q 'assistant-header-dispatch' app.js
           grep -q 'dungeon-assistant' app.js
           grep -q 'replayTutorial' app.js
           grep -q 'updateAssistantViewport' app.js
