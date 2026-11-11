@@ -53,7 +53,8 @@ jobs:
           grep -q 'crawler-vault.png' app.js
           grep -q 'step-treasury.png' app.js
           grep -q 'Sanctum art direction: weathered dungeon stone and iron' styles.css
-          grep -q 'sanctumart1' index.html
+          grep -q 'sanctumdistrictart2' index.html
+          grep -q 'facilityImages\[f\[0\]\]' app.js
   deploy:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'repository_dispatch' && github.event.action == 'development-updated')
     needs: verify
