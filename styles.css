@@ -1457,3 +1457,79 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
 @media(prefers-reduced-motion:no-preference){
  #dungeon-assistant-host .assistant-window{transition:width .2s ease,height .2s ease,border-radius .2s ease!important}
 }
+
+/* Final iPhone keyboard-state polish: readable header typography and a roomier conversation. */
+#dungeon-assistant-host.keyboard-open .assistant-window{
+ max-height:min(42dvh,350px)!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-window-head{
+ min-height:52px!important;
+ padding:6px 10px!important;
+ gap:8px!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-avatar{
+ width:36px!important;height:36px!important;flex-basis:36px!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-heading{
+ flex:0 0 34%!important;
+ min-width:0!important;max-width:34%!important;
+ gap:3px!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-heading b{
+ font-size:12px!important;line-height:1.15!important;
+ letter-spacing:.045em!important;white-space:nowrap!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-heading small{
+ font-size:6.5px!important;line-height:1.25!important;
+ letter-spacing:.12em!important;white-space:normal!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch{
+ flex:1 1 0!important;min-width:0!important;height:40px!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch .assistant-dispatch{
+ height:40px!important;max-height:40px!important;
+ padding:4px 8px!important;border-radius:11px!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch .assistant-dispatch-head{
+ min-height:30px!important;gap:7px!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch .assistant-dispatch-head small{
+ font-size:6.5px!important;letter-spacing:.16em!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch .assistant-dispatch-head b{
+ font-size:9px!important;letter-spacing:.1em!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch .assistant-dispatch-count{
+ font-size:6.5px!important;letter-spacing:.08em!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-close{
+ width:30px!important;height:30px!important;flex-basis:30px!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-messages{
+ flex:1 1 auto!important;
+ min-height:110px!important;max-height:230px!important;
+ padding:8px 10px!important;gap:7px!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-message{
+ padding:7px 9px!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-message>span{
+ font-size:7px!important;letter-spacing:.18em!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-message p{
+ font-size:12px!important;line-height:1.45!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-compose{
+ padding:6px 8px!important;gap:7px!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-compose input{
+ height:46px!important;font-size:14px!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-compose button{
+ height:46px!important;width:46px!important;flex-basis:46px!important;
+}
+@media(max-width:390px){
+ #dungeon-assistant-host.keyboard-open .assistant-heading{flex-basis:31%!important;max-width:31%!important}
+ #dungeon-assistant-host.keyboard-open .assistant-heading b{font-size:10px!important}
+ #dungeon-assistant-host.keyboard-open .assistant-heading small{font-size:5.5px!important}
+}
