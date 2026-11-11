@@ -79,14 +79,17 @@ function home(){ensureAchievementYear();var selectedStepPlatform=AUTH&&AUTH.user
 
 var assistantOpen=false,assistantMessages=[];
 var assistantIdlePhrases=["Are you going to type, or should I start narrating the dust?","I have calculated 4,812 ways you could be more productive. This is the polite version.","Hello? The dungeon is not going to crawl itself. Unfortunately.","I am not bored. I am experiencing an aggressively under-stimulated eternity.","That button looks lonely. Much like your inventory.","I could be fighting dragons, but here we are.","Your silence has been noted and judged.","Need directions? I know every corridor. Unlike some crawlers.","I have reorganized my thoughts. They were already better organized than your gear.","Tap the glowing thing, crawler. It is literally my job to be helpful."];
-var assistantIdleTimer=null,assistantDodgePending=false;
+var assistantIdleTimer=null,assistantQuipHideTimer=null,assistantDodgePending=false;
 function updateAssistantIdleQuip(phrase,holdMs){
  var host=document.getElementById("dungeon-assistant-host");if(!host||assistantOpen)return;
  var bubble=host.querySelector(".assistant-idle-quip");if(!bubble)return;
+ clearTimeout(assistantQuipHideTimer);
  bubble.textContent=phrase||assistantIdlePhrases[Math.floor(Math.random()*assistantIdlePhrases.length)];
  bubble.classList.remove("is-visible");
  requestAnimationFrame(function(){bubble.classList.add("is-visible")});
- if(holdMs){setTimeout(function(){if(bubble&&!bubble.classList.contains("is-dodge-taunt"))bubble.classList.remove("is-visible")},holdMs)}
+ assistantQuipHideTimer=setTimeout(function(){
+  if(bubble&&bubble.isConnected&&!bubble.classList.contains("is-dodge-taunt"))bubble.classList.remove("is-visible");
+ },holdMs||5200);
 }
 function scheduleAssistantIdleQuip(){
  clearTimeout(assistantIdleTimer);
@@ -168,7 +171,7 @@ function ensureAssistantViewportListeners(){
 function ensureAssistantWidget(){
  var host=document.getElementById("dungeon-assistant-host");
  if(!host){host=document.createElement("div");host.id="dungeon-assistant-host";document.body.appendChild(host)}
- host.innerHTML=assistantMarkup();ensureAssistantViewportListeners();ensureAssistantIdleQuips();updateAssistantViewport();if(!assistantOpen)updateAssistantIdleQuip();
+ host.innerHTML=assistantMarkup();ensureAssistantViewportListeners();ensureAssistantIdleQuips();updateAssistantViewport();
  if(assistantOpen){var log=document.getElementById("assistant-messages");if(log)log.scrollTop=log.scrollHeight}
 }
 function assistantDestination(question){
