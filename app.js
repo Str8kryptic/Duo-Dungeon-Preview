@@ -164,7 +164,8 @@ function askDungeonAI(question){
  var clean=String(question||"").trim();if(!clean)return;
  var replayTutorial=/(replay|restart|start|show me|take me through|run|again).{0,36}(tutorial|tour|first descent|walkthrough)|(tutorial|tour|first descent|walkthrough).{0,36}(again|replay|restart)/i.test(clean);
  assistantMessages.push({role:"user",text:clean.slice(0,400)});
- var destination=replayTutorial?null:assistantDestination(clean);\n assistantMessages.push({role:"assistant",text:replayTutorial?"You want the tutorial again? Of course you do. I have reset the tour, polished the handrails, and lowered the difficulty of following instructions. Slightly. Let us begin.":assistantAnswer(clean),destination:destination});
+ var destination=replayTutorial?null:assistantDestination(clean);
+ assistantMessages.push({role:"assistant",text:replayTutorial?"You want the tutorial again? Of course you do. I have reset the tour, polished the handrails, and lowered the difficulty of following instructions. Slightly. Let us begin.":assistantAnswer(clean),destination:destination});
  assistantMessages=assistantMessages.slice(-14);
  if(replayTutorial){s.tutorialProgress=0;s.tutorialInProgress=false;assistantOpen=false}
  else{assistantOpen=true;s.notifications.forEach(function(n){n.read=true})}
