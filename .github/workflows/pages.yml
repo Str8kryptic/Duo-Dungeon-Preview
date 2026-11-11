@@ -50,6 +50,10 @@ jobs:
           node --check rpg-combat.js
           node scripts/test-health-connect.mjs
           node scripts/test-rpg-combat.mjs
+          grep -q 'crawler-vault.png' app.js
+          grep -q 'step-treasury.png' app.js
+          grep -q 'Sanctum art direction: weathered dungeon stone and iron' styles.css
+          grep -q 'sanctumart1' index.html
   deploy:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'repository_dispatch' && github.event.action == 'development-updated')
     needs: verify
