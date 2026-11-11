@@ -1288,3 +1288,9 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
 .assistant-idle-quip.is-visible{opacity:1;transform:translateY(0) scale(1)}
 #dungeon-assistant-host:has(.dungeon-assistant.is-open) .assistant-idle-quip{display:none}
 @media(max-width:600px){#dungeon-assistant-host.keyboard-open .assistant-window{left:7px!important;right:7px!important;max-height:min(32dvh,230px)!important}.assistant-idle-quip{font-size:9px;max-width:62vw}}
+
+/* Rare System fake-out when a crawler taps the launcher. */
+.assistant-launcher.assistant-dodge{animation:assistant-dodge-left .34s cubic-bezier(.2,.8,.3,1) both}
+@keyframes assistant-dodge-left{0%{transform:translateX(0) rotate(0)}45%{transform:translateX(-23px) rotate(-9deg)}100%{transform:translateX(0) rotate(0)}}
+.assistant-idle-quip.is-dodge-taunt{opacity:1;transform:translateY(0) scale(1);border-color:#8ce5ff;box-shadow:0 0 14px #28baffcc,0 0 28px #168bff66}
+@media(prefers-reduced-motion:reduce){.assistant-launcher.assistant-dodge{animation:none!important}}
