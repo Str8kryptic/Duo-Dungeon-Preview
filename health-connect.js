@@ -10,10 +10,10 @@
 
   async function requirePlugin() {
     if (!nativeAndroid || !plugin) {
-      throw new Error("Android Health Connect is available only in the Duo Dungeon Android app.");
+      throw new Error("Health Connect lives in the Android app, crawler. Open Duo Dungeon there to continue.");
     }
     if (capacitor.isPluginAvailable && !capacitor.isPluginAvailable("Health")) {
-      throw new Error("The Android Health Connect module is not installed in this build. Update the Development app and try again.");
+      throw new Error("This build forgot to pack its Health Connect gear. Update the Development app and try again.");
     }
   }
 
@@ -31,7 +31,7 @@
       var authorized = !!(permission && Array.isArray(permission.readAuthorized) && permission.readAuthorized.indexOf("steps") >= 0);
       return { available: true, authorized: authorized, nativeAndroid: true, reason: authorized ? "" : "Allow Duo Dungeon to read your step total in Health Connect." };
     } catch (error) {
-      return { available: false, authorized: false, nativeAndroid: true, reason: error && error.message || "Could not check Health Connect." };
+      return { available: false, authorized: false, nativeAndroid: true, reason: error && error.message || "Health Connect refused to answer the System’s roll call. Check the app and try again." };
     }
   }
 
@@ -39,11 +39,11 @@
     await requirePlugin();
     var availability = await plugin.isAvailable();
     if (!availability || !availability.available) {
-      throw new Error(availability && availability.reason || "Health Connect is unavailable. Install or update it, then try again.");
+      throw new Error(availability && availability.reason || "Health Connect is not ready for this expedition. Install or update it, then try again.");
     }
     var permission = await plugin.requestAuthorization({ read: ["steps"], write: [] });
     var authorized = !!(permission && Array.isArray(permission.readAuthorized) && permission.readAuthorized.indexOf("steps") >= 0);
-    if (!authorized) throw new Error("Step access was not granted. You can enable it later in Health Connect settings.");
+    if (!authorized) throw new Error("Health Connect kept its step records under lock. Grant read access in its settings when you are ready.");
     return status();
   }
 
@@ -51,7 +51,7 @@
     await requirePlugin();
     var permission = await plugin.checkAuthorization({ read: ["steps"], write: [] });
     if (!permission || !Array.isArray(permission.readAuthorized) || permission.readAuthorized.indexOf("steps") < 0) {
-      throw new Error("Health Connect step permission is missing or was revoked. Reconnect to continue.");
+      throw new Error("Your step-reading permission has gone missing. Reconnect Health Connect to let the System count your steps.");
     }
     var now = new Date();
     var start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
