@@ -193,3 +193,10 @@
 .current-title-select { width:100%; min-height:43px; padding:10px 12px; border:1px solid #80638a; border-radius:9px; color:#f3dfbd; background:#17111e; font:600 12px Arial,sans-serif; }
 .current-title-select:focus-visible { outline:2px solid #e4c17d; outline-offset:2px; }
 .current-title-panel .muted-copy { margin:10px 0 0; }
+
+/* Combat subpages: long names and action labels remain inside their cards. */
+.rpg-page,.rpg-page *{min-width:0}
+.rpg-page :is(h1,h2,h3,h4,p,small,b,strong,span,label,button){overflow-wrap:anywhere}
+.rpg-page :is(.rpg-subpanel,.rpg-collapsible,.rpg-monster-card,.rpg-battle-card){box-sizing:border-box;max-width:100%}
+.rpg-page :is(.rpg-action-primary,.rpg-action-secondary,.rpg-craft-button){white-space:normal;line-height:1.3;max-width:100%}
+@media(max-width:520px){.rpg-page h1{font-size:clamp(22px,6vw,30px);line-height:1.15}.rpg-page h2{font-size:clamp(17px,4.8vw,23px);line-height:1.2}.rpg-page p{line-height:1.5}.rpg-page .rpg-section-head{gap:8px;align-items:flex-start}}
