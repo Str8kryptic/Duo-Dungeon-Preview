@@ -1330,3 +1330,62 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
 #dungeon-assistant-host.assistant-roaming .assistant-idle-quip{position:absolute!important;left:0!important;right:auto!important;top:72px!important;bottom:auto!important;display:block!important;opacity:1!important;transform:none!important;max-width:min(260px,72vw)!important}
 #dungeon-assistant-host.assistant-roaming .assistant-launcher{animation:none!important}
 @media(prefers-reduced-motion:reduce){#dungeon-assistant-host.assistant-roaming{transition:none!important}}
+
+/* Refined keyboard console: bring the panel closer to the keyboard and place Dispatch in the header's open right-hand space. */
+#dungeon-assistant-host.keyboard-open{
+ bottom:calc(env(safe-area-inset-bottom) + 2px)!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-window,
+#dungeon-assistant-host.keyboard-open .dungeon-assistant.is-open .assistant-window{
+ margin-bottom:0!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-window-head{
+ display:flex!important;align-items:center!important;gap:7px!important;
+ padding:4px 8px!important;min-height:43px!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-heading{flex:0 1 auto!important;min-width:112px!important}
+#dungeon-assistant-host.keyboard-open .assistant-heading b{font-size:11px!important;white-space:nowrap}
+#dungeon-assistant-host.keyboard-open .assistant-heading small{font-size:5px!important;white-space:nowrap}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch{
+ display:flex!important;align-items:center!important;justify-content:flex-end!important;
+ flex:1 1 0!important;min-width:0!important;max-width:240px!important;height:34px!important;
+ overflow:hidden!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch .assistant-dispatch{
+ display:block!important;flex:1 1 auto!important;width:100%!important;
+ min-width:0!important;height:34px!important;max-height:34px!important;
+ margin:0!important;padding:3px 7px!important;overflow:hidden!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch .assistant-dispatch-head{
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ gap:5px!important;min-height:25px!important;padding:0!important;border:0!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch .assistant-dispatch-head small{font-size:5px!important}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch .assistant-dispatch-head b{font-size:8px!important;white-space:nowrap}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch .assistant-dispatch-count{font-size:5px!important;white-space:nowrap}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch .assistant-dispatch-empty{display:none!important}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch .assistant-dispatch.has-active-notifications{
+ height:34px!important;max-height:34px!important;overflow:hidden!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch .notification-entry{display:none!important}
+#dungeon-assistant-host.keyboard-open .assistant-header-dispatch .assistant-dispatch.has-active-notifications .notification-entry:first-of-type{
+ display:flex!important;padding:2px 0!important;font-size:6px!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-online{font-size:5px!important;gap:3px!important}
+#dungeon-assistant-host.keyboard-open .assistant-close{width:25px!important;height:25px!important;flex:none!important}
+#dungeon-assistant-host.keyboard-open .assistant-messages{
+ flex:1 1 auto!important;min-height:42px!important;max-height:90px!important;
+ padding:4px 8px!important;overflow-y:auto!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-message{padding:5px 7px!important}
+#dungeon-assistant-host.keyboard-open .assistant-message p{font-size:10px!important;line-height:1.35!important}
+#dungeon-assistant-host.keyboard-open .assistant-compose{padding:4px 7px!important}
+@media(max-width:600px){
+ #dungeon-assistant-host.keyboard-open .assistant-heading{min-width:100px!important}
+ #dungeon-assistant-host.keyboard-open .assistant-header-dispatch{max-width:none!important}
+ #dungeon-assistant-host.keyboard-open .assistant-online{display:none!important}
+}
+
+/* Idle System speech is transient; hidden between randomized transmissions. */
+.assistant-idle-quip{opacity:0!important;pointer-events:none!important;transition:opacity .22s ease,transform .22s ease!important}
+.assistant-idle-quip.is-visible{opacity:1!important;transform:translateY(0) scale(1)!important}
