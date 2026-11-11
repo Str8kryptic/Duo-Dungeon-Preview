@@ -1263,3 +1263,34 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
 .home-sync-card.home-sync-compact{margin:12px 0 14px;padding:9px 12px}
 .home-sync-card.home-sync-compact .action{width:100%;min-height:44px}
 .adventurer-path-slot{margin-top:0}
+
+/* Mobile landscape assistant: full-width panel anchored immediately above keyboard. */
+#dungeon-assistant-host.keyboard-open .assistant-window{
+ position:fixed!important;left:8px!important;right:8px!important;top:auto!important;
+ bottom:calc(var(--assistant-keyboard-inset,0px) + 8px + env(safe-area-inset-bottom))!important;
+ width:auto!important;max-width:none!important;max-height:min(34dvh,250px)!important;
+ display:flex!important;flex-direction:column!important;overflow:hidden!important;z-index:1002!important;
+}
+#dungeon-assistant-host.keyboard-open .assistant-window-head{flex:0 0 auto;padding:5px 9px!important}
+#dungeon-assistant-host.keyboard-open .assistant-intro{display:none!important}
+#dungeon-assistant-host.keyboard-open .assistant-dispatch{flex:0 0 auto;min-height:0!important;margin:0 7px 3px!important;padding:4px 7px!important;max-height:30px!important;overflow:hidden!important}
+#dungeon-assistant-host.keyboard-open .assistant-dispatch-head{min-height:20px;padding:0!important;border:0!important}
+#dungeon-assistant-host.keyboard-open .assistant-dispatch-empty{display:none!important}
+#dungeon-assistant-host.keyboard-open .assistant-dispatch.has-active-notifications{max-height:66px!important;overflow:auto!important}
+#dungeon-assistant-host.keyboard-open .assistant-messages{flex:1 1 auto;min-height:0!important;max-height:68px!important;padding:3px 8px!important;overflow:auto!important}
+#dungeon-assistant-host.keyboard-open .assistant-prompts{display:none!important}
+#dungeon-assistant-host.keyboard-open .assistant-compose{flex:0 0 auto;padding:4px 7px!important}
+#dungeon-assistant-host.keyboard-open .assistant-compose input{height:36px!important}
+#dungeon-assistant-host.keyboard-open .assistant-disclaimer{display:none!important}
+/* Electric System quip appears beside the launcher while chat is closed. */
+.assistant-idle-quip{position:absolute;right:68px;bottom:18px;max-width:min(245px,65vw);padding:8px 11px;border:1px solid #55c9ff;border-radius:11px 11px 3px 11px;background:linear-gradient(135deg,#09253b,#15152b);color:#bdeeff;font-size:10px;font-weight:750;line-height:1.35;letter-spacing:.2px;box-shadow:0 0 8px #25aaff99,inset 0 0 12px #2e9dff22;opacity:0;transform:translateY(5px) scale(.97);pointer-events:none;transition:opacity .25s,transform .25s}
+.assistant-idle-quip:after{content:"";position:absolute;right:-5px;bottom:10px;width:8px;height:8px;background:#111d32;border-right:1px solid #55c9ff;border-bottom:1px solid #55c9ff;transform:rotate(-45deg)}
+.assistant-idle-quip.is-visible{opacity:1;transform:translateY(0) scale(1)}
+#dungeon-assistant-host:has(.dungeon-assistant.is-open) .assistant-idle-quip{display:none}
+@media(max-width:600px){#dungeon-assistant-host.keyboard-open .assistant-window{left:7px!important;right:7px!important;max-height:min(32dvh,230px)!important}.assistant-idle-quip{font-size:9px;max-width:62vw}}
+
+/* Rare System fake-out when a crawler taps the launcher. */
+.assistant-launcher.assistant-dodge{animation:assistant-dodge-left .34s cubic-bezier(.2,.8,.3,1) both}
+@keyframes assistant-dodge-left{0%{transform:translateX(0) rotate(0)}45%{transform:translateX(-23px) rotate(-9deg)}100%{transform:translateX(0) rotate(0)}}
+.assistant-idle-quip.is-dodge-taunt{opacity:1;transform:translateY(0) scale(1);border-color:#8ce5ff;box-shadow:0 0 14px #28baffcc,0 0 28px #168bff66}
+@media(prefers-reduced-motion:reduce){.assistant-launcher.assistant-dodge{animation:none!important}}
