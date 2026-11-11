@@ -1,10 +1,7 @@
-name: Propose Production promotion after successful Development deploy
+name: Manually propose Production promotion
 
 on:
-  workflow_run:
-    workflows: ["Deploy Duo Dungeon Preview"]
-    types: [completed]
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -15,39 +12,27 @@ concurrency:
 
 jobs:
   propose-production:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the exact Development commit
+      - name: Check out the exact Development source
         uses: actions/checkout@v4
         with:
-          ref: main
+          repository: Str8kryptic/Duo-Dungeon
+          ref: promotion/development-latest
+          token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
           path: development
           fetch-depth: 1
 
-      - name: Skip stale preview deployments
-        id: freshness
-        shell: bash
-        run: |
-          if [ "$(git -C development rev-parse HEAD)" != "${{ github.event.workflow_run.head_sha }}" ]; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "A newer Development commit exists; waiting for its Preview deployment."
-          else
-            echo "skip=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Check out Production
-        if: steps.freshness.outputs.skip != 'true'
+      - name: Check out Production main
         uses: actions/checkout@v4
         with:
           repository: Str8kryptic/Duo-Dungeon
           ref: main
           token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
           path: production
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Verify Development and Production account isolation
-        if: steps.freshness.outputs.skip != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -59,60 +44,35 @@ jobs:
           prod_auth = Path("production/auth.js").read_text()
 
           def project_url(source, label):
-              match = re.search(r'PROJECT_URL\s*=\s*"([^"]+)"', source)
+              match = re.search(r'PROJECT_URL\\s*=\\s*"([^"]+)"', source)
               if not match:
                   raise SystemExit(f"BLOCKED: {label} Supabase project URL is missing.")
               return match.group(1)
 
           dev_url = project_url(dev_auth, "Development")
           prod_url = project_url(prod_auth, "Production")
-
-          expected_dev = "https://xuxwwpfeenaaxzfspiiq.supabase.co"
-          expected_prod = "https://cbndsdcotvnfkhfjrxst.supabase.co"
-
-          if dev_url != expected_dev:
-              raise SystemExit("BLOCKED: Development auth.js is not pointed at the approved Development project.")
-          if prod_url != expected_prod:
-              raise SystemExit("BLOCKED: Production auth.js is not pointed at the approved Production project.")
+          if dev_url != "https://xuxwwpfeenaaxzfspiiq.supabase.co":
+              raise SystemExit("BLOCKED: Development is not pointed at its approved Supabase project.")
+          if prod_url != "https://cbndsdcotvnfkhfjrxst.supabase.co":
+              raise SystemExit("BLOCKED: Production is not pointed at its approved Supabase project.")
           if dev_url == prod_url:
-              raise SystemExit("BLOCKED: Development and Production share the same Supabase project.")
-
-          if "duo-dungeon-dev-auth-token-v1" not in dev_auth:
-              raise SystemExit("BLOCKED: Development auth storage namespace is missing.")
-          if "duo-dungeon-dev-auth-token-v1" in prod_auth:
-              raise SystemExit("BLOCKED: Development auth storage namespace leaked into Production.")
-
-          print("PASS: Development and Production use distinct, approved Supabase projects.")
-          print("PASS: Development auth storage namespace is isolated.")
+              raise SystemExit("BLOCKED: Development and Production share a Supabase project.")
+          if "duo-dungeon-dev-auth-token-v1" not in dev_auth or "duo-dungeon-dev-auth-token-v1" in prod_auth:
+              raise SystemExit("BLOCKED: Development auth storage isolation failed.")
+          print("PASS: Development and Production accounts are isolated.")
           PY
 
-      - name: Stage approved application files
-        if: steps.freshness.outputs.skip != 'true'
+      - name: Stage only shared assets on a separate Production proposal branch
+        id: stage
         shell: bash
         run: |
           set -euo pipefail
           cd production
-          # Switch to the stable promotion branch BEFORE copying any files.
-          # This avoids Git refusing the checkout because staged preview files
-          # would otherwise be overwritten.
-          branch="promotion/development-latest"
-          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
-            git fetch origin "$branch"
-            git checkout -B "$branch" "origin/$branch"
-          else
-            git checkout -b "$branch"
-          fi
-
+          branch="promotion/production-shared-assets-latest"
+          git fetch origin main
+          git checkout -B "$branch" origin/main
           cd ..
-          # Only environment-neutral assets are eligible for automatic staging.
-          # app.js, auth.js, index.html, setup.html, and dev-tools files remain
-          # environment-specific until a dedicated production-safe build step exists.
-          files=(
-            game-data.js
-            sync.js
-            styles.css
-          )
-          for file in "${files[@]}"; do
+          for file in game-data.js sync.js styles.css; do
             test -f "development/$file"
             cp "development/$file" "production/$file"
           done
@@ -120,41 +80,32 @@ jobs:
             mkdir -p production/assets
             cp -R development/assets/. production/assets/
           fi
-          # Production's Pages workflow, domain configuration, and repository
-          # settings are deliberately not copied from Development.
+          cd production
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add game-data.js sync.js styles.css assets
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No shared asset changes to propose."
+          else
+            git commit -m "Propose verified shared assets from Development"
+            git push --force origin "$branch"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "source_sha=$(git -C ../development rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Create or update the single Production promotion pull request
-        if: steps.freshness.outputs.skip != 'true'
+      - name: Create or update the Production review pull request
+        if: steps.stage.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
-          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+          SOURCE_SHA: ${{ steps.stage.outputs.source_sha }}
         shell: bash
         run: |
           set -euo pipefail
-          cd production
-          branch="promotion/development-latest"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add game-data.js sync.js styles.css assets 2>/dev/null || git add game-data.js sync.js styles.css
-          if git diff --cached --quiet; then
-            echo "Development and Production application files already match."
-            exit 0
-          fi
-          git commit -m "Promote verified Development build to Production"
-          git push --force-with-lease origin "$branch"
-          body="Automated proposal containing environment-neutral shared assets only.
-
-          Development commit: $SOURCE_SHA
-
-          Environment-specific files (auth.js, app.js, index.html, setup.html, and developer tools) are deliberately excluded. Review before merging; Production deployment remains a separate, explicit action."
-          existing_pr="$(gh pr list --repo Str8kryptic/Duo-Dungeon --state open --head "$branch" --json number --jq '.[0].number // empty')"
+          body="Manual proposal containing shared assets only.\n\nDevelopment source: $SOURCE_SHA\n\nThis workflow is manually triggered. It does not deploy Production. Environment-specific files are excluded."
+          existing_pr="$(gh pr list --repo Str8kryptic/Duo-Dungeon --state open --head promotion/production-shared-assets-latest --json number --jq '.[0].number // empty')"
           if [ -n "$existing_pr" ]; then
-            gh pr edit "$existing_pr" --repo Str8kryptic/Duo-Dungeon \
-              --title "Promote shared assets from verified Development build" \
-              --body "$body"
-            echo "Updated existing Production promotion PR #$existing_pr."
+            gh pr edit "$existing_pr" --repo Str8kryptic/Duo-Dungeon --title "Promote shared assets from Development" --body "$body"
           else
-            gh pr create --repo Str8kryptic/Duo-Dungeon --base main --head "$branch" \
-              --title "Promote shared assets from verified Development build" \
-              --body "$body"
+            gh pr create --repo Str8kryptic/Duo-Dungeon --base main --head promotion/production-shared-assets-latest --title "Promote shared assets from Development" --body "$body"
           fi
