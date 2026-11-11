@@ -1762,3 +1762,25 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
  .assistant-notification-toggle{width:23px!important;height:23px!important;flex-basis:23px!important}
 }
 @media(prefers-reduced-motion:reduce){.assistant-notification-toggle.has-unread{animation:none!important}}
+
+/* Dungeon-wide text-fit audit: keep labels, cards and generated names inside their own space. */
+#app,.rpg-page,.rpg-panel,.rpg-subpanel,.panel,.facility-content,.facility-scene,.guild-page,.guild-hero,.guild-board,.profile-page,.descent-panel{min-width:0;max-width:100%}
+#app :is(h1,h2,h3,h4,p,small,strong,b,span,label,li,dd,dt){min-width:0;overflow-wrap:anywhere}
+#app :is(button,a,.action,.link,.text-link){max-width:100%;white-space:normal}
+#app :is(.eyebrow,.rpg-eyebrow,.guild-eyebrow,.rpg-count){line-height:1.35;letter-spacing:clamp(.35px,.12vw,1.15px);overflow-wrap:anywhere}
+#app :is(.panel,.rpg-panel,.rpg-subpanel,.guild-board,.profile-crest,.facility-interior){box-sizing:border-box}
+#app :is(.item,.item-card,.monster-card,.rpg-monster-card,.rpg-equipped-grid>div,.profile-stat-grid>div){min-width:0}
+#app :is(.item h3,.item p,.item small,.monster-card h3,.monster-card p,.rpg-monster-card h3,.rpg-monster-card p){overflow-wrap:anywhere;word-break:normal}
+#app :is(.action,.rpg-action-primary,.rpg-action-secondary,.guild-action){line-height:1.3}
+@media(max-width:520px){
+ #app h1{font-size:clamp(21px,5.8vw,30px);line-height:1.14}
+ #app h2{font-size:clamp(17px,4.7vw,23px);line-height:1.2}
+ #app h3{font-size:clamp(14px,3.9vw,18px);line-height:1.25}
+ #app p{font-size:clamp(11px,3vw,14px);line-height:1.5}
+ #app .eyebrow{font-size:clamp(7px,1.9vw,9px)}
+ #app button,#app .action{min-height:38px;padding-inline:clamp(8px,2.5vw,13px)}
+}
+@media(max-width:360px){
+ #app .item-grid,#app .monster-grid,#app .profile-stat-grid,#app .rpg-resource-grid{grid-template-columns:minmax(0,1fr)!important}
+ #app .panel,#app .rpg-panel,#app .rpg-subpanel{padding-inline:12px}
+}
