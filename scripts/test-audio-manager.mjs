@@ -17,6 +17,6 @@ assert.match(html, /audio-manager\.js/);
 console.log("Supabase audio manifest integration checks passed.");
 
 const playFunction = manager.slice(manager.indexOf("function play(key)"), manager.indexOf("function detectTrack()"));
-assert.ok(playFunction.indexOf("audio.play()") < playFunction.indexOf("audio.addEventListener(\"loadedmetadata\""), "play() must not wait for loadedmetadata on iOS");
+assert.match(playFunction, /audio\.addEventListener\("loadedmetadata", seek, \{ once: true \}\);[\s\S]*?audio\.load\(\);[\s\S]*?var result = audio\.play\(\);/);
 assert.match(manager, /authOverlay && !authOverlay\.classList\.contains\("hidden"\)/);
 assert.match(manager, /observer\.observe\(authOverlay/);
