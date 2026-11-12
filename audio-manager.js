@@ -76,6 +76,9 @@
           if (wasPlaying) fadeTo(prefs.volume, 900);
           updateControls();
         }).catch(function (error) {
+          // A browser may reject sound-on autoplay until a user gesture.
+          // Keep the first-interaction fallback available in that case.
+          unlocked = false;
           if (status) status.textContent = "Tap to start music";
           console.warn("[DUO_AUDIO] Playback was blocked", error);
           updateControls();
@@ -127,7 +130,10 @@
       });
       manifestReady = true;
       updateControls();
-      if (unlocked && prefs.enabled) play(detectTrack());
+      if (prefs.enabled) {
+        if (unlocked) play(detectTrack());
+        else attemptAutoplay();
+      }
     }).catch(function (error) {
       manifestReady = false;
       if (status) status.textContent = "Soundtrack unavailable";
@@ -182,6 +188,21 @@
       return { enabled: prefs.enabled, volume: prefs.volume, track: currentKey, unlocked: unlocked, manifestReady: manifestReady };
     }
   };
+  // Try sound-on autoplay once the manifest is ready. Browsers that permit
+  // autoplay (including eligible Chrome sessions) start immediately; browsers
+  // that block it fall back to the first real user interaction below.
+  function attemptAutoplay() {
+    if (!prefs.enabled || !manifestReady || unlocked) return;
+    unlocked = true;
+    play(detectTrack());
+  }
+  document.addEventListener("focusin", function (event) {
+    if (event.target && event.target.id === "auth-email" && !unlocked) {
+      unlocked = true;
+      if (prefs.enabled && manifestReady) play("login");
+      updateControls();
+    }
+  }, true);
   document.addEventListener("pointerdown", function () {
     if (unlocked) return;
     unlocked = true;
