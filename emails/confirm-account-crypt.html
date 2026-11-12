@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="supported-color-schemes" content="dark">
+<title>Confirm your Duo Dungeon account</title>
+</head>
+<body style="margin:0;padding:0;background-color:#09090d;color:#eee8dc;font-family:Georgia,'Times New Roman',serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;background-color:#09090d;">
+<tr><td align="center" style="padding:34px 12px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;border-collapse:separate;border-spacing:0;background-color:#17171b;border:1px solid #66543b;">
+<tr><td style="padding:8px;background-color:#242329;border-bottom:1px solid #8b7049;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #4d4850;">
+<tr><td align="center" style="padding:30px 22px 28px;background-color:#201e25;">
+<div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:5px;color:#c5a66b;">A GATE HAS OPENED</div>
+<div style="margin-top:14px;font-size:27px;line-height:1.25;font-weight:bold;letter-spacing:2px;color:#f1dfb8;">DUO DUNGEON</div>
+<div style="margin:13px auto 0;width:76px;border-top:1px solid #a18455;"></div>
+<div style="margin-top:17px;font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:3px;color:#aaa1a8;">ACCOUNT REGISTRATION</div>
+</td></tr>
+<tr><td align="center" style="padding:30px 24px 10px;">
+<div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:3px;color:#b79a69;">THE ARCHIVES REQUIRE YOUR SEAL</div>
+<h1 style="margin:13px 0 0;font-size:29px;line-height:1.2;font-weight:normal;color:#f0dfbd;">Verify Your Email</h1>
+</td></tr>
+<tr><td style="padding:18px 30px 8px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.8;color:#d1c9c0;">
+<p style="margin:0 0 16px;">Your descent into Duo Dungeon is nearly ready to begin.</p>
+<p style="margin:0 0 12px;">Before the gates open, confirm that this email address belongs to you. This verifies your account and helps keep your progress safely tied to the right crawler.</p>
+</td></tr>
+<tr><td align="center" style="padding:22px 24px 26px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:separate;">
+<tr><td align="center" bgcolor="#b18b50" style="border:1px solid #e0c58d;border-radius:3px;">
+<a href="{{ .ConfirmationURL }}" target="_blank" style="display:inline-block;padding:16px 34px;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:bold;letter-spacing:2px;color:#17130e;text-decoration:none;">CONFIRM EMAIL ADDRESS</a>
+</td></tr>
+</table>
+</td></tr>
+<tr><td style="padding:0 30px 24px;font-family:Arial,Helvetica,sans-serif;">
+<div style="padding:17px 18px;background-color:#111115;border:1px solid #403b3d;">
+<div style="font-size:10px;letter-spacing:2px;color:#c3a16a;">IF THE GATE DOES NOT OPEN</div>
+<p style="margin:9px 0 8px;font-size:12px;line-height:1.6;color:#bcb4ad;">Copy this secure link into your browser to confirm your address:</p>
+<p style="margin:0;word-break:break-all;font-size:11px;line-height:1.6;"><a href="{{ .ConfirmationURL }}" style="color:#dfc18a;text-decoration:underline;">{{ .ConfirmationURL }}</a></p>
+</div>
+</td></tr>
+<tr><td style="padding:0 30px 28px;font-family:Arial,Helvetica,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #51463a;">
+<tr><td style="padding-top:18px;font-size:11px;line-height:1.7;color:#aaa2a0;">
+<strong style="color:#d2b477;letter-spacing:1px;">A NOTE FROM THE SYSTEM</strong><br>
+If you did not create a Duo Dungeon account, you can ignore this email. Your address will not be verified and no action is required.
+</td></tr>
+</table>
+</td></tr>
+<tr><td align="center" style="padding:20px 22px;background-color:#101014;border-top:1px solid #51463a;font-family:Arial,Helvetica,sans-serif;">
+<div style="font-size:9px;letter-spacing:3px;color:#b18b50;">THE DUNGEON AWAITS</div>
+<div style="margin-top:9px;font-size:10px;color:#827b7b;">Duo Dungeon · <a href="{{ .SiteURL }}" style="color:#c4a36c;text-decoration:none;">duodungeon.com</a></div>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>
