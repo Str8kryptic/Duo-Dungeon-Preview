@@ -72,8 +72,9 @@ jobs:
           run_check "RPG combat JavaScript syntax" node --check rpg-combat.js
           run_check "Health Connect tests" node scripts/test-health-connect.mjs
           run_check "RPG combat tests" node scripts/test-rpg-combat.mjs
-          run_check "Crawler vault asset reference" grep -q 'crawler-vault.png' app.js
-          run_check "Step treasury asset reference" grep -q 'step-treasury.png' app.js
+          run_check "Location manifest includes Crawler Vault" grep -q '"assetId": "facility-bag"' visual/location-manifests.js
+          run_check "Location manifest includes Step Treasury" grep -q '"assetId": "facility-treasury"' visual/location-manifests.js
+          run_check "Facility grid resolves manifest assets" grep -q 'registry.getById&&location' app.js
           run_check "Sanctum art-direction marker" grep -q 'Sanctum art direction: weathered dungeon stone and iron' styles.css
           run_check "Dungeon Atmosphere 2.0 marker" grep -q 'DUNGEON ATMOSPHERE 2.0' styles.css
           run_check "Game-section marker" grep -q 'data-game-section' app.js
