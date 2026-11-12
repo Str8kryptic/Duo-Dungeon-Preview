@@ -59,27 +59,39 @@
     function start() {
       currentKey = key;
       audio.src = track.publicUrl;
-      audio.load();
+      audio.volume = wasPlaying ? 0 : prefs.volume;
       var seek = function () {
-        audio.removeEventListener("loadedmetadata", seek);
         var offset = Number(track.startOffsetSeconds) || 0;
         if (offset > 0 && Number.isFinite(audio.duration) && offset < audio.duration) {
           try { audio.currentTime = offset; } catch (error) {}
         }
-        audio.volume = wasPlaying ? 0 : prefs.volume;
-        var result = audio.play();
-        if (result && typeof result.then === "function") {
-          result.then(function () { if (wasPlaying) fadeTo(prefs.volume, 900); updateControls(); })
-            .catch(updateControls);
-        }
       };
       audio.addEventListener("loadedmetadata", seek, { once: true });
+      audio.load();
+      // Call play immediately in the user's interaction task. Waiting for
+      // loadedmetadata first loses iOS Safari's transient user activation.
+      var result = audio.play();
+      if (result && typeof result.then === "function") {
+        result.then(function () {
+          if (wasPlaying) fadeTo(prefs.volume, 900);
+          updateControls();
+        }).catch(function (error) {
+          // A browser may reject sound-on autoplay until a user gesture.
+          // Keep the first-interaction fallback available in that case.
+          unlocked = false;
+          if (status) status.textContent = "Tap to start music";
+          console.warn("[DUO_AUDIO] Playback was blocked", error);
+          updateControls();
+        });
+      }
     }
     if (wasPlaying) fadeTo(0, 500, start);
     else start();
     updateControls();
   }
   function detectTrack() {
+    var authOverlay = document.getElementById("auth-overlay");
+    if (authOverlay && !authOverlay.classList.contains("hidden")) return "login";
     var active = document.querySelector(".main-nav [data-page].active");
     var page = active && active.getAttribute("data-page");
     var text = ((document.querySelector("#app") || document.body).innerText || "").toLowerCase();
@@ -118,7 +130,10 @@
       });
       manifestReady = true;
       updateControls();
-      if (unlocked && prefs.enabled) play(detectTrack());
+      if (prefs.enabled) {
+        if (unlocked) play(detectTrack());
+        else attemptAutoplay();
+      }
     }).catch(function (error) {
       manifestReady = false;
       if (status) status.textContent = "Soundtrack unavailable";
@@ -173,6 +188,21 @@
       return { enabled: prefs.enabled, volume: prefs.volume, track: currentKey, unlocked: unlocked, manifestReady: manifestReady };
     }
   };
+  // Try sound-on autoplay once the manifest is ready. Browsers that permit
+  // autoplay (including eligible Chrome sessions) start immediately; browsers
+  // that block it fall back to the first real user interaction below.
+  function attemptAutoplay() {
+    if (!prefs.enabled || !manifestReady || unlocked) return;
+    unlocked = true;
+    play(detectTrack());
+  }
+  document.addEventListener("focusin", function (event) {
+    if (event.target && event.target.id === "auth-email" && !unlocked) {
+      unlocked = true;
+      if (prefs.enabled && manifestReady) play("login");
+      updateControls();
+    }
+  }, true);
   document.addEventListener("pointerdown", function () {
     if (unlocked) return;
     unlocked = true;
@@ -200,5 +230,7 @@
   if (root) observer.observe(root, { childList: true, subtree: true, characterData: true });
   var nav = document.querySelector(".main-nav");
   if (nav) observer.observe(nav, { attributes: true, subtree: true, attributeFilter: ["class"] });
+  var authOverlay = document.getElementById("auth-overlay");
+  if (authOverlay) observer.observe(authOverlay, { attributes: true, attributeFilter: ["class"] });
   syncTrack();
 })();
