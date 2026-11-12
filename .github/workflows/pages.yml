@@ -38,29 +38,52 @@ jobs:
         run: |
           rsync -a --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' development-source/ ./
       - name: Check application syntax
+        shell: bash
         run: |
-          test -s assistant-orb.js
-          grep -q 'assistant-orb.js' index.html
-          grep -q 'DUO_ORB.mount(host)' app.js
-          node --check assistant-orb.js
-          node --check app.js
-          node --check guild.js
-          node scripts/test-guild.mjs
-          node scripts/test-adventurers-path.mjs
-          node --check adventurers-path.js
-          node --check auth.js
-          grep -q 'SEND TEST EMAIL TO ME' dev-tools.js
-          grep -q 'sendTestGameUpdate' auth.js
-          node --check health-connect.js
-          node --check rpg-combat.js
-          node scripts/test-health-connect.mjs
-          node scripts/test-rpg-combat.mjs
-          grep -q 'crawler-vault.png' app.js
-          grep -q 'step-treasury.png' app.js
-          grep -q 'Sanctum art direction: weathered dungeon stone and iron' styles.css
-          grep -q 'DUNGEON ATMOSPHERE 2.0' styles.css
-          grep -q 'data-game-section' app.js
-          grep -q 'facilityImages\[f\[0\]\]' app.js
+          failures=0
+
+          run_check() {
+            label="$1"
+            shift
+            echo "::group::Check: $label"
+            if "$@"; then
+              echo "PASS: $label"
+            else
+              status=$?
+              echo "::error title=Verification failed::$label (exit code $status)"
+              failures=$((failures + 1))
+            fi
+            echo "::endgroup::"
+          }
+
+          run_check "AI orb script exists" test -s assistant-orb.js
+          run_check "AI orb script is loaded by index.html" grep -q 'assistant-orb.js' index.html
+          run_check "AI orb mounts from app.js" grep -q 'DUO_ORB.mount(host)' app.js
+          run_check "AI orb JavaScript syntax" node --check assistant-orb.js
+          run_check "Application JavaScript syntax" node --check app.js
+          run_check "Guild JavaScript syntax" node --check guild.js
+          run_check "Adventurer's Guild tests" node scripts/test-guild.mjs
+          run_check "Adventurer's Path tests" node scripts/test-adventurers-path.mjs
+          run_check "Adventurer's Path JavaScript syntax" node --check adventurers-path.js
+          run_check "Authentication JavaScript syntax" node --check auth.js
+          run_check "Development test-email marker" grep -q 'SEND TEST EMAIL TO ME' dev-tools.js
+          run_check "Game-update test function marker" grep -q 'sendTestGameUpdate' auth.js
+          run_check "Health Connect JavaScript syntax" node --check health-connect.js
+          run_check "RPG combat JavaScript syntax" node --check rpg-combat.js
+          run_check "Health Connect tests" node scripts/test-health-connect.mjs
+          run_check "RPG combat tests" node scripts/test-rpg-combat.mjs
+          run_check "Crawler vault asset reference" grep -q 'crawler-vault.png' app.js
+          run_check "Step treasury asset reference" grep -q 'step-treasury.png' app.js
+          run_check "Sanctum art-direction marker" grep -q 'Sanctum art direction: weathered dungeon stone and iron' styles.css
+          run_check "Dungeon Atmosphere 2.0 marker" grep -q 'DUNGEON ATMOSPHERE 2.0' styles.css
+          run_check "Game-section marker" grep -q 'data-game-section' app.js
+          run_check "Facility image mapping" grep -Fq 'facilityImages[f[0]]' app.js
+
+          if [ "$failures" -gt 0 ]; then
+            echo "::error title=Verification summary::$failures check(s) failed. See the named checks above."
+            exit 1
+          fi
+          echo "All application verification checks passed."
   deploy:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'repository_dispatch' && github.event.action == 'development-updated')
     needs: verify
