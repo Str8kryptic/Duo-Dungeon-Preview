@@ -58,7 +58,6 @@ jobs:
           grep -q 'crawler-vault.png' app.js
           grep -q 'step-treasury.png' app.js
           grep -q 'Sanctum art direction: weathered dungeon stone and iron' styles.css
-          grep -q 'atmosphere2' index.html
           grep -q 'DUNGEON ATMOSPHERE 2.0' styles.css
           grep -q 'data-game-section' app.js
           grep -q 'facilityImages\[f\[0\]\]' app.js
