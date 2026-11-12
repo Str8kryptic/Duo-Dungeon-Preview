@@ -10,7 +10,8 @@
     "android:open": "cap open android",
     "android:configure": "node scripts/prepare-android-health.mjs",
     "android:verify": "node scripts/verify-android-health-manifest.mjs",
-    "test:guild": "node scripts/test-guild.mjs"
+    "test:guild": "node scripts/test-guild.mjs",
+    "test:audio": "node --check audio-manager.js && node scripts/test-audio-manager.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.0.0",
