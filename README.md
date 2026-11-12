@@ -21,3 +21,6 @@ files are not the source of truth and must not be edited to make game changes.
 ## Live avatar deployment check
 
 The AI avatar is a canvas-rendered live module (`assistant-orb.js`) loaded from the Development branch. The Pages workflow verifies the module, its script include, and its mount call before deployment. If the live site still shows an older avatar, rerun **Deploy Duo Dungeon Preview** from the Actions tab to rebuild the Pages artifact from the current Development branch.
+
+
+The legacy prerecorded avatar presentation has been removed from Development. Preview now uses only the live Canvas-rendered AI avatar; the old avatar styling is removed and stale GIF images are hidden.
