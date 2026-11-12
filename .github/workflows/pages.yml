@@ -77,7 +77,7 @@ jobs:
           run_check "Sanctum art-direction marker" grep -q 'Sanctum art direction: weathered dungeon stone and iron' styles.css
           run_check "Dungeon Atmosphere 2.0 marker" grep -q 'DUNGEON ATMOSPHERE 2.0' styles.css
           run_check "Game-section marker" grep -q 'data-game-section' app.js
-          run_check "Facility image mapping" grep -Fq 'facilityImages[f[0]]' app.js
+          run_check "Current Development Preview source verification" node scripts/test-preview-source.mjs
 
           if [ "$failures" -gt 0 ]; then
             echo "::error title=Verification summary::$failures check(s) failed. See the named checks above."
