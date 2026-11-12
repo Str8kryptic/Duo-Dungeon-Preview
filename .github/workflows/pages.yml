@@ -1,4 +1,5 @@
 name: Deploy Duo Dungeon Preview
+# Refresh deployment: stage the latest promotion/development-latest source on every preview deploy.
 
 on:
   push:
