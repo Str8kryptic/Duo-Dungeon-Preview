@@ -17,3 +17,7 @@ files are not the source of truth and must not be edited to make game changes.
 - The workflow can be run manually for an immediate refresh.
 - A scheduled sync runs every 15 minutes as a safety net.
 - The deployment validates the live AI orb module and its script wiring before publishing.
+
+## Live avatar deployment check
+
+The AI avatar is a canvas-rendered live module (`assistant-orb.js`) loaded from the Development branch. The Pages workflow verifies the module, its script include, and its mount call before deployment. If the live site still shows an older avatar, rerun **Deploy Duo Dungeon Preview** from the Actions tab to rebuild the Pages artifact from the current Development branch.
