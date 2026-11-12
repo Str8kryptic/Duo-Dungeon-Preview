@@ -207,3 +207,42 @@ The repository-side confirmation HTML is not proof that the same HTML is current
 This manifest is documentation only. Creating or merging it does not install email templates, change authentication behavior, update Supabase settings, send emails, or deploy the application.
 
 **Production remains protected. No Production action is authorized by this manifest.**
+
+
+## 11. Repository template review — 2026-11-12
+
+The branded confirmation template and the new password-recovery template are now both present on the Preview repository's `main` branch:
+
+- `emails/confirm-account.html`
+- `emails/reset-password.html`
+
+The recovery template was added in PR #52. The existing confirmation template was preserved without modification.
+
+A static source review of both files confirmed:
+
+| Check | Confirm Signup | Reset Password |
+|---|---:|---:|
+| English HTML document declaration | Pass | Pass |
+| Mobile viewport metadata | Pass | Pass |
+| Table-based email layout | Pass | Pass |
+| Supabase confirmation URL placeholder | 3 occurrences | 3 occurrences |
+| Site URL footer placeholder | 1 occurrence | 1 occurrence |
+| Fallback link included | Pass | Pass |
+| Security wording included | Pass | Pass |
+| Inline styling; no JavaScript | Pass | Pass |
+| No externally loaded web fonts | Pass | Pass |
+
+These checks are source-level checks only. They do not prove rendering consistency across Gmail, Apple Mail, Outlook, or other email clients, and they do not verify delivery or authentication end-to-end.
+
+### Current release state
+
+- [x] Repository manifest merged.
+- [x] Branded recovery HTML merged.
+- [x] Existing branded confirmation HTML retained.
+- [x] Static source checks completed.
+- [ ] Visual rendering reviewed in representative email clients.
+- [ ] Both templates installed in Supabase Development.
+- [ ] Signup, confirmation, resend, recovery, and password-update flows tested.
+- [ ] Explicit approval for any Production change.
+
+**Next gate:** review the rendered templates and obtain explicit approval before installing them in the Development Supabase dashboard. No hosted template has been changed by this repository work.
