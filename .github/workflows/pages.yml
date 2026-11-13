@@ -37,6 +37,17 @@ jobs:
       - name: Stage Development web app for Preview verification
         run: |
           rsync -a --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' development-source/ ./
+      - name: Check out isolated Phase 4 source
+        uses: actions/checkout@v7
+        with:
+          repository: Str8kryptic/Duo-Dungeon
+          ref: phase4/activity-engine-gathering-crafting
+          token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
+          path: phase4-source
+      - name: Stage isolated Phase 4 preview
+        run: |
+          mkdir -p phase4
+          rsync -a --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' phase4-source/ phase4/
       - name: Check application syntax
         shell: bash
         run: |
@@ -79,6 +90,7 @@ jobs:
           run_check "Dungeon Atmosphere 2.0 marker" grep -q 'DUNGEON ATMOSPHERE 2.0' styles.css
           run_check "Game-section marker" grep -q 'data-game-section' app.js
           run_check "Current Development Preview source verification" node scripts/test-preview-source.mjs
+          run_check "Isolated Phase 4 Activity Engine contracts" node phase4/tests/phase4-activity-engine.test.cjs
 
           if [ "$failures" -gt 0 ]; then
             echo "::error title=Verification summary::$failures check(s) failed. See the named checks above."
@@ -105,6 +117,17 @@ jobs:
       - name: Stage Development web app for Preview deployment
         run: |
           rsync -a --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' development-source/ ./
+      - name: Check out isolated Phase 4 source
+        uses: actions/checkout@v7
+        with:
+          repository: Str8kryptic/Duo-Dungeon
+          ref: phase4/activity-engine-gathering-crafting
+          token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
+          path: phase4-source
+      - name: Stage isolated Phase 4 preview
+        run: |
+          mkdir -p phase4
+          rsync -a --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' phase4-source/ phase4/
       - name: Configure Pages
         uses: actions/configure-pages@v6
         with:
