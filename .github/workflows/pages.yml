@@ -3,6 +3,7 @@ name: Deploy Duo Dungeon Preview
 # Phase 4 refresh: republish the latest isolated feature branch after route and combat UI updates (2026-11-13).
 # Rebuild after keeping the expedition route visible alongside an active encounter.
 # Rebuild after aligning the active-Hunt boss-gate contract assertion with disabled encounter actions.
+# Rebuild for closed Hunt accordions, distinct floor boss visuals and mobile header overflow fix.
 
 on:
   push:
