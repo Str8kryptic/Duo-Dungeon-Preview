@@ -5,6 +5,7 @@ name: Deploy Duo Dungeon Preview
 # Rebuild after aligning the active-Hunt boss-gate contract assertion with disabled encounter actions.
 # Rebuild for closed Hunt accordions, distinct floor boss visuals and mobile header overflow fix.
 # Re-run the isolated Phase 4 contract suite after fixing the native-details whitespace matcher.
+# Republish shared horizontal count/status labels across all Hunt panels (2026-11-13).
 
 on:
   push:
