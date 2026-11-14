@@ -1789,13 +1789,13 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
 /* Login artwork integration — Preview only. Artwork is served from the public-assets bucket. */
 .auth-overlay{
  isolation:isolate;overflow-y:auto;align-items:center;
- background:#08070c!important;backdrop-filter:none!important;
+ background:transparent!important;backdrop-filter:none!important;
  padding:clamp(12px,3vw,28px)!important;
 }
-.auth-backdrop{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:-2;opacity:.76}
-.auth-overlay:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,#08070b66,#08070bd9 72%,#08070bf2);pointer-events:none}
+.auth-backdrop{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;opacity:.76}
+.auth-overlay:before{content:"";position:fixed;inset:0;z-index:1;background:linear-gradient(180deg,#08070b66,#08070bd9 72%,#08070bf2);pointer-events:none}
 .auth-card{
- position:relative;isolation:isolate;box-sizing:border-box;width:min(100%,470px);
+ position:relative;z-index:2;isolation:isolate;box-sizing:border-box;width:min(100%,470px);
  max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain;
  padding:clamp(18px,4vw,28px);border:1px solid #9a744c;border-radius:19px;
  background:linear-gradient(155deg,#211b20f2,#0d0c12f5 72%);
@@ -1843,3 +1843,13 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
  .auth-card .auth-sub{font-size:8px;margin-bottom:12px}
 }
 @media(prefers-reduced-motion:reduce){.auth-card *{scroll-behavior:auto!important}}
+
+/* Reuse the remaining matching component frames only on controls that already exist. */
+.auth-card .auth-input-panel:first-of-type{background-image:linear-gradient(#171318d9,#171318e8),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Panels/login-input-panel.png");background-size:cover;background-position:center}
+.auth-card .auth-input-panel:nth-of-type(2){background-image:linear-gradient(#171318d9,#171318e8),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Panels/login-password-panel.png");background-size:cover;background-position:center}
+.auth-card .auth-message{padding:9px 12px;border:1px solid #80634b;border-radius:9px;background:linear-gradient(#171318d9,#171318e8),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Panels/login-message-panel.png") center/cover}
+.auth-card #auth-submit{background-image:linear-gradient(#d7b77855,#9b6b3455),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Buttons/login-primary.png");background-size:100% 100%;background-position:center}
+.auth-card #guest-button{background-image:linear-gradient(#2a202055,#17131855),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Buttons/continue.png");background-size:100% 100%;background-position:center}
+.auth-card #auth-forgot{border:1px solid #8a6b4d;border-radius:8px;padding:10px 14px;color:#e4c58f;background:linear-gradient(#17131866,#17131866),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Buttons/forgot-password.png") center/100% 100%}
+.auth-card #auth-resend{background-image:linear-gradient(#2a202055,#17131855),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Buttons/sign-up.png");background-size:100% 100%}
+.auth-card .auth-decoration img{content:url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Decoration/login-divider-secondary.png")}
