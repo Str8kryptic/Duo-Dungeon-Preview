@@ -29,3 +29,8 @@ The legacy prerecorded avatar presentation has been removed from Development. Pr
 ## Latest deployment source
 
 Preview stages the current `promotion/development-latest` branch from `Str8kryptic/Duo-Dungeon`. The mobile layout correction is included in Development commit `2bebbe271bef30315e67824cb5cf9a89fd95dbf1`. The Home page cleanup removing the legacy Adventurer’s Path panel and duplicate readiness card is included in Development commit `ea4743518d3ab4552db335e0bdce7bdb230c6d30`.
+
+
+## Phase 70 shell update
+
+The Development source now uses the illustrated crypt frame: the AI Orb sits in the top header and the primary navigation is Home, Hunt, Haven, Logbook, and More. See Development commits `c6269be` and `9bc56fb`.
