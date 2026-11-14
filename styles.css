@@ -1942,3 +1942,18 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
  .auth-v2-field input{font-size:13px!important}
  .auth-v2-feedback{font-size:9px!important}
 }
+
+/* LoginV2 ambient effects: shaped SVG flame highlights and crack-following electrical filaments. */
+.auth-v2-fx{position:absolute!important;inset:0!important;z-index:2!important;overflow:hidden!important;pointer-events:none!important;contain:paint!important}
+.auth-v2-fx-svg{display:block!important;width:100%!important;height:100%!important;overflow:visible!important}
+.auth-v2-live{z-index:3!important}
+.dd-flame{transform-box:fill-box;transform-origin:50% 100%;opacity:.48;mix-blend-mode:screen;animation:dd-flame-flicker 180ms steps(2,end) infinite alternate}
+.dd-flame-right{animation-duration:230ms;animation-delay:-90ms}
+@keyframes dd-flame-flicker{0%{transform:translate(0,1px) scale(.92,.94);opacity:.28}35%{transform:translate(-2px,-2px) scale(1.02,1.08);opacity:.58}70%{transform:translate(1px,-4px) scale(.96,1.13);opacity:.42}100%{transform:translate(2px,0) scale(1.06,.98);opacity:.62}}
+.dd-cracks{mix-blend-mode:screen;opacity:.18}
+.dd-arc{stroke:#39caff;stroke-width:4.2;stroke-dasharray:18 13 4 10;stroke-dashoffset:0;opacity:.28;animation:dd-arc-spark 4.6s linear infinite}
+.dd-arc:nth-child(2){animation-delay:-1.1s}.dd-arc:nth-child(3){animation-delay:-2.3s}.dd-arc:nth-child(4){animation-delay:-.7s}.dd-arc:nth-child(5){animation-delay:-3.1s}.dd-arc:nth-child(6){animation-delay:-1.8s}
+@keyframes dd-arc-spark{0%,72%,100%{opacity:.12;stroke-width:2.5;stroke-dashoffset:0}74%{opacity:.9;stroke-width:5.5;stroke-dashoffset:-16}76%{opacity:.22;stroke-width:3;stroke-dashoffset:-30}79%{opacity:1;stroke-width:6;stroke-dashoffset:-52}83%{opacity:.18;stroke-width:2.5;stroke-dashoffset:-74}}
+.dd-orb-pulse{fill:none;stroke:#b55cff;stroke-width:5;opacity:.18;filter:drop-shadow(0 0 9px #a32cff);transform-box:fill-box;transform-origin:center;animation:dd-orb-beat 2.8s ease-in-out infinite}
+@keyframes dd-orb-beat{0%,100%{opacity:.12;transform:scale(.9)}50%{opacity:.62;transform:scale(1.18)}}
+@media(prefers-reduced-motion:reduce){.dd-flame,.dd-arc,.dd-orb-pulse{animation:none!important}.dd-flame{opacity:.28}.dd-arc{opacity:.22}}
