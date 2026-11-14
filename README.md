@@ -28,4 +28,4 @@ The legacy prerecorded avatar presentation has been removed from Development. Pr
 
 ## Latest deployment source
 
-Preview stages the current `promotion/development-latest` branch from `Str8kryptic/Duo-Dungeon`. The mobile layout correction is included in Development commit `2bebbe271bef30315e67824cb5cf9a89fd95dbf1`.
+Preview stages the current `promotion/development-latest` branch from `Str8kryptic/Duo-Dungeon`. The mobile layout correction is included in Development commit `2bebbe271bef30315e67824cb5cf9a89fd95dbf1`. The Home page cleanup removing the legacy Adventurer’s Path panel and duplicate readiness card is included in Development commit `ea4743518d3ab4552db335e0bdce7bdb230c6d30`.
