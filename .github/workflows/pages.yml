@@ -44,6 +44,14 @@ jobs:
       - name: Stage Development web app for Preview verification
         run: |
           rsync -a --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' development-source/ ./
+      - name: Verify approved global dungeon background
+        shell: bash
+        run: |
+          set -euo pipefail
+          background_url="https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/Duo-dungeon-backgrounds/MainBackDrop.jpeg"
+          grep -Fq "$background_url" visual/pages/unified-stone-background.css
+          curl --fail --silent --show-error --location --output /dev/null "$background_url"
+          echo "PASS: approved Supabase background is configured and publicly reachable."
       - name: Check out isolated Phase 4 source
         uses: actions/checkout@v7
         with:
