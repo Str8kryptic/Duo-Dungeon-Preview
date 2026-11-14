@@ -44,7 +44,7 @@ jobs:
       - name: Stage Development web app for Preview verification
         run: |
           rsync -a --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' development-source/ ./
-      # Re-run deployment after the global backdrop replacement.
+      # Re-run deployment after the global backdrop replacement and cache-bust.
       - name: Verify approved global dungeon background
         shell: bash
         run: |
