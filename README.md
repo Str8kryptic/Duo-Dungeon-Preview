@@ -24,3 +24,8 @@ The AI avatar is a canvas-rendered live module (`assistant-orb.js`) loaded from 
 
 
 The legacy prerecorded avatar presentation has been removed from Development. Preview now uses only the live Canvas-rendered AI avatar; the old avatar styling is removed and stale GIF images are hidden.
+
+
+## Latest deployment source
+
+Preview stages the current `promotion/development-latest` branch from `Str8kryptic/Duo-Dungeon`. The mobile layout correction is included in Development commit `2bebbe271bef30315e67824cb5cf9a89fd95dbf1`.
