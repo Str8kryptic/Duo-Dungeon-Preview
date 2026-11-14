@@ -160,3 +160,5 @@ jobs:
 # Rebuild Preview with latest centered navigation shell.
 
 # Rebuild Preview with the corrected five-slot centered Orb navigation.
+
+# Sync Preview to Development clean-artwork reset commit bf7fab0.
