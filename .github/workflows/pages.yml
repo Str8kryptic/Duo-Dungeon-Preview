@@ -91,7 +91,8 @@ jobs:
           run_check "Application JavaScript syntax" node --check app.js
           run_check "Guild JavaScript syntax" node --check guild.js
           run_check "Guild migration and contract tests" node scripts/test-guild.mjs
-          run_check "Hunt and Activity Ledger progression tests" node scripts/test-activity-progression.mjs
+          run_check "Hunt economy regression tests" node scripts/test-hunt-economy.mjs
+          run_check "Activity Ledger regression tests" node scripts/test-activity-engine.mjs
           run_check "Adventurer's Path tests" node scripts/test-adventurers-path.mjs
           run_check "Adventurer's Path JavaScript syntax" node --check adventurers-path.js
           run_check "Authentication JavaScript syntax" node --check auth.js
@@ -100,7 +101,7 @@ jobs:
           run_check "RPG combat regression tests" node scripts/test-rpg-combat.mjs
           run_check "Activity Ledger JavaScript syntax" node --check activity-engine.js
           run_check "Retired step-reward endpoint returns HTTP 410" grep -q '}, 410);' supabase/functions/step-reward-sync/index.ts
-          run_check "Retired step Treasury is absent from active facilities" bash -c "! grep -q '\\[\"treasury\",' app.js"
+          run_check "Legacy Treasury only exchanges existing Marks" bash -c "grep -q 'LEGACY TREASURY MARKS' app.js && grep -q 'Health sync no longer generates Marks or reserve energy' app.js"
           run_check "Historical step records remain in save schema" grep -q 'stepLifetime' app.js
           run_check "New saves do not receive a step reserve" bash -c "! grep -q 'bankedSteps:10000' app.js"
 
