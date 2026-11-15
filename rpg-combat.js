@@ -694,22 +694,14 @@
   }
 
   function sync(state, page, hooks) {
-    if (page !== "combat" || !state) {
-      stopTimer();
-      return;
-    }
-    if (timer) {
-      activeState = state;
-      activeHooks = hooks;
-      return;
-    }
+    if (!state) { stopTimer(); return; }
     activeState = state;
     activeHooks = hooks;
+    if (!state.rpgCombat || !state.rpgCombat.battle) { stopTimer(); return; }
+    if (timer) return;
     var now = Date.now();
-    if (state.rpgCombat && state.rpgCombat.battle) {
-      state.rpgCombat.battle.nextPlayerAt = now + 1600;
-      state.rpgCombat.battle.nextEnemyAt = now + 2600;
-    }
+    state.rpgCombat.battle.nextPlayerAt = now + 1600;
+    state.rpgCombat.battle.nextEnemyAt = now + 2600;
     timer = window.setInterval(tick, 450);
   }
 
@@ -734,7 +726,7 @@
       '<div class="rpg-combatants"><article class="rpg-combatant rpg-player-combatant"><span class="rpg-combatant-icon">♙</span><small>CRAWLER</small><b>LVL ' + r.level + '</b><strong>' + r.hp + ' / ' + r.maxHp + ' HP</strong>' + bar(r.hp, r.maxHp, "rpg-hp") + '<small>ATK ' + player.attack + ' · DEF ' + player.defense + '</small></article>' +
       '<div class="rpg-versus">VS</div><article class="rpg-combatant rpg-monster-combatant"><span class="rpg-combatant-icon">☠</span><small>HOSTILE</small><b>' + esc(monster.kind) + '</b><strong>' + battle.hp + ' / ' + battle.maxHp + ' HP</strong>' + bar(battle.hp, battle.maxHp, "rpg-enemy-hp") + '<small>ATK ' + monster.attack + ' · DEF ' + monster.defense + '</small></article></div>' +
       '<div class="rpg-action-grid"><button class="rpg-action-primary" data-rpg-action="quick-strike" ' + (quickReady ? "" : "disabled") + '>⚔ QUICK STRIKE</button><button data-rpg-action="heavy-strike" ' + (heavyReady && r.stamina >= 5 ? "" : "disabled") + '>✦ HEAVY STRIKE <small>5 STAMINA</small></button><button data-rpg-action="guard">⬟ GUARD</button><button data-rpg-action="use-potion" ' + (r.inventory.potions > 0 && r.hp < r.maxHp ? "" : "disabled") + '>✚ HEALING DRAUGHT <small>' + r.inventory.potions + ' READY</small></button><button data-rpg-action="use-power-tonic" ' + (r.inventory.consumables.power > 0 ? "" : "disabled") + '>✦ BRUTAL TONIC <small>' + r.inventory.consumables.power + ' READY</small></button><button data-rpg-action="use-ward-tonic" ' + (r.inventory.consumables.ward > 0 ? "" : "disabled") + '>⬡ WARDEN ELIXIR <small>' + r.inventory.consumables.ward + ' READY</small></button></div>' +
-      '<div class="rpg-battle-footer"><span>Auto-attacks are active while this screen is open.</span><button class="rpg-text-button" data-rpg-action="flee">RETREAT</button></div>' +
+      '<div class="rpg-battle-footer"><span>Auto-attacks continue while this encounter is active, even when you browse other pages.</span><button class="rpg-text-button" data-rpg-action="flee">RETREAT</button></div>' +
       '<div class="rpg-log"><div class="rpg-eyebrow">BATTLE LOG</div>' + r.log.slice(-5).reverse().map(function (entry) { return '<p>' + esc(entry.text) + '</p>'; }).join("") + '</div></section>';
   }
 
@@ -831,6 +823,18 @@
     return '<details class="rpg-collapsible" ' + (openByDefault ? 'open' : '') + '><summary><span>' + esc(label) + '</span><span class="rpg-collapse-indicator" aria-hidden="true">⌄</span></summary><div class="rpg-collapsible-content">' + content + '</div></details>';
   }
 
+  function renderHotbar(state) {
+    var r = ensure(state), battle = r && r.battle;
+    if (!battle) return "";
+    var monster = monsterById(battle.monsterId);
+    if (!monster) return "";
+    var playerPct = clamp(r.hp / r.maxHp * 100, 0, 100);
+    var enemyPct = clamp(battle.hp / battle.maxHp * 100, 0, 100);
+    var quickReady = Date.now() >= Number(battle.quickReadyAt || 0);
+    var heavyReady = Date.now() >= Number(battle.heavyReadyAt || 0) && r.stamina >= 5;
+    return '<aside class="duo-battle-hotbar" role="region" aria-label="Active battle controls"><div class="duo-hotbar-top"><span class="duo-hotbar-live"><i></i> ACTIVE BATTLE</span><strong>' + esc(monster.name) + '</strong><span class="duo-hotbar-phase">' + (monster.boss ? 'PHASE ' + (Number(battle.phase) || 1) + ' / 3' : 'ENCOUNTER') + '</span></div><div class="duo-hotbar-meters"><div><span>ENEMY <b>' + Math.max(0, Math.ceil(battle.hp)) + ' / ' + battle.maxHp + '</b></span><i class="duo-hotbar-track is-enemy"><i style="width:' + enemyPct + '%"></i></i></div><div><span>YOU <b>' + r.hp + ' / ' + r.maxHp + '</b></span><i class="duo-hotbar-track is-player"><i style="width:' + playerPct + '%"></i></i></div></div><div class="duo-hotbar-actions"><button data-rpg-action="quick-strike" ' + (quickReady ? '' : 'disabled') + '>⚔ <span>STRIKE</span></button><button data-rpg-action="heavy-strike" ' + (heavyReady ? '' : 'disabled') + '>✦ <span>HEAVY</span></button><button data-rpg-action="guard">⬡ <span>GUARD</span></button><button data-rpg-action="use-potion" ' + (r.inventory.potions > 0 && r.hp < r.maxHp ? '' : 'disabled') + '>✚ <span>HEAL ' + r.inventory.potions + '</span></button><button class="duo-hotbar-stop" data-rpg-action="flee">■ <span>STOP</span></button></div></aside>';
+  }
+
   function render(state) {
     var r = ensure(state);
     if (!r) return '<section class="rpg-page"><h1>THE HUNT IS ON BREAK</h1><p>The combat ledger is missing. Refresh the dungeon and try again.</p></section>';
@@ -846,11 +850,12 @@
       collapsibleSection("ALCHEMY LAB", renderAlchemy(state, r), false) +
       collapsibleSection("SEALED LOOT", '<section class="rpg-subpanel"><div class="rpg-section-head"><div><div class="rpg-eyebrow">REWARD CACHE</div><h3>Sealed Loot</h3></div><span class="rpg-count">' + r.inventory.lootBoxes + ' CACHES</span></div><p class="rpg-section-hint">Monster loot caches contain equipment appropriate to your deepest unlocked floor.</p><button class="rpg-action-primary rpg-craft-button" data-rpg-action="open-cache" ' + (r.inventory.lootBoxes > 0 ? "" : "disabled") + '>◇ OPEN LOOT CACHE</button></section>', false) +
       collapsibleSection("EQUIPMENT & MATERIALS", renderInventory(r), false) +
-      '<p class="rpg-footnote">Combat uses stamina. Basic attacks run automatically while this page is open; you control special attacks, guarding, and healing.</p></div>';
+      '<p class="rpg-footnote">Combat uses stamina. Basic attacks continue automatically during an active encounter across every game page; use the floating hotbar for quick actions or stop the fight.</p></div>';
   }
   window.DUO_RPG_COMBAT = {
     ensure: ensure,
     render: render,
+    renderHotbar: renderHotbar,
     handleAction: handleAction,
     sync: sync
   };
