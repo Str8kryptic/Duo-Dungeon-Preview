@@ -19,14 +19,13 @@ function migrateRecord(record,state,period){
  if(!record)return record;
  record.claimed=Array.isArray(record.claimed)?record.claimed:[];
  record.contracts=Array.isArray(record.contracts)?record.contracts:[];
- record.contracts.forEach(function(c){
-  if(c.type==="steps"){
-   c.type="kills";
-   c.title=period==="daily"?"HUNT THE DEPTHS":"THE WEEKLY HUNT";
-   c.description=period==="daily"?"Defeat monsters in the Hunt to earn this reward.":"Defeat monsters throughout the week to earn this reward.";
-   if(!Number.isFinite(Number(record.startKills)))record.startKills=Number(state.guildStats.kills)||0;
-  }
- });
+ if(record.contracts.some(function(c){return c&&c.type==="steps"})){
+  record.claimed=[];
+  record.startKills=Number(state.guildStats.kills)||0;
+  record.startCrafts=Number(state.guildStats.crafts)||0;
+  record.startAchievements=Array.isArray(state.claimedAchievements)?state.claimedAchievements.length:0;
+  record.contracts=choose(period==="daily"?dailyPools:weeklyPools,String(record.period)+":"+state.number+":activity-migration");
+ }
  return record;
 }
 function ensure(state,day){
