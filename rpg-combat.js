@@ -271,13 +271,73 @@
     refresh(hooks);
   }
 
+  function activityRewardBoosts(state) {
+    var data = typeof window !== "undefined" && window.DUO_DATA || {};
+    var catalog = Array.isArray(data.shopItems) ? data.shopItems : [];
+    var bonuses = { coins: 0, xp: 0, rare: 0, companionXP: 0 };
+    function addEffects(effects) {
+      Object.keys(effects || {}).forEach(function (key) {
+        if (Object.prototype.hasOwnProperty.call(bonuses, key)) bonuses[key] += Number(effects[key]) || 0;
+      });
+    }
+    ["weapon", "armor", "companion"].forEach(function (slot) {
+      var id = state.gear && state.gear[slot], item = catalog.find(function (entry) { return entry.id === id; });
+      if (item) addEffects(item.effects);
+    });
+    (data.relicCatalog || []).forEach(function (relic) {
+      if ((state.relics || []).indexOf(relic.id) >= 0) addEffects(relic.effects);
+    });
+    ["weapon", "armor"].forEach(function (slot) {
+      var id = state.gear && state.gear[slot], item = catalog.find(function (entry) { return entry.id === id; });
+      var rank = Number(state.upgrades && state.upgrades[id]) || 0;
+      if (item && rank) {
+        var key = item.effects && item.effects.xp && !item.effects.coins ? "xp" : "coins";
+        bonuses[key] += rank * 0.02;
+        if (rank >= 5) bonuses.rare += 0.05;
+      }
+    });
+    var weapon = catalog.find(function (entry) { return state.gear && entry.id === state.gear.weapon; });
+    var armor = catalog.find(function (entry) { return state.gear && entry.id === state.gear.armor; });
+    if (weapon && armor && weapon.set && weapon.set === armor.set) {
+      bonuses.coins += 0.10;
+      bonuses.xp += 0.05;
+    }
+    var companion = catalog.find(function (entry) { return state.gear && entry.id === state.gear.companion; });
+    if (companion) {
+      var companionLevel = Math.floor(Math.sqrt(Math.max(0, Number(state.companionXP) || 0) / 25)) + 1;
+      bonuses.companionXP += Math.min(0.20, Math.max(0, companionLevel - 1) * 0.002);
+      if (companion.id === "cat") bonuses.rare += 0.02;
+      if (companion.id === "demon") bonuses.xp += 0.03;
+    }
+    (state.activePotions || []).forEach(function (potion) {
+      if (potion.endsAt > Date.now()) addEffects(potion.effect);
+    });
+    return bonuses;
+  }
+
   function winBattle(state, r, hooks) {
     var battle = r.battle;
     var monster = monsterById(battle && battle.monsterId);
     if (!monster) { r.battle = null; return; }
     r.kills[monster.id] = (Number(r.kills[monster.id]) || 0) + 1;
     recordBountyProgress(r, monster);
-    r.xp += monster.xp;
+    var boosts = activityRewardBoosts(state);
+    var xpReward = Math.max(1, Math.round(monster.xp * (1 + boosts.xp)));
+    var coinReward = Math.max(10, Math.round(monster.xp * 1.5 * (1 + boosts.coins)));
+    r.xp += xpReward;
+    state.xp = (Number(state.xp) || 0) + xpReward;
+    state.coins = (Number(state.coins) || 0) + coinReward;
+    state.guildStats = state.guildStats && typeof state.guildStats === "object" ? state.guildStats : { kills: 0, crafts: 0 };
+    state.guildStats.kills = (Number(state.guildStats.kills) || 0) + 1;
+    state.monsterKills = state.monsterKills && typeof state.monsterKills === "object" ? state.monsterKills : {};
+    var speciesKey = String(monster.name || "Unknown Monster").replace(/^ELITE\s+/i, "").trim().toLowerCase();
+    state.monsterKills[speciesKey] = (Number(state.monsterKills[speciesKey]) || 0) + 1;
+    state.monsterKillTotal = (Number(state.monsterKillTotal) || 0) + 1;
+    if (state.gear && state.gear.companion) {
+      state.companionXPById = state.companionXPById && typeof state.companionXPById === "object" ? state.companionXPById : {};
+      state.companionXPById[state.gear.companion] = (Number(state.companionXPById[state.gear.companion]) || 0) + Math.max(1, Math.round(5 * (1 + boosts.companionXP)));
+      state.companionXP = state.companionXPById[state.gear.companion];
+    }
     var drops = awardDrops(r, monster);
     if (monster.chamberId) {
       r.chambers.cleared[monster.chamberId] = (Number(r.chambers.cleared[monster.chamberId]) || 0) + 1;
@@ -296,10 +356,10 @@
         }
       });
     }
-    log(r, monster.name + " defeated. +" + monster.xp + " combat XP. Loot: " + drops + ".");
+    log(r, monster.name + " defeated. +" + xpReward + " XP · +" + coinReward + " coins. Loot: " + drops + ".");
     r.battle = null;
     levelUp(r, hooks);
-    notify(hooks, monster.name + " defeated. " + drops + ".");
+    notify(hooks, monster.name + " defeated. +" + xpReward + " XP · +" + coinReward + " coins. " + drops + ".");
   }
 
   function loseBattle(r, hooks) {
@@ -403,7 +463,13 @@
     startBattle(state, chamber.bossId, hooks, true);
   }
 
-  function craftPotion(r, hooks) {
+  function recordCraftActivity(state) {
+    if (!state) return;
+    state.guildStats = state.guildStats && typeof state.guildStats === "object" ? state.guildStats : { kills: 0, crafts: 0 };
+    state.guildStats.crafts = (Number(state.guildStats.crafts) || 0) + 1;
+  }
+
+  function craftPotion(state, r, hooks) {
     var materials = r.inventory.materials;
     if ((materials.bitter_herb || 0) < 2 || (materials.venom_gland || 0) < 1) {
       notify(hooks, "You need 2 Bitter Herbs and 1 Venom Gland to craft a Healing Draught.");
@@ -412,6 +478,7 @@
     materials.bitter_herb -= 2;
     materials.venom_gland -= 1;
     r.inventory.potions += 1;
+    recordCraftActivity(state);
     log(r, "Crafted 1 Field Healing Draught. The alchemist is only mildly alarmed.");
     notify(hooks, "Field Healing Draught crafted.");
     refresh(hooks);
@@ -435,12 +502,13 @@
     if (!canAfford(r, recipe.costs)) { notify(hooks, "You are missing materials for " + item.name + "."); return; }
     Object.keys(recipe.costs).forEach(function (id) { r.inventory.materials[id] -= recipe.costs[id]; });
     r.inventory.gear.push(item.id);
+    recordCraftActivity(state);
     log(r, "Forged " + item.name + ". The forge approves. The monster probably won't.");
     notify(hooks, item.name + " forged and added to your equipment pack.");
     refresh(hooks);
   }
 
-  function craftConsumable(r, recipe, hooks) {
+  function craftConsumable(state, r, recipe, hooks) {
     if (!canAfford(r, recipe.costs)) { notify(hooks, "You are missing materials for " + recipe.name + "."); return; }
     Object.keys(recipe.costs).forEach(function (id) { r.inventory.materials[id] -= recipe.costs[id]; });
     if (recipe.id === "healing") {
@@ -448,6 +516,7 @@
     } else {
       r.inventory.consumables[recipe.id] = (Number(r.inventory.consumables[recipe.id]) || 0) + 1;
     }
+    recordCraftActivity(state);
     log(r, "Brewed " + recipe.name + ".");
     notify(hooks, recipe.name + " brewed.");
     refresh(hooks);
@@ -492,22 +561,24 @@
         Object.keys(brewRecipe.costs).forEach(function (id) { r.inventory.materials[id] -= brewRecipe.costs[id]; });
         var restored = Math.min(25, r.maxStamina - r.stamina);
         r.stamina += restored;
+        recordCraftActivity(state);
         log(r, brewRecipe.name + " restores " + restored + " stamina.");
         notify(hooks, restored + " stamina restored.");
         refresh(hooks);
         return;
       }
-      craftConsumable(r, brewRecipe, hooks);
+      craftConsumable(state, r, brewRecipe, hooks);
       return;
     }
-    if (action === "craft-healing") { craftPotion(r, hooks); return; }
-    if (action === "craft-power-tonic") { craftConsumable(r, alchemyRecipes[1], hooks); return; }
-    if (action === "craft-ward-tonic") { craftConsumable(r, alchemyRecipes[2], hooks); return; }
+    if (action === "craft-healing") { craftPotion(state, r, hooks); return; }
+    if (action === "craft-power-tonic") { craftConsumable(state, r, alchemyRecipes[1], hooks); return; }
+    if (action === "craft-ward-tonic") { craftConsumable(state, r, alchemyRecipes[2], hooks); return; }
     if (action === "craft-stamina-elixir") {
       var staminaRecipe = alchemyRecipes[3];
       if (!canAfford(r, staminaRecipe.costs)) { notify(hooks, "You are missing materials for " + staminaRecipe.name + "."); return; }
       Object.keys(staminaRecipe.costs).forEach(function (id) { r.inventory.materials[id] -= staminaRecipe.costs[id]; });
       r.stamina = Math.min(r.maxStamina, r.stamina + 25);
+      recordCraftActivity(state);
       log(r, "Used " + staminaRecipe.name + ". 25 stamina restored.");
       notify(hooks, "25 stamina restored.");
       refresh(hooks);
