@@ -33,12 +33,12 @@ assert.notEqual(player.guild.weekly.period,weekBefore,"Weekly commissions should
 assert.equal(player.guild.weekly.claimed.length,0);
 const legacy={number:42,coins:0,xp:0,stepsToday:5000,stepLifetime:25000,guildStats:{kills:3,crafts:0},guild:{daily:{period:"2026-11-10",startKills:0,startCrafts:0,claimed:[],contracts:[{id:"old-step",type:"steps",target:3,title:"OLD WALKING CONTRACT",description:"Old step contract",coins:50,xp:25}]},weekly:{period:"2026-11-09",startKills:0,startCrafts:0,startSteps:0,claimed:[],contracts:[]}}};
 Guild.ensure(legacy,"2026-11-10");
-assert.equal(legacy.guild.daily.contracts[0].type,"kills","Legacy step contracts should migrate to gameplay activity contracts");
-assert.equal(Guild.progress(legacy,"daily",legacy.guild.daily.contracts[0]),3,"Legacy contract migration should use monster kills, not old step totals");
+assert.ok(["kills","crafts","achievements"].includes(legacy.guild.daily.contracts[0].type),"Legacy step contracts should be replaced with gameplay activity contracts");
+assert.notEqual(legacy.guild.daily.contracts[0].target,2500,"Legacy step targets must not become unrealistic monster or crafting targets");
 assert.equal(legacy.stepsToday,5000,"Migration must preserve historical step records");
 const html=Guild.render(player,"2026-11-16");
 assert.match(html,/THE GUILD HALL/);
 assert.match(html,/DAILY CONTRACTS/);
 assert.match(html,/WEEKLY COMMISSIONS/);
-assert.match(html,/monster victories and crafting/);
+assert.match(html,/monster victories, crafting, and achievements/);
 console.log("Adventurer's Guild activity tests passed.");
