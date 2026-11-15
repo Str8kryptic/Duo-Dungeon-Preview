@@ -171,6 +171,14 @@
     if (changed) window.dispatchEvent(new CustomEvent("duo:activity-settled"));
     return '<div class="activity-page"><header class="activity-hero"><div class="activity-eyebrow">THE SANCTUM · PRODUCTION & PROFICIENCY</div><h1>ACTIVITIES</h1><p>Gather what the dungeon hides. Master the craft. Return to the Hunt better prepared.</p><div class="activity-hero-stats"><span><b>' + Object.keys(skills).length + '</b> DISCIPLINES</span><span><b>' + nodes.length + '</b> GATHERING NODES</span><span><b>' + recipes.length + '</b> RECIPES</span></div></header>' + offlineNotice + activeMarkup + '<section class="activity-skill-overview"><div class="activity-section-heading"><div><small>YOUR DISCIPLINES</small><h2>Skill Ledger</h2></div></div><div class="activity-skill-grid">' + skillMarkup + '</div></section>' + nodeMarkup + '<section class="activity-skill-section"><div class="activity-section-heading"><div><small>THE WORKSHOP</small><h2>⌑ Crafting</h2><p>Crafting uses the same materials as your existing Vault, Forge and Apothecary. Successful recipes award Crafting XP.</p></div></div><div class="activity-recipe-grid">' + recipeMarkup + '</div></section><section class="activity-skill-section"><div class="activity-section-heading"><div><small>SHARED INVENTORY</small><h2>Material Locker</h2><p>Gathered resources are added directly to your existing combat material inventory.</p></div></div><div class="activity-material-grid">' + bagMarkup + '</div></section><footer class="activity-footer">Step history is preserved separately. Activities use their own gathering cycles, skill XP and shared crafting materials.</footer></div>';
   }
+  function renderHotbar(state) {
+    var a = ensure(state), active = a && a.active;
+    if (!active) return "";
+    var node = nodes.find(function (x) { return x.id === active.nodeId; });
+    if (!node) return "";
+    var p = progress(active, node, Date.now());
+    return '<aside class="duo-gather-hotbar" role="region" aria-label="Active gathering activity"><div class="duo-gather-top"><span class="duo-gather-live"><i></i> ACTIVITY RUNNING</span><strong>' + esc(node.name) + '</strong><span class="duo-gather-yield">+' + (node.yield + Math.floor(Math.max(0, a.skills[node.skill].level - 1) / 5)) + ' / CYCLE</span></div><div class="duo-gather-track"><i style="width:' + p.pct + '%"></i></div><div class="duo-gather-meta"><b>' + fmtTime(p.remaining) + ' TO NEXT YIELD</b><span>' + (Number(active.totalActions) || 0) + ' CYCLES COLLECTED</span></div><button class="duo-gather-stop" data-activity-collect>■ COLLECT & STOP</button></aside>';
+  }
   function awardCraftingXP(state, action) {
     var recipe = recipes.find(function (x) { return x.action === action; });
     if (!recipe) return false;
@@ -253,7 +261,7 @@
     if (bar) bar.style.width = p.pct + "%";
     if (label) label.textContent = fmtTime(p.remaining) + " until next yield";
   }
-  window.DUO_ACTIVITY_ENGINE = { ensure: ensure, settle: settle, render: render, handleClick: handleClick, awardCraftingXP: awardCraftingXP, tick: tick };
+  window.DUO_ACTIVITY_ENGINE = { ensure: ensure, settle: settle, render: render, renderHotbar: renderHotbar, handleClick: handleClick, awardCraftingXP: awardCraftingXP, tick: tick };
   window.addEventListener("duo:activity-settled", function () {
     if (window.DUO_ACTIVITY_SAVE && typeof window.DUO_ACTIVITY_SAVE === "function") window.DUO_ACTIVITY_SAVE();
   });
