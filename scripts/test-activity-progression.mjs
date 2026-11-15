@@ -48,6 +48,8 @@ const state = {
   monsterKills: {}, monsterKillTotal: 0,
   activePotions: [{ endsAt: Date.now() + 60000, effect: { coins: 0.5, xp: 0.5 } }]
 };
+let milestoneCallbacks = 0;
+window.DUO_APP_ON_MONSTER_KILL = () => { milestoneCallbacks += 1; };
 const hooks = { save() {}, render() {}, toast() {}, notify() {} };
 const rpg = Combat.ensure(state);
 Activities.ensure(state);
@@ -58,6 +60,7 @@ rpg.battle.hp = 0;
 Combat.handleAction(state, "quick-strike", hooks);
 assert.equal(state.guildStats.kills, 1, "Hunt victory should advance Guild kill progress");
 assert.equal(state.monsterKillTotal, 1, "Hunt victory should update the lifetime elimination ledger");
+assert.equal(milestoneCallbacks, 1, "Hunt victory should trigger the permanent milestone reward handler");
 assert.ok(state.xp > 28, "Hunt victory should award boosted global XP");
 assert.ok(state.coins > 142, "Hunt victory should award boosted coins");
 
