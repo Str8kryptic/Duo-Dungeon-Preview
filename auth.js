@@ -36,36 +36,72 @@ var root=document.createElement("div");root.className="auth-overlay";root.id="au
 root.innerHTML='<section class="auth-card"><video class="auth-login-v2-art" autoplay muted loop playsinline preload="auto" poster="https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Backgrounds/LoginV2.png" aria-label="Animated Duo Dungeon login background"><source src="https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Backgrounds/LoginV3.mp4" type="video/mp4"></video><button type="button" class="auth-v2-orb" id="auth-v2-orb" aria-label="Ask the Orb"><canvas class="assistant-orb-live" data-ai-orb aria-hidden="true"></canvas></button><section class="auth-v2-live"><form id="auth-form" autocomplete="off"><div class="auth-v2-field auth-v2-email"><label class="sr-only" for="auth-email">Email address</label><input id="auth-email" type="email" name="delver-login-email" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email" required aria-label="Email address"></div><div class="auth-v2-field auth-v2-password"><label class="sr-only" for="auth-password">Password</label><input id="auth-password" type="password" name="delver-login-password" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false" minlength="12" required aria-label="Password"></div><button class="auth-v2-submit" id="auth-submit" type="submit" aria-label="Log in"></button></form><div class="auth-v2-feedback" id="auth-message" role="status" aria-live="polite"></div><div class="auth-buttons"><button type="button" data-mode="signup">CREATE ACCOUNT</button><button type="button" data-mode="login" class="active">LOG IN</button></div><button type="button" class="auth-v2-resend" id="auth-resend" style="display:none" disabled aria-label="Resend confirmation email"></button><button type="button" class="auth-v2-forgot" id="auth-forgot" style="display:none">FORGOT PASSWORD?</button><button type="button" class="auth-v2-guest" id="guest-button" aria-label="Guest Sign-In">GUEST SIGN-IN</button><button type="button" class="auth-v2-back" id="auth-back" style="display:none">BACK TO GAME</button><button type="button" class="auth-v2-signout" id="auth-signout" style="display:none">SIGN OUT</button><p class="auth-small">Guest progress stays on this device until you create an account.</p></section></section>';
 document.body.appendChild(root);
 
-// LoginV3 diagnostics: do not silently replace a failed video with the static poster.
+// LoginV3 playback state: retain the poster until a decoded frame is actually available.
 var loginBackgroundVideo=root.querySelector("video.auth-login-v2-art");
 var loginBackgroundStatus=root.querySelector("#auth-message");
 if(loginBackgroundVideo){
   var loginVideoSource=loginBackgroundVideo.querySelector("source");
-  if(loginVideoSource)loginVideoSource.src="https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Backgrounds/LoginV3.mp4?v=20261115b";
-  // Keep LoginV2 visible until Safari has decoded the first LoginV3 frame.
+  var loginVideoUrl="https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Backgrounds/LoginV3.mp4?v=20261115c";
+  if(loginVideoSource)loginVideoSource.src=loginVideoUrl;
   loginBackgroundVideo.setAttribute("poster","https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Backgrounds/LoginV2.png");
+  loginBackgroundVideo.muted=true;
+  loginBackgroundVideo.defaultMuted=true;
+  loginBackgroundVideo.playsInline=true;
+  loginBackgroundVideo.loop=true;
+  function loginVideoStatus(text){if(loginBackgroundStatus)loginBackgroundStatus.textContent=text;}
+  loginVideoStatus("Waking the dungeon…");
+  loginBackgroundVideo.addEventListener("loadedmetadata",function(){
+    console.info("[Duo Dungeon LoginV3] Metadata loaded.",{duration:loginBackgroundVideo.duration,videoWidth:loginBackgroundVideo.videoWidth,videoHeight:loginBackgroundVideo.videoHeight});
+    loginVideoStatus("Animation ready — starting…");
+  });
   loginBackgroundVideo.addEventListener("loadeddata",function(){
-    if(loginBackgroundStatus)loginBackgroundStatus.textContent="";
-    console.info("[Duo Dungeon LoginV3] First video frame loaded.",{readyState:loginBackgroundVideo.readyState,currentSrc:loginBackgroundVideo.currentSrc});
+    console.info("[Duo Dungeon LoginV3] First decoded frame loaded.",{readyState:loginBackgroundVideo.readyState});
+    loginVideoStatus("Animation frame loaded.");
+  });
+  loginBackgroundVideo.addEventListener("canplay",function(){
+    console.info("[Duo Dungeon LoginV3] Can play.");
+    loginVideoStatus("Animation ready.");
   });
   loginBackgroundVideo.addEventListener("playing",function(){
-    if(loginBackgroundStatus)loginBackgroundStatus.textContent="";
     console.info("[Duo Dungeon LoginV3] Playback started.");
+    loginVideoStatus("");
+  });
+  loginBackgroundVideo.addEventListener("waiting",function(){
+    console.warn("[Duo Dungeon LoginV3] Waiting for video data.");
+    loginVideoStatus("The animation is buffering…");
+  });
+  loginBackgroundVideo.addEventListener("stalled",function(){
+    console.warn("[Duo Dungeon LoginV3] Video download stalled.",{networkState:loginBackgroundVideo.networkState,readyState:loginBackgroundVideo.readyState,currentSrc:loginBackgroundVideo.currentSrc});
+    loginVideoStatus("The animation download stalled.");
   });
   loginBackgroundVideo.addEventListener("error",function(){
     var mediaError=loginBackgroundVideo.error;
     var details={code:mediaError?mediaError.code:null,message:mediaError?mediaError.message:"Unknown media error",networkState:loginBackgroundVideo.networkState,readyState:loginBackgroundVideo.readyState,currentSrc:loginBackgroundVideo.currentSrc};
-    console.error("[Duo Dungeon LoginV3] Video failed to load.",details);
-    if(loginBackgroundStatus)loginBackgroundStatus.textContent="Animated background failed to load (video error "+details.code+").";
+    console.error("[Duo Dungeon LoginV3] Video failed.",details);
+    loginVideoStatus("Animation unavailable (video error "+details.code+").");
   });
-  loginBackgroundVideo.addEventListener("stalled",function(){
-    console.warn("[Duo Dungeon LoginV3] Video download stalled.",{networkState:loginBackgroundVideo.networkState,currentSrc:loginBackgroundVideo.currentSrc});
-  });
+  function startLoginVideoFromGesture(){
+    if(!loginBackgroundVideo.paused)return;
+    loginBackgroundVideo.play().then(function(){
+      console.info("[Duo Dungeon LoginV3] Playback started after user gesture.");
+    }).catch(function(error){
+      console.warn("[Duo Dungeon LoginV3] User-initiated playback failed.",error);
+      loginVideoStatus("Animation could not start: "+(error&&error.name?error.name:"playback error")+".");
+    });
+  }
+  // In-app browsers sometimes suppress autoplay; allow the first tap anywhere on the login shell to start it.
+  root.addEventListener("pointerdown",startLoginVideoFromGesture,{passive:true});
   loginBackgroundVideo.load();
   loginBackgroundVideo.play().catch(function(error){
-    console.warn("[Duo Dungeon LoginV3] Autoplay was blocked.",error);
-    if(loginBackgroundStatus)loginBackgroundStatus.textContent="Tap the screen to start the animated background.";
+    console.warn("[Duo Dungeon LoginV3] Autoplay blocked.",error);
+    loginVideoStatus("Tap anywhere to start the animated background.");
   });
+  window.setTimeout(function(){
+    if(loginBackgroundVideo.paused&&loginBackgroundVideo.readyState<2){
+      loginVideoStatus("Animation hasn't loaded yet. Check video access or encoding.");
+      console.warn("[Duo Dungeon LoginV3] No decoded frame after 8 seconds.",{networkState:loginBackgroundVideo.networkState,readyState:loginBackgroundVideo.readyState,currentSrc:loginBackgroundVideo.currentSrc});
+    }
+  },8000);
 }
 
 var form=root.querySelector("#auth-form"),msg=root.querySelector("#auth-message"),submit=root.querySelector("#auth-submit"),guest=root.querySelector("#guest-button"),back=root.querySelector("#auth-back"),signout=root.querySelector("#auth-signout"),currentMode="signup",busy=false,resendEmail="",resendTimer=null;var resend=root.querySelector("#auth-resend"),forgot=root.querySelector("#auth-forgot");
