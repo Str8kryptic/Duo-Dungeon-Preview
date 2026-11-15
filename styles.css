@@ -1953,3 +1953,8 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
 .dd-crack{stroke:#39caff;stroke-width:3.2;stroke-dasharray:2 18 30 12;stroke-dashoffset:0;opacity:.08;vector-effect:non-scaling-stroke}.dd-crack-a,.dd-crack-b{animation:dd-crack-surge 4.8s ease-in-out infinite}.dd-crack-c,.dd-crack-d{animation:dd-crack-surge 5.7s ease-in-out infinite}.dd-crack-e,.dd-crack-f{animation:dd-crack-surge 6.4s ease-in-out infinite}.dd-crack-b,.dd-crack-d,.dd-crack-f{animation-delay:-2.2s}
 @keyframes dd-crack-surge{0%,68%,100%{opacity:.035;stroke-width:2.2;stroke-dashoffset:0}71%{opacity:.92;stroke-width:4.8;stroke-dashoffset:-24}74%{opacity:.16;stroke-width:2.8;stroke-dashoffset:-48}77%{opacity:.78;stroke-width:4.2;stroke-dashoffset:-76}81%{opacity:.04;stroke-width:2;stroke-dashoffset:-110}}
 @media(prefers-reduced-motion:reduce){.dd-fire-shape,.dd-fire-halo,.dd-fire-outer,.dd-fire-tongue,.dd-embers circle,.dd-crack{animation:none!important}.dd-fire-shape{opacity:.72}.dd-fire-halo{opacity:.55}.dd-embers circle{opacity:0}.dd-crack{opacity:.05}}
+
+/* Preserve the LoginV2 purple Orb pulse alongside the new ambient effects. */
+.dd-orb-pulse{fill:none;stroke:#b55cff;stroke-width:5;opacity:.18;filter:drop-shadow(0 0 9px #a32cff);transform-box:fill-box;transform-origin:center;animation:dd-orb-beat 2.8s ease-in-out infinite}
+@keyframes dd-orb-beat{0%,100%{opacity:.12;transform:scale(.9)}50%{opacity:.62;transform:scale(1.18)}}
+@media(prefers-reduced-motion:reduce){.dd-orb-pulse{animation:none!important;opacity:.22}}
