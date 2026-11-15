@@ -10,7 +10,7 @@ const hooks={save(){},render(){},toast(){},notify(){}};
 Combat.ensure(state);
 Combat.handleAction(state,"hunt:cave-stalker",hooks);
 assert.ok(state.rpgCombat.battle,"Hunt should start a battle");
-state.rpgCombat.battle.hp=1;
+state.rpgCombat.battle.hp=0;
 Combat.handleAction(state,"quick-strike",hooks);
 assert.equal(state.guildStats.kills,1,"Hunt victory should advance Guild kill progress");
 assert.equal(state.monsterKillTotal,1,"Hunt victory should update the lifetime elimination ledger");
