@@ -30,7 +30,7 @@ const itemAIComments = {
  dragon:"A pocket-sized catastrophe with excellent attendance and terrible table manners.",
  cat:"It has accepted the position. You have not been approved as its owner.",
  demon:"A tiny apocalypse with a performance review scheduled for your enemies.",
- title1:"A prestigious label for a crawler who has somehow made it through the paperwork and the monsters.",
+ title1:"A prestigious label for a Delver who has somehow made it through the paperwork and the monsters.",
  title2:"Your realm is small, your stride is mighty, and your subjects keep asking when the next maintenance window is.",
  title3:"The title is impressive. I have updated the org chart so the dungeon knows who to blame.",
  potion:"A volatile little confidence boost. Follow the timer; do not challenge the bottle.",
@@ -47,7 +47,7 @@ const itemAIComments = {
 };
 const shopItems = [
 {id:"identity_random",name:"Crawler Number Reassignment",type:"identity",rarity:"Epic",price:15000,desc:"A sanctioned identity reroll. Cost: 10 Step Dust + 5 Mimic Shards."},
-{id:"identity_custom",name:"Bespoke Crawler Number License",type:"identity",rarity:"Mythic",price:50000,desc:"Cost: 50 Step Dust + 25 Mimic Shards + 10 Dragon Scales. Choose a six-digit Crawler Number."},
+{id:"identity_custom",name:"Bespoke Crawler Number License",type:"identity",rarity:"Mythic",price:50000,desc:"Cost: 50 Step Dust + 25 Mimic Shards + 10 Dragon Scales. Choose a six-digit Delver Number."},
 {id:"sword",name:"Legendary Trail Slayer",type:"weapon",rarity:"Legendary",price:8500,set:"Royal",effects:{xp:.10},desc:"Forged from the tears of overworked goblins. +10% XP per 100 steps."},
 {id:"axe",name:"Goblin Cleaver",type:"weapon",rarity:"Rare",price:1400,set:"Goblin",effects:{coins:.15},desc:"For chopping questionable decisions. +15% coins per 100 steps."},
 {id:"dagger",name:"Pocket Knife of Regret",type:"weapon",rarity:"Common",price:300,effects:{xp:.03},desc:"Small weapon. Massive disappointment. +3% XP per 100 steps."},
@@ -103,7 +103,7 @@ Object.assign(itemAIComments,{
   demon:"A tiny apocalypse with excellent punctuality and a deeply concerning employee handbook. +15% XP.",
   title1:"The registry has reluctantly certified you as a Professional Disaster. It is not a compliment, but it is official.",
   title2:"A title of considerable authority over daily steps, dungeon corridors, and one goblin who still disputes the promotion.",
-  title3:"Supreme Crawler. The dungeon has updated its emergency procedures and added your portrait.",
+  title3:"Supreme Delver. The dungeon has updated its emergency procedures and added your portrait.",
   potion:"A cloudy tonic that smells like a wizard's laboratory after a plumbing incident. +10% XP for 10 minutes.",
   greed:"The goblins distilled their favorite personality flaw and put it in a bottle. +50% coins for 30 minutes. Financially irresponsible, but effective.",
   wisdom:"A blue elixir that briefly makes the instructions seem obvious. +50% XP for 30 minutes. Side effects may include confidence.",
