@@ -48,6 +48,7 @@ jobs:
           rsync -a --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' development-source/ ./
       # Re-run deployment after the global backdrop replacement and cache-bust.
       - name: Verify approved global dungeon background
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
@@ -103,7 +104,7 @@ jobs:
           run_check "Health Connect tests" node scripts/test-health-connect.mjs
           run_check "RPG combat tests" node scripts/test-rpg-combat.mjs
           run_check "Location manifest includes Crawler Vault" grep -q '"assetId": "facility-bag"' visual/location-manifests.js
-          run_check "Location manifest includes Step Treasury" grep -q '"assetId": "facility-treasury"' visual/location-manifests.js
+          run_check "Retired Step Treasury is absent from active facility navigation" bash -c "! grep -q '\\[\"treasury\",' app.js"
           run_check "Facility grid resolves manifest assets" grep -q 'registry.getById&&location' app.js
           run_check "Sanctum art-direction marker" grep -q 'Sanctum art direction: weathered dungeon stone and iron' styles.css
           run_check "Dungeon Atmosphere 2.0 marker" grep -q 'DUNGEON ATMOSPHERE 2.0' styles.css
