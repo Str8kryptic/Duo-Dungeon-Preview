@@ -3,7 +3,9 @@
 var PROJECT_URL="https://xuxwwpfeenaaxzfspiiq.supabase.co",PUBLISHABLE_KEY="sb_publishable_h_Dw5OeqfUQ856jYriSMRg_iFg-_pzS";
 var SAVE_KEY="duo-dungeon-save-v2",CLAIM_KEY="duo-dungeon-claim-guest",IDLE_KEY="duo-dungeon-last-active-v1",IDLE_LIMIT=60*60*1000,client=null,user=null,mode="pending",initialSave=null,crawlerNumber=null,saveRevision=null,saveBlocked=false,persistQueue=Promise.resolve(),resolveReady,idleTimer=null,lastActivityWrite=0;
 // Persist the Supabase session across refreshes; expire it after one hour without activity.
-function readLastActivity(){try{return Number(localStorage.getItem(IDLE_KEY))||0}catch(e){return 0}}
+function safeStorageGet(key){try{return localStorage.getItem(key)}catch(e){return null}}
+function safeStorageRemove(key){try{localStorage.removeItem(key)}catch(e){}}
+function readLastActivity(){return Number(safeStorageGet(IDLE_KEY))||0}
 function stopIdleSignOut(){if(idleTimer){clearTimeout(idleTimer);idleTimer=null}}
 function scheduleIdleSignOut(){stopIdleSignOut();if(!user)return;var last=readLastActivity();if(!last){writeLastActivity();return}var remaining=IDLE_LIMIT-(Date.now()-last);if(remaining<=0){expireIdleSession();return}idleTimer=setTimeout(expireIdleSession,remaining+50)}
 function writeLastActivity(){var now=Date.now();if(now-lastActivityWrite<10000)return;lastActivityWrite=now;try{localStorage.setItem(IDLE_KEY,String(now))}catch(e){}scheduleIdleSignOut()}
@@ -104,13 +106,13 @@ if(loginBackgroundVideo){
   },8000);
 }
 
-var form=root.querySelector("#auth-form"),msg=root.querySelector("#auth-message"),submit=root.querySelector("#auth-submit"),guest=root.querySelector("#guest-button"),back=root.querySelector("#auth-back"),signout=root.querySelector("#auth-signout"),currentMode="signup",busy=false,resendEmail="",resendTimer=null;var resend=root.querySelector("#auth-resend"),forgot=root.querySelector("#auth-forgot");
+var form=root.querySelector("#auth-form"),msg=root.querySelector("#auth-message"),submit=root.querySelector("#auth-submit"),guest=root.querySelector("#guest-button"),back=root.querySelector("#auth-back"),signout=root.querySelector("#auth-signout"),currentMode=DEV_PREVIEW?"login":"signup",busy=false,resendEmail="",resendTimer=null;var resend=root.querySelector("#auth-resend"),forgot=root.querySelector("#auth-forgot");
 function message(t){msg.textContent=t}
 var loginOrb=root.querySelector("#auth-v2-orb");
 if(loginOrb)loginOrb.addEventListener("click",function(){message("Impressive. You found the Orb. Now try logging in before demanding answers.");});
 function mountLoginOrb(){if(window.DUO_ORB&&root.querySelector("canvas[data-ai-orb]"))window.DUO_ORB.mount(root)}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mountLoginOrb,{once:true});else mountLoginOrb();
-function armResend(email){resendEmail=email;var deadline=Date.now()+120000;try{localStorage.setItem("duo-dungeon-resend-email",email);localStorage.setItem("duo-dungeon-resend-deadline",String(deadline))}catch(e){}resend.style.display="block";if(resendTimer)clearInterval(resendTimer);function tick(){var remaining=Math.max(0,Math.ceil((deadline-Date.now())/1000)),m=Math.floor(remaining/60),s=String(remaining%60).padStart(2,"0");resend.textContent=remaining>0?"RESEND CONFIRMATION IN "+m+":"+s:"RESEND CONFIRMATION EMAIL";resend.disabled=remaining>0;if(remaining===0&&resendTimer){clearInterval(resendTimer);resendTimer=null}}tick();if(deadline>Date.now())resendTimer=setInterval(tick,1000)}function restoreResend(){try{var savedEmail=localStorage.getItem("duo-dungeon-resend-email"),deadline=Number(localStorage.getItem("duo-dungeon-resend-deadline"));if(savedEmail&&deadline){resendEmail=savedEmail;resend.style.display="block";if(resendTimer)clearInterval(resendTimer);function tick(){var remaining=Math.max(0,Math.ceil((deadline-Date.now())/1000)),m=Math.floor(remaining/60),s=String(remaining%60).padStart(2,"0");resend.textContent=remaining>0?"RESEND CONFIRMATION IN "+m+":"+s:"RESEND CONFIRMATION EMAIL";resend.disabled=remaining>0;if(remaining===0&&resendTimer){clearInterval(resendTimer);resendTimer=null}}tick();if(deadline>Date.now())resendTimer=setInterval(tick,1000)}}catch(e){}}
+function armResend(email){resendEmail=email;var deadline=Date.now()+120000;try{localStorage.setItem("duo-dungeon-resend-email",email);localStorage.setItem("duo-dungeon-resend-deadline",String(deadline))}catch(e){}resend.style.display="block";if(resendTimer)clearInterval(resendTimer);function tick(){var remaining=Math.max(0,Math.ceil((deadline-Date.now())/1000)),m=Math.floor(remaining/60),s=String(remaining%60).padStart(2,"0");resend.textContent=remaining>0?"RESEND CONFIRMATION IN "+m+":"+s:"RESEND CONFIRMATION EMAIL";resend.disabled=remaining>0;if(remaining===0&&resendTimer){clearInterval(resendTimer);resendTimer=null}}tick();if(deadline>Date.now())resendTimer=setInterval(tick,1000)}function restoreResend(){try{var savedEmail=localStorage.getItem("duo-dungeon-resend-email"),deadline=Number(safeStorageGet("duo-dungeon-resend-deadline"));if(savedEmail&&deadline){resendEmail=savedEmail;resend.style.display="block";if(resendTimer)clearInterval(resendTimer);function tick(){var remaining=Math.max(0,Math.ceil((deadline-Date.now())/1000)),m=Math.floor(remaining/60),s=String(remaining%60).padStart(2,"0");resend.textContent=remaining>0?"RESEND CONFIRMATION IN "+m+":"+s:"RESEND CONFIRMATION EMAIL";resend.disabled=remaining>0;if(remaining===0&&resendTimer){clearInterval(resendTimer);resendTimer=null}}tick();if(deadline>Date.now())resendTimer=setInterval(tick,1000)}}catch(e){}}
 function setBusy(v){busy=v;submit.disabled=v;guest.disabled=v;submit.style.opacity=v?".6":"1"}
 restoreResend();
 document.addEventListener("visibilitychange",function(){if(!document.hidden&&resendEmail){var deadline=Number(localStorage.getItem("duo-dungeon-resend-deadline"));if(deadline){if(resendTimer)clearInterval(resendTimer);resendTimer=null;var remaining=Math.max(0,Math.ceil((deadline-Date.now())/1000));resend.disabled=remaining>0;var m=Math.floor(remaining/60),s=String(remaining%60).padStart(2,"0");resend.textContent=remaining>0?"RESEND CONFIRMATION IN "+m+":"+s:"RESEND CONFIRMATION EMAIL";if(remaining>0)resendTimer=setInterval(function(){var left=Math.max(0,Math.ceil((deadline-Date.now())/1000));var mm=Math.floor(left/60),ss=String(left%60).padStart(2,"0");resend.textContent=left>0?"RESEND CONFIRMATION IN "+mm+":"+ss:"RESEND CONFIRMATION EMAIL";resend.disabled=left>0;if(left===0&&resendTimer){clearInterval(resendTimer);resendTimer=null}},1000)}}});
@@ -152,9 +154,9 @@ async function loadAccount(u,afterSignup){
  if(p.error)throw p.error;crawlerNumber=p.data.crawler_number;
  var r=await client.from("player_saves").select("save_data,revision").eq("user_id",u.id).maybeSingle();
  if(r.error)throw r.error;
- if(r.data&&r.data.save_data){initialSave=r.data.save_data;saveRevision=Number(r.data.revision||0);saveBlocked=false;localStorage.removeItem(CLAIM_KEY)}
+ if(r.data&&r.data.save_data){initialSave=r.data.save_data;saveRevision=Number(r.data.revision||0);saveBlocked=false;safeStorageRemove(CLAIM_KEY)}
  else{
-  var claim=localStorage.getItem(CLAIM_KEY)==="1",guestSave=claim?readLocal():null,legacySave=!guestSave?migrateLegacy(readLegacy()):null;
+  var claim=safeStorageGet(CLAIM_KEY)==="1",guestSave=claim?readLocal():null,legacySave=!guestSave?migrateLegacy(readLegacy()):null;
   initialSave=guestSave||legacySave||fresh();saveRevision=null;saveBlocked=false;
   if(guestSave&&guestSave.number){
    var up=await client.from("player_profiles").update({crawler_number:guestSave.number,display_name:String(guestSave.name||"NEW DELVER").slice(0,20),updated_at:new Date().toISOString()}).eq("id",u.id).select("crawler_number").maybeSingle();
@@ -184,7 +186,7 @@ guest.addEventListener("click",finishGuest);back.addEventListener("click",functi
 signout.addEventListener("click",async function(){stopIdleSignOut();if(client){await client.auth.signOut()}user=null;mode="pending";try{localStorage.removeItem(IDLE_KEY)}catch(e){}window.location.reload()});
 resend.addEventListener("click",async function(){if(busy||!resendEmail)return;setBusy(true);resend.disabled=true;message("Asking the registrar to send another confirmation…");try{var result=await client.auth.resend({type:"signup",email:resendEmail,options:{emailRedirectTo:new URL("./?welcome=1",window.location.href).href}});if(result.error)throw result.error;message("Another confirmation email has been requested. Check your inbox and junk folder.");armResend(resendEmail)}catch(err){message(err&&err.message?err.message:"Could not resend the confirmation email. Try logging in if the account may already be confirmed.");resend.disabled=false;resend.textContent="TRY RESENDING"}finally{setBusy(false)}});
 form.addEventListener("submit",async function(e){
- e.preventDefault();if(busy||!client)return;var email=root.querySelector("#auth-email").value.trim(),password=root.querySelector("#auth-password").value;setBusy(true);message("Contacting the dungeon registrar…");
+ e.preventDefault();if(busy||!client)return;if(DEV_PREVIEW&&currentMode!=="login"){currentMode="login";submit.textContent="LOG IN";}var email=root.querySelector("#auth-email").value.trim(),password=root.querySelector("#auth-password").value;setBusy(true);message("Contacting the dungeon registrar…");
  try{
   if(currentMode==="signup"){
    if(readLocal())localStorage.setItem(CLAIM_KEY,"1");
@@ -323,7 +325,7 @@ async function boot(){
   if(recoveryHandled)return;
   if(recoveryUrl&&session.data.session){enterPasswordRecovery(session.data.session);return}
   if(session.data.session){var lastActivity=readLastActivity();if(lastActivity&&Date.now()-lastActivity>=IDLE_LIMIT){await client.auth.signOut({scope:"local"});try{localStorage.removeItem(IDLE_KEY)}catch(e){}mode="pending";root.classList.remove("hidden");configureDevLogin("Your session ended after one hour without activity. Sign in again to continue.");resolveReady();return}await loadAccount(session.data.session.user)}else{mode="pending";if(DEV_PREVIEW)configureDevLogin("Private Development build. Sign in with the authorized developer account.");root.classList.remove("hidden")}
- }catch(e){if(typeof session!=="undefined"&&session&&session.data&&session.data.session&&activateOfflineAccount(session.data.session)){console.warn("Duo Dungeon entered offline account mode:",e.message);return}mode="guest";initialSave=null;root.classList.remove("hidden");message("Account service unavailable: "+e.message+". You can still continue as a guest.");resolveReady()}
+ }catch(e){if(typeof session!=="undefined"&&session&&session.data&&session.data.session&&activateOfflineAccount(session.data.session)){console.warn("Duo Dungeon entered offline account mode:",e.message);return}mode="guest";initialSave=null;configureDevLogin("Account service unavailable: "+e.message+". Sign-in is still available; try again when the account service recovers.");root.classList.remove("hidden");if(!DEV_PREVIEW)message("Account service unavailable: "+e.message+". You can still continue as a guest.");resolveReady()}
 }
 boot();
 })();
