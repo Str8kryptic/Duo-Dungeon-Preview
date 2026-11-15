@@ -333,6 +333,7 @@
     var speciesKey = String(monster.name || "Unknown Monster").replace(/^ELITE\s+/i, "").trim().toLowerCase();
     state.monsterKills[speciesKey] = (Number(state.monsterKills[speciesKey]) || 0) + 1;
     state.monsterKillTotal = (Number(state.monsterKillTotal) || 0) + 1;
+    if (typeof window !== "undefined" && typeof window.DUO_APP_ON_MONSTER_KILL === "function") window.DUO_APP_ON_MONSTER_KILL(monster.name);
     if (state.gear && state.gear.companion) {
       state.companionXPById = state.companionXPById && typeof state.companionXPById === "object" ? state.companionXPById : {};
       state.companionXPById[state.gear.companion] = (Number(state.companionXPById[state.gear.companion]) || 0) + Math.max(1, Math.round(5 * (1 + boosts.companionXP)));
