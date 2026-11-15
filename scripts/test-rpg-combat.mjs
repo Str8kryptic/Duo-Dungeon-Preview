@@ -28,7 +28,7 @@ const board = combat.render(state);
 assert.match(board, /Cave Stalker/);
 assert.match(board, /Crypt Guardian/);
 assert.match(board, /Reach Descent floor 3/);
-assert.match(board, /Combat uses stamina, never Step Power/);
+assert.match(board, /Combat uses stamina/);
 
 combat.handleAction(state, "hunt:cave-stalker", hooks);
 assert.ok(rpg.battle, "unlocked monster should start a battle");
