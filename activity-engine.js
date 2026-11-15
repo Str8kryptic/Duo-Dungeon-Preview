@@ -177,7 +177,7 @@
     var node = nodes.find(function (x) { return x.id === active.nodeId; });
     if (!node) return "";
     var p = progress(active, node, Date.now());
-    return '<aside class="duo-gather-hotbar" role="region" aria-label="Active gathering activity"><div class="duo-gather-top"><span class="duo-gather-live"><i></i> ACTIVITY RUNNING</span><strong>' + esc(node.name) + '</strong><span class="duo-gather-yield">+' + (node.yield + Math.floor(Math.max(0, a.skills[node.skill].level - 1) / 5)) + ' / CYCLE</span></div><div class="duo-gather-track"><i style="width:' + p.pct + '%"></i></div><div class="duo-gather-meta"><b>' + fmtTime(p.remaining) + ' TO NEXT YIELD</b><span>' + (Number(active.totalActions) || 0) + ' CYCLES COLLECTED</span></div><button class="duo-gather-stop" data-activity-collect>■ COLLECT & STOP</button></aside>';
+    return '<aside class="duo-gather-hotbar" role="region" aria-label="Active gathering activity"><div class="duo-gather-top"><span class="duo-gather-live"><i></i> ACTIVITY RUNNING</span><strong>' + esc(node.name) + '</strong><span class="duo-gather-yield">+' + (node.yield + Math.floor(Math.max(0, a.skills[node.skill].level - 1) / 5)) + ' / CYCLE</span></div><div class="duo-gather-track"><i id="duo-gather-live-bar" style="width:' + p.pct + '%"></i></div><div class="duo-gather-meta"><b id="duo-gather-live-time">' + fmtTime(p.remaining) + ' TO NEXT YIELD</b><span>' + (Number(active.totalActions) || 0) + ' CYCLES COLLECTED</span></div><button class="duo-gather-stop" data-activity-collect>■ COLLECT & STOP</button></aside>';
   }
   function awardCraftingXP(state, action) {
     var recipe = recipes.find(function (x) { return x.action === action; });
@@ -227,6 +227,14 @@
     if (!state || !state.activityEngine || !state.activityEngine.active) return;
     var changed = settle(state, Date.now());
     if (changed) window.dispatchEvent(new CustomEvent("duo:activity-settled"));
+    var active = state.activityEngine.active, node = active && nodes.find(function (x) { return x.id === active.nodeId; });
+    if (node) {
+      var liveProgress = progress(active, node, Date.now());
+      var liveBar = document.getElementById("duo-gather-live-bar");
+      var liveLabel = document.getElementById("duo-gather-live-time");
+      if (liveBar) liveBar.style.width = liveProgress.pct + "%";
+      if (liveLabel) liveLabel.textContent = fmtTime(liveProgress.remaining) + " TO NEXT YIELD";
+    }
     if (document.body.getAttribute("data-game-section") !== "activities") return;
     if (changed) {
       Object.keys(skills).forEach(function (id) {
