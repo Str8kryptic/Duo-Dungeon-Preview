@@ -19,12 +19,14 @@ function migrateRecord(record,state,period){
  if(!record)return record;
  record.claimed=Array.isArray(record.claimed)?record.claimed:[];
  record.contracts=Array.isArray(record.contracts)?record.contracts:[];
- if(record.contracts.some(function(c){return c&&c.type==="steps"})){
-  record.claimed=[];
+ var legacy=record.contracts.filter(function(c){return c.type==="steps"});
+ if(legacy.length){
+  record.legacyStepContracts=legacy.map(function(c){return {id:c.id,target:c.target,claimed:record.claimed.indexOf(c.id)>=0,rewardCoins:c.coins,rewardXP:c.xp}});
   record.startKills=Number(state.guildStats.kills)||0;
   record.startCrafts=Number(state.guildStats.crafts)||0;
-  record.startAchievements=Array.isArray(state.claimedAchievements)?state.claimedAchievements.length:0;
-  record.contracts=choose(period==="daily"?dailyPools:weeklyPools,String(record.period)+":"+state.number+":activity-migration");
+  record.claimed=[];
+  var pool=period==="weekly"?weeklyPools:dailyPools;
+  record.contracts=choose(pool,String(record.period||dayKey())+":"+String(state.number||"crawler")+":activity-migration");
  }
  return record;
 }
