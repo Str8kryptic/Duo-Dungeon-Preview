@@ -20,6 +20,8 @@ function json(body: unknown, status = 200) {
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  return json({ error: "Step-based rewards have been retired. Existing historical records are preserved." }, 410);
+  /* Legacy handler retained below for historical reference; it is no longer reachable. */
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
   try {

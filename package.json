@@ -11,6 +11,7 @@
     "android:configure": "node scripts/prepare-android-health.mjs",
     "android:verify": "node scripts/verify-android-health-manifest.mjs",
     "test:guild": "node scripts/test-guild.mjs",
+    "test:activity": "node scripts/test-activity-progression.mjs",
     "test:audio": "node --check audio-manager.js && node scripts/test-audio-manager.mjs"
   },
   "dependencies": {

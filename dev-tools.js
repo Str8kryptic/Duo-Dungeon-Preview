@@ -22,11 +22,11 @@ auth.ready.then(function(){
  '<div><small>CRAWLER</small><b>#'+esc(u.crawlerNumber||"—")+' · '+esc(u.displayName||"Unnamed crawler")+'</b></div><div><small>USERNAME / EMAIL</small><b>'+esc(u.email||"No email")+'</b></div>'+
  '<div><small>EMAIL CONFIRMED</small><b>'+(u.emailConfirmedAt?"Yes · "+esc(date(u.emailConfirmedAt)):"No")+'</b></div><div><small>LAST SUCCESSFUL LOGIN</small><b>'+esc(date(u.lastSignInAt))+'</b></div>'+
  '<div><small>ACCOUNT CREATED</small><b>'+esc(date(u.createdAt))+'</b></div><div><small>LAST SAVE · REVISION</small><b>'+esc(date(u.saveUpdatedAt))+' · '+Number(u.revision||0)+'</b></div>'+
- '<div><small>PROFILE UPDATED</small><b>'+esc(date(u.profileUpdatedAt))+'</b></div><div><small>LIFETIME STEPS</small><b>'+Number(u.stepLifetime||0).toLocaleString()+'</b></div>'+
- '<div><small>STEPS TODAY</small><b>'+Number(u.stepsToday||0).toLocaleString()+' · Health '+Number(u.healthStepsToday||0).toLocaleString()+'</b></div>'+
+ '<div><small>PROFILE UPDATED</small><b>'+esc(date(u.profileUpdatedAt))+'</b></div><div><small>ARCHIVED LIFETIME STEPS</small><b>'+Number(u.stepLifetime||0).toLocaleString()+'</b></div>'+
+ '<div><small>ARCHIVED DAILY STEPS</small><b>'+Number(u.stepsToday||0).toLocaleString()+' · Health '+Number(u.healthStepsToday||0).toLocaleString()+'</b></div>'+
  '<div><small>XP / COINS</small><b>'+Number(u.xp||0).toLocaleString()+' XP · '+Number(u.coins||0).toLocaleString()+' coins</b></div>'+
  '<div><small>BAG / TITLE</small><b>'+Number(u.bagCount||0)+' items · '+esc(u.title||"No title")+'</b></div></div>'+
- '<section class="dev-sync-history"><div class="dev-sync-history-head"><b>PREVIOUS HEALTH SYNCS</b><span>'+((u.syncHistory||[]).length)+' RECORDED · UP TO 30</span></div>'+
+ '<section class="dev-sync-history"><div class="dev-sync-history-head"><b>LEGACY HEALTH SYNC HISTORY</b><span>'+((u.syncHistory||[]).length)+' RECORDED · UP TO 30</span></div>'+
  ((u.syncHistory||[]).length?'<div class="dev-sync-history-list">'+u.syncHistory.map(function(x){return '<article><div><b>'+esc(new Date(x.date+"T12:00:00").toLocaleDateString())+'</b><small>Recorded '+esc(date(x.createdAt))+'</small></div><strong>'+Number(x.totalSteps||0).toLocaleString()+' steps</strong></article>'}).join('')+'</div>':'<p>No Health syncs recorded yet.</p>')+'</section></td></tr>'}
  function table(){var rows=filtered();if(!rows.length)return '<div class="dev-empty">No crawlers match that filter. The dungeon is suspiciously quiet.</div>';
  return '<div class="dev-table-scroll"><table class="dev-table"><thead><tr><th>CRAWLER</th><th>USERNAME</th><th>LAST LOGIN</th><th>ACCOUNT STATUS</th><th>SAVE</th></tr></thead><tbody>'+

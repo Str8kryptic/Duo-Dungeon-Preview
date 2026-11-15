@@ -16,7 +16,8 @@
 <meta name="twitter:title" content="Duo Dungeon — Enter the Dungeon">
 <meta name="twitter:description" content="Your next questionable decision awaits. Join the adventure.">
 <meta name="twitter:image" content="https://duodungeon.com/assets/duo-dungeon-invite.jpg">
-<link rel="stylesheet" href="styles.css?v=20261115loginv3f">
+<link rel="stylesheet" href="styles.css?v=20261115activityprogression1">
+<link rel="stylesheet" href="activity-engine.css?v=20261115activity1">
 <link rel="stylesheet" href="dev-tools.css?v=20261109devsteps1">
 </head>
 <body>
@@ -28,7 +29,7 @@
 <button data-page="profile">♙<small>PROFILE</small></button>
 <button data-page="quests">☷<small>QUESTS</small></button>
 <button data-page="rankings">🏆<small>RANKS</small></button>
-<button data-page="guilds">⚔<small>GUILDS</small></button>
+<button data-page="guild">⚔<small>GUILDS</small></button>
 <button data-page="info">ⓘ<small>CODEX</small></button>
 </nav>
 <main id="app"><section class="panel"><h1>ENTERING THE DUNGEON…</h1><p>Preparing your fresh crawler.</p></section></main>
@@ -38,10 +39,12 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="auth.js?v=20261115overlayfix1"></script>
 <script src="item-art.js?v=20261111assets1"></script>
-<script src="game-data.js?v=20261115loginflow1" onerror="document.getElementById('app').innerHTML='<section class=&quot;panel&quot;><h1>DATA FILE FAILED</h1><p>Refresh this page.</p></section>'"></script>
-<script src="sync.js?v=20261109steps2"></script>
-<script src="health-connect.js?v=20261110androidhealthconnect1"></script>
-<script src="app.js?v=20261115loginflow1" onerror="document.getElementById('app').innerHTML='<section class=&quot;panel&quot;><h1>GAME ENGINE FAILED</h1><p>Refresh this page.</p></section>'"></script>
+<script src="guild.js?v=20261115activityprogression3"></script>
+<script src="adventurers-path.js?v=20261115activityprogression2"></script>
+<script src="game-data.js?v=20261115activityprogression3" onerror="document.getElementById('app').innerHTML='<section class=&quot;panel&quot;><h1>DATA FILE FAILED</h1><p>Refresh this page.</p></section>'"></script>
+<script src="rpg-combat.js?v=20261115activityprogression3"></script>
+<script src="activity-engine.js?v=20261115activity1"></script>
+<script src="app.js?v=20261115activityprogression4" onerror="document.getElementById('app').innerHTML='<section class=&quot;panel&quot;><h1>GAME ENGINE FAILED</h1><p>Refresh this page.</p></section>'"></script>
 <script src="dev-tools.js?v=20261109devsteps1"></script>
 <script src="audio-manager.js?v=20261112supabaseaudio1"></script>
 </body>
