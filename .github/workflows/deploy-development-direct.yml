@@ -1,0 +1,47 @@
+name: Deploy Development source to Preview (direct)
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: preview-pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Preview workflow
+        uses: actions/checkout@v4
+      - name: Checkout latest Development source
+        uses: actions/checkout@v4
+        with:
+          repository: Str8kryptic/Duo-Dungeon
+          ref: promotion/development-latest
+          token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
+          path: development-source
+      - name: Stage Development application
+        run: |
+          rsync -a --delete --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' development-source/ ./site/
+      - name: Verify LoginV3 is in staged site
+        run: |
+          grep -q 'LoginV3.mp4' site/auth.js
+          grep -q '<video' site/auth.js
+          grep -q 'auth.js?v=20261114orbvoice2' site/index.html
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
