@@ -1944,10 +1944,29 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
 }
 
 
-/* LoginV2: retain the purple Orb pulse; remove torch flames, embers, and blue crack effects. */
-.auth-v2-fx{position:absolute!important;inset:0!important;z-index:2!important;overflow:hidden!important;pointer-events:none!important;contain:paint!important}
-.auth-v2-fx-svg{display:block!important;width:100%!important;height:100%!important;overflow:visible!important}
+/* LoginV2 center Orb — reuse the live in-game assistant Orb animation and tap response. */
 .auth-v2-live{z-index:3!important}
-.dd-orb-pulse{fill:none;stroke:#b55cff;stroke-width:5;opacity:.18;filter:drop-shadow(0 0 9px #a32cff);transform-box:fill-box;transform-origin:center;animation:dd-orb-beat 2.8s ease-in-out infinite}
-@keyframes dd-orb-beat{0%,100%{opacity:.12;transform:scale(.9)}50%{opacity:.62;transform:scale(1.18)}}
-@media(prefers-reduced-motion:reduce){.dd-orb-pulse{animation:none!important;opacity:.22}}
+.auth-v2-center-orb{
+ position:absolute!important;left:44.4%!important;top:27.3%!important;
+ display:grid!important;place-items:center!important;box-sizing:border-box!important;
+ width:11.2%!important;height:7.5%!important;min-height:0!important;padding:0!important;
+ border:1px solid #8bd9ff!important;border-radius:50%!important;
+ background:radial-gradient(circle at 32% 24%,#58c7ff 0%,#167bc7 43%,#084078 100%)!important;
+ color:#effaff!important;box-shadow:0 0 0 4px #168bd333,0 8px 28px #000a,inset 0 0 15px #d8f5ff66!important;
+ overflow:visible!important;cursor:pointer!important;z-index:5!important;
+ transition:background .2s,border-color .2s,box-shadow .2s!important;
+}
+.auth-v2-center-orb:before{content:"";position:absolute;inset:-5px;border:1px solid #55bfff55;border-radius:50%;transform:none;animation:assistant-orb-breathe 3.2s ease-in-out infinite;pointer-events:none}
+.auth-v2-center-orb:after{content:"";position:absolute;inset:4px;border:1px solid #e1f7ff77;border-radius:50%;pointer-events:none}
+.auth-v2-orb-sigil{position:relative;z-index:1;color:#fff;font:900 clamp(18px,3.4vw,34px)/1 system-ui,sans-serif;text-shadow:0 1px 9px #002e65;filter:drop-shadow(0 0 5px #d8f5ff)}
+.auth-v2-center-orb:active{transform:scale(.96)!important}
+.auth-v2-orb-reply{
+ position:absolute!important;left:25%!important;top:36%!important;width:50%!important;z-index:6!important;
+ box-sizing:border-box!important;padding:9px 12px!important;border:1px solid #65b9e8!important;border-radius:11px!important;
+ background:linear-gradient(145deg,#12283df2,#111724f5)!important;color:#e8f6ff!important;
+ font:700 clamp(9px,1.35vw,13px)/1.45 system-ui,sans-serif!important;text-align:center!important;
+ box-shadow:0 8px 24px #000b,0 0 16px #168bd344!important;pointer-events:none!important;
+}
+.auth-v2-orb-reply[hidden]{display:none!important}
+@keyframes assistant-orb-breathe{0%,100%{opacity:.35;transform:scale(.96)}50%{opacity:.85;transform:scale(1.06)}}
+@media(prefers-reduced-motion:reduce){.auth-v2-center-orb:before{animation:none!important;opacity:.5}}
