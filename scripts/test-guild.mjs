@@ -5,16 +5,16 @@ const context={window:{},module:{exports:{}},Date,Math};
 runInNewContext(readFileSync(new URL("../guild.js",import.meta.url),"utf8"),context);
 const Guild=context.window.DUO_GUILD;
 assert.ok(Guild,"Guild module should expose its API");
-const player={number:123456,coins:250,xp:0,stepDate:"2026-11-10",stepsToday:0,stepLifetime:10000,guildStats:{kills:4,crafts:1}};
+const player={number:123456,coins:250,xp:0,claimedAchievements:[],guildStats:{kills:4,crafts:1}};
 Guild.ensure(player,"2026-11-10");
 assert.equal(player.guild.daily.contracts.length,3);
 assert.equal(player.guild.weekly.contracts.length,3);
 const first=player.guild.daily.contracts[0];
-const same={number:123456,coins:250,xp:0,stepDate:"2026-11-10",stepsToday:0,stepLifetime:10000,guildStats:{kills:4,crafts:1}};
+const same={number:123456,coins:250,xp:0,claimedAchievements:[],guildStats:{kills:4,crafts:1}};
 Guild.ensure(same,"2026-11-10");
 assert.deepEqual(JSON.parse(JSON.stringify(player.guild.daily.contracts)),JSON.parse(JSON.stringify(same.guild.daily.contracts)),"Daily board should be stable for a crawler and date");
-if(first.type==="steps"){player.stepsToday=first.target;assert.equal(Guild.progress(player,"daily",first),first.target)}
-else if(first.type==="kills"){player.guildStats.kills+=first.target;assert.equal(Guild.progress(player,"daily",first),first.target)}
+assert.ok(["kills","crafts"].includes(first.type),"Daily contracts must use gameplay activity types");
+if(first.type==="kills"){player.guildStats.kills+=first.target;assert.equal(Guild.progress(player,"daily",first),first.target)}
 else{player.guildStats.crafts+=first.target;assert.equal(Guild.progress(player,"daily",first),first.target)}
 const reward=Guild.claim(player,"daily",first.id,"2026-11-10");
 assert.equal(reward.ok,true,"Completed contract should be claimable");
@@ -25,15 +25,20 @@ const previous=player.guild.daily;
 Guild.ensure(player,"2026-11-11");
 assert.notEqual(player.guild.daily.period,previous.period,"Daily board should rotate at local midnight");
 assert.equal(player.guild.daily.claimed.length,0);
-const weekly=player.guild.weekly,weeklyContract=weekly.contracts.find(c=>c.type==="steps");
-player.stepLifetime=weekly.startSteps+weeklyContract.target;
-assert.equal(Guild.progress(player,"weekly",weeklyContract),weeklyContract.target,"Weekly verified-step progress should use lifetime delta");
+const weekly=player.guild.weekly,weeklyContract=weekly.contracts[0];
+assert.ok(["kills","crafts"].includes(weeklyContract.type),"Weekly commissions must use gameplay activity types");
 const weekBefore=player.guild.weekly.period;
 Guild.ensure(player,"2026-11-16");
 assert.notEqual(player.guild.weekly.period,weekBefore,"Weekly commissions should rotate on Monday");
 assert.equal(player.guild.weekly.claimed.length,0);
+const legacy={number:42,coins:0,xp:0,stepsToday:5000,stepLifetime:25000,guildStats:{kills:3,crafts:0},guild:{daily:{period:"2026-11-10",startKills:0,startCrafts:0,claimed:[],contracts:[{id:"old-step",type:"steps",target:3,title:"OLD WALKING CONTRACT",description:"Old step contract",coins:50,xp:25}]},weekly:{period:"2026-11-09",startKills:0,startCrafts:0,startSteps:0,claimed:[],contracts:[]}}};
+Guild.ensure(legacy,"2026-11-10");
+assert.equal(legacy.guild.daily.contracts[0].type,"kills","Legacy step contracts should migrate to gameplay activity contracts");
+assert.equal(Guild.progress(legacy,"daily",legacy.guild.daily.contracts[0]),3,"Legacy contract migration should use monster kills, not old step totals");
+assert.equal(legacy.stepsToday,5000,"Migration must preserve historical step records");
 const html=Guild.render(player,"2026-11-16");
 assert.match(html,/THE GUILD HALL/);
 assert.match(html,/DAILY CONTRACTS/);
 assert.match(html,/WEEKLY COMMISSIONS/);
-console.log("Adventurer's Guild tests passed.");
+assert.match(html,/monster victories and crafting/);
+console.log("Adventurer's Guild activity tests passed.");
