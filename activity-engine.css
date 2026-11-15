@@ -67,3 +67,5 @@
 .activity-offline-notice{display:flex;flex-direction:column;gap:5px;margin:10px 0;padding:11px 13px;border:1px solid #9b784d;border-radius:10px;background:linear-gradient(110deg,#493323,#241b25);box-shadow:inset 3px 0 #d4ad70}
 .activity-offline-notice b{color:#f2d49a;font-size:8px;letter-spacing:1px}
 .activity-offline-notice span{color:#d1c0ca;font-size:8px;line-height:1.5}
+
+/* Live gathering state is surfaced by the shared floating activity hotbar. */
