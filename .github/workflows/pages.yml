@@ -35,6 +35,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
       - name: Checkout latest Development source
+        if: github.event_name != 'pull_request'
         uses: actions/checkout@v7
         with:
           repository: Str8kryptic/Duo-Dungeon
@@ -42,6 +43,7 @@ jobs:
           token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
           path: development-source
       - name: Stage Development web app for Preview verification
+        if: github.event_name != 'pull_request'
         run: |
           rsync -a --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' development-source/ ./
       # Re-run deployment after the global backdrop replacement and cache-bust.
