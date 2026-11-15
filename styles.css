@@ -1184,8 +1184,7 @@ body:after{inset:0;opacity:.18;background-image:radial-gradient(1px 1px at 8% 18
 .adventurer-path:before{content:"";position:absolute;inset:4px;border:1px solid #bd965333;border-radius:12px;pointer-events:none}
 .path-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative}.path-heading .eyebrow{color:#e2bc77;font-size:8px;letter-spacing:1.8px}.path-heading h2{margin:5px 0 4px;color:#f6dba2;font:700 clamp(19px,4vw,25px)/1.1 Georgia,serif}.path-heading p{margin:0;color:#c7b6cb;font-size:11px}
 .path-score{flex:0 0 auto;min-width:65px;padding:8px 9px;border:1px solid #a98256;border-radius:10px;background:#1c1524;text-align:center}.path-score b,.path-score small{display:block}.path-score b{color:#ffe1a0;font:700 19px Georgia,serif}.path-score small{margin-top:3px;color:#cbb5d0;font-size:6px;letter-spacing:1px}
-.path-level-track{margin:13px 0;padding:9px 10px;border:1px solid #624a69;border-radius:9px;background:#130f1b99}.path-level-track>div:first-child{display:flex;justify-content:space-between;color:#d4bfd9;font-size:7px;font-weight:800;letter-spacing:1px}
-.path-level-track .bar,.path-objective-progress .bar{height:5px;margin-top:6px;background:#100c16;border-radius:8px;overflow:hidden}.path-level-track .bar span,.path-objective-progress .bar span{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#a66ac4,#f0c77d)}
+.path-objective-progress .bar{height:5px;margin-top:6px;background:#100c16;border-radius:8px;overflow:hidden}.path-objective-progress .bar span{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#a66ac4,#f0c77d)}
 .path-objective-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;position:relative}.path-objective{min-width:0;padding:10px;border:1px solid #705879;border-radius:11px;background:linear-gradient(145deg,#302239,#1c1524)}.path-objective.is-complete{border-color:#a98957;background:linear-gradient(145deg,#3a2d32,#211a25)}
 .path-objective-top{display:flex;align-items:center;justify-content:space-between;gap:4px}.path-objective-icon{font-size:17px;color:#e5c17c}.path-objective-status{font-size:6px;font-weight:900;letter-spacing:.6px;color:#c7b2cd}.path-objective.is-complete .path-objective-status{color:#e8c77f}
 .path-objective h3{margin:6px 0 4px;color:#f3dba8;font-size:10px;letter-spacing:.65px}.path-objective p{min-height:30px;margin:0;color:#bfaec5;font-size:9px;line-height:1.4}.path-objective-progress{margin-top:8px}.path-objective-progress small{display:block;margin-top:5px;color:#d9c6dc;font-size:7px;font-weight:800;letter-spacing:.3px}
@@ -1289,12 +1288,6 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
 #dungeon-assistant-host:has(.dungeon-assistant.is-open) .assistant-idle-quip{display:none}
 @media(max-width:600px){#dungeon-assistant-host.keyboard-open .assistant-window{left:7px!important;right:7px!important;max-height:min(32dvh,230px)!important}.assistant-idle-quip{font-size:9px;max-width:62vw}}
 
-/* Rare System fake-out when a crawler taps the launcher. */
-.assistant-launcher.assistant-dodge{animation:assistant-dodge-left .34s cubic-bezier(.2,.8,.3,1) both}
-@keyframes assistant-dodge-left{0%{transform:translateX(0) rotate(0)}45%{transform:translateX(-23px) rotate(-9deg)}100%{transform:translateX(0) rotate(0)}}
-.assistant-idle-quip.is-dodge-taunt{opacity:1;transform:translateY(0) scale(1);border-color:#8ce5ff;box-shadow:0 0 14px #28baffcc,0 0 28px #168bff66}
-@media(prefers-reduced-motion:reduce){.assistant-launcher.assistant-dodge{animation:none!important}}
-
 /* Definitive iPhone keyboard layout: full-bleed landscape assistant above the keyboard. */
 #dungeon-assistant-host.keyboard-open{position:fixed!important;left:0!important;right:0!important;top:auto!important;bottom:calc(var(--assistant-keyboard-inset,0px) + env(safe-area-inset-bottom) + 5px)!important;width:100vw!important;max-width:none!important;z-index:1205!important;transform:none!important}
 #dungeon-assistant-host.keyboard-open .dungeon-assistant{display:block!important;width:100%!important}
@@ -1320,17 +1313,6 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
 #dungeon-assistant-host.keyboard-open .assistant-disclaimer{display:none!important}
 #dungeon-assistant-host.keyboard-open .assistant-launcher,
 #dungeon-assistant-host.keyboard-open .assistant-idle-quip{display:none!important}
-/* Random System taunts: brief, readable, and automatically cleared between appearances. */
-.assistant-idle-quip{transition:opacity .22s ease,transform .22s ease!important}
-.assistant-idle-quip.is-visible{opacity:1!important;transform:translateY(0) scale(1)!important}
-.assistant-idle-quip.is-dodge-taunt{opacity:1!important;transform:translateY(0) scale(1)!important;left:0!important;right:auto!important;top:70px!important;bottom:auto!important;z-index:1300!important;max-width:min(260px,72vw)!important}
-/* The System roams to the upper-left, delivers its line, then returns before opening. */
-#dungeon-assistant-host.assistant-roaming{left:12px!important;right:auto!important;top:12px!important;bottom:auto!important;transform:none!important;transition:left .55s cubic-bezier(.2,.8,.2,1),top .55s cubic-bezier(.2,.8,.2,1)!important;z-index:1300!important}
-#dungeon-assistant-host.assistant-roaming .dungeon-assistant{align-items:flex-start!important}
-#dungeon-assistant-host.assistant-roaming .assistant-idle-quip{position:absolute!important;left:0!important;right:auto!important;top:72px!important;bottom:auto!important;display:block!important;opacity:1!important;transform:none!important;max-width:min(260px,72vw)!important}
-#dungeon-assistant-host.assistant-roaming .assistant-launcher{animation:none!important}
-@media(prefers-reduced-motion:reduce){#dungeon-assistant-host.assistant-roaming{transition:none!important}}
-
 /* Refined keyboard console: bring the panel closer to the keyboard and place Dispatch in the header's open right-hand space. */
 #dungeon-assistant-host.keyboard-open{
  bottom:calc(env(safe-area-inset-bottom) + 2px)!important;
@@ -1540,38 +1522,6 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
  font-size:16px!important;
  line-height:1.25!important;
 }
-/* Make the System's roaming joke bubble genuinely readable on phone screens. */
-#dungeon-assistant-host.assistant-roaming .assistant-idle-quip,
-#dungeon-assistant-host .assistant-idle-quip.is-dodge-taunt{
- box-sizing:border-box!important;
- width:min(320px,calc(100vw - 32px))!important;
- max-width:calc(100vw - 32px)!important;
- min-width:min(250px,calc(100vw - 32px))!important;
- padding:12px 15px!important;
- font-size:14px!important;
- line-height:1.45!important;
- font-weight:700!important;
- letter-spacing:.015em!important;
- white-space:normal!important;
- overflow-wrap:anywhere!important;
- text-shadow:0 0 8px #39baff55!important;
- border-width:1.5px!important;
- border-radius:12px!important;
- box-shadow:0 0 12px #28aaffaa,0 0 25px #168bff55,inset 0 0 14px #2e9dff22!important;
-}
-#dungeon-assistant-host.assistant-roaming .assistant-idle-quip{
- top:68px!important;
- left:0!important;
- right:auto!important;
-}
-@media(max-width:390px){
- #dungeon-assistant-host.assistant-roaming .assistant-idle-quip,
- #dungeon-assistant-host .assistant-idle-quip.is-dodge-taunt{
-  font-size:13px!important;padding:11px 13px!important;
- }
-}
-
-
 /* Closed-keyboard AI console redesign: clear hierarchy, no clipped header, balanced sections. */
 @media(max-width:600px){
  #dungeon-assistant-host:not(.keyboard-open) .assistant-window{
@@ -1786,6 +1736,1278 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
 }
 
 
+/* Sanctum art direction: weathered dungeon stone and iron; gold reserved for rare highlights. */
+.facility{border:1px solid #4b4b50!important;border-radius:12px!important;background:linear-gradient(155deg,#25262b,#111216)!important;box-shadow:inset 0 0 0 1px #ffffff08,0 4px 12px #0008!important}
+.facility:hover,.facility:focus-visible{border-color:#8b7958!important;box-shadow:inset 0 0 0 1px #b99a5a22,0 5px 14px #0009!important}
+.facility-art{aspect-ratio:1/1!important;background-repeat:no-repeat!important;background-size:cover!important;background-position:center!important}
+.facility-art:after{background:linear-gradient(180deg,transparent 78%,#11121635)!important}
+.facility-label{background:linear-gradient(180deg,#25262b,#141519)!important;color:#e6dfd1!important;border-top:1px solid #55545a!important;letter-spacing:.55px!important}
+
+/* Sanctum facility illustrations: use the commissioned scene art on the live district cards. */
+.base-district-card .district-art{display:block;min-height:0;aspect-ratio:16/10;background-color:#17181c;background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;border-bottom:1px solid #55545a;}
+.base-district-card .district-art:before{content:none!important;}
+.base-district-card .district-art:after{content:"";position:absolute;inset:55% 0 0;background:linear-gradient(180deg,transparent,#11121670);pointer-events:none;}
+.base-district-card{border-color:#4b4b50;background:linear-gradient(155deg,#25262b,#111216);}
+.base-district-card:active{border-color:#8b7958;}
+.base-district-card .district-card-copy>small{color:#b9a77f;}
+.base-district-card .district-card-copy h3{color:#e6dfd1;}
+.base-district-card .district-card-copy>span{color:#c4ad78;border-color:#55545a;}
+
+
+/* DUNGEON ATMOSPHERE 2.0 — one world, distinct identities for every destination. */
+:root{
+ --world-glow:#9b6acb;
+ --world-glow-soft:#9b6acb22;
+ --world-edge:#80618f;
+ --world-ember:#e5b96e;
+ --world-surface:#211a27;
+ --world-surface-deep:#111017;
+}
+body{
+ background-color:#0b090e!important;
+ background-image:
+  radial-gradient(ellipse at 50% -12%,color-mix(in srgb,var(--world-glow) 34%,transparent),transparent 54%),
+  radial-gradient(ellipse at 8% 58%,var(--world-glow-soft),transparent 42%),
+  radial-gradient(ellipse at 92% 88%,#d9a65c0d,transparent 36%),
+  linear-gradient(180deg,#17121b 0%,#0b090e 72%,#08070b 100%)!important;
+ background-attachment:fixed!important;
+}
+body:before{
+ background:
+  radial-gradient(ellipse at 18% 28%,color-mix(in srgb,var(--world-glow) 17%,transparent) 0,transparent 35%),
+  radial-gradient(ellipse at 83% 62%,#d49a4b12 0,transparent 32%),
+  radial-gradient(ellipse at 50% 95%,color-mix(in srgb,var(--world-glow) 9%,transparent) 0,transparent 36%)!important;
+ opacity:.58!important;
+}
+body:after{opacity:.23!important}
+body[data-game-section="home"]{--world-glow:#9b6acb;--world-glow-soft:#9b6acb20;--world-edge:#80618f}
+body[data-game-section="combat"]{--world-glow:#b9563f;--world-glow-soft:#b9563f1c;--world-edge:#96604c}
+body[data-game-section="quests"]{--world-glow:#a58b4f;--world-glow-soft:#a58b4f1b;--world-edge:#8c784d}
+body[data-game-section="guild"]{--world-glow:#4c91a0;--world-glow-soft:#4c91a01c;--world-edge:#527e89}
+body[data-game-section="sanctum"]{--world-glow:#a47c4d;--world-glow-soft:#a47c4d1b;--world-edge:#8b7958}
+body[data-game-section="profile"]{--world-glow:#8466b4;--world-glow-soft:#8466b41d;--world-edge:#75618e}
+body[data-game-section="info"]{--world-glow:#64859e;--world-glow-soft:#64859e1b;--world-edge:#607f94}
+
+/* Shared dungeon materials: consistent stone, iron, readable parchment. */
+#app .panel,#app .rpg-panel,#app .rpg-subpanel,#app .guild-board,
+#app .profile-crest,#app .facility-content>.panel,#app .facility-interior{
+ border-color:color-mix(in srgb,var(--world-edge) 58%,#49434b)!important;
+}
+#app .panel,#app .rpg-panel,#app .rpg-subpanel,#app .guild-board{
+ box-shadow:inset 0 1px 0 #ffffff0a,0 9px 24px #0005;
+}
+#app .eyebrow{ text-shadow:0 1px 8px color-mix(in srgb,var(--world-ember) 16%,transparent); }
+
+/* The active destination remains gold-edged, with a subtle local atmosphere. */
+.main-nav>button{
+ transition:background .22s ease,border-color .22s ease,box-shadow .22s ease,color .22s ease,transform .22s ease!important;
+}
+.main-nav>button.active{
+ border-color:#f0c978!important;
+ background:
+  radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--world-glow) 30%,transparent),transparent 78%),
+  linear-gradient(150deg,#654b5d,#3a293e 70%,#2b1d32)!important;
+ box-shadow:inset 0 0 0 1px #fff0bd45,inset 0 0 15px color-mix(in srgb,var(--world-glow) 25%,transparent),0 0 10px #d6a65338!important;
+ transform:translateY(-1px);
+}
+.main-nav>button.active::before{
+ content:"";position:absolute;top:2px;left:22%;right:22%;height:2px;border-radius:2px;
+ background:linear-gradient(90deg,transparent,#f5d48f,transparent);box-shadow:0 0 8px #f3c56b99;
+}
+
+/* Quiet scene transitions; content remains fully interactive. */
+#app{position:relative;isolation:isolate}
+#app>*{animation:dungeon-page-arrive .28s ease-out both}
+@keyframes dungeon-page-arrive{from{opacity:.72;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.main-nav>button:active{transform:translateY(1px) scale(.98)}
+@media(prefers-reduced-motion:reduce){
+ body:before,body:after{animation:none!important}
+ #app>*{animation:none!important}
+ .main-nav>button{transition:none!important}
+ .main-nav>button.active{transform:none}
+}
+
+/* Unhinged AI digital face and mood-reactive personality system */
+.assistant-face{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;position:relative;color:#eafaff;filter:drop-shadow(0 0 5px currentColor)}
+.assistant-face-eyes{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;height:12px;animation:assistant-eye-gaze 8s ease-in-out infinite}
+.assistant-face-eyes i{display:block;width:7px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 5px currentColor;animation:assistant-eye-blink 5.7s infinite}
+.assistant-face-eyes i:nth-child(2){animation-delay:.08s}
+.assistant-face-mouth{display:block;width:13px;height:5px;border:2px solid currentColor;border-top:0;border-radius:0 0 12px 12px;transform-origin:center;transition:all .22s ease}
+@keyframes assistant-eye-blink{0%,43%,47%,100%{transform:scaleY(1)}45%{transform:scaleY(.12)}}
+@keyframes assistant-eye-gaze{0%,18%,100%{transform:translateX(0)}24%,31%{transform:translateX(-3px)}57%,64%{transform:translateX(3px)}}
+.assistant-launcher-sigil{display:grid;place-items:center}
+.assistant-launcher-sigil .assistant-face{width:40px;height:40px}
+.assistant-avatar .assistant-face{width:36px;height:36px}
+.assistant-launcher[data-mood],.assistant-idle-quip[data-mood]{transition:background .28s ease,border-color .28s ease,box-shadow .28s ease,color .28s ease}
+#dungeon-assistant .assistant-launcher[data-mood="normal"]{background:radial-gradient(circle at 32% 24%,#78d4ff 0%,#167bc7 48%,#063d73 100%);border-color:#8bd9ff;box-shadow:0 0 0 4px #168bd333,0 8px 28px #000a,inset 0 0 15px #d8f5ff66}
+#dungeon-assistant .assistant-launcher[data-mood="excited"]{background:radial-gradient(circle at 32% 24%,#ffe99a 0%,#d89a20 48%,#70410a 100%);border-color:#ffe28a;box-shadow:0 0 0 4px #f3c84b33,0 0 25px #f3c84b88,0 8px 28px #000a}
+#dungeon-assistant .assistant-launcher[data-mood="angry"]{background:radial-gradient(circle at 32% 24%,#ff9b8d 0%,#cf302d 48%,#64131b 100%);border-color:#ff9b8d;box-shadow:0 0 0 4px #ed514b33,0 0 25px #ed514b88,0 8px 28px #000a}
+#dungeon-assistant .assistant-launcher[data-mood="suspicious"]{background:radial-gradient(circle at 32% 24%,#d6a5ff 0%,#7138b3 48%,#32144f 100%);border-color:#c99bff;box-shadow:0 0 0 4px #a66ae833,0 0 25px #a66ae888,0 8px 28px #000a}
+#dungeon-assistant .assistant-launcher[data-mood="panic"]{background:radial-gradient(circle at 32% 24%,#ffc18c 0%,#e45b21 48%,#76220e 100%);border-color:#ffb078;box-shadow:0 0 0 4px #ff873d33,0 0 25px #ff873d88,0 8px 28px #000a}
+#dungeon-assistant .assistant-launcher[data-mood="sad"]{background:radial-gradient(circle at 32% 24%,#a4c6ef 0%,#3867a7 48%,#1b315b 100%);border-color:#9abde9;box-shadow:0 0 0 4px #4c83c833,0 0 22px #4c83c866,0 8px 28px #000a}
+#dungeon-assistant .assistant-launcher[data-mood="glitch"]{background:radial-gradient(circle at 32% 24%,#b4fff2 0%,#1a9f9b 48%,#084b59 100%);border-color:#8affed;box-shadow:0 0 0 4px #45d6c533,0 0 28px #45d6c588,0 8px 28px #000a;animation:assistant-glitch-flicker .22s steps(2,end) infinite}
+#dungeon-assistant .assistant-idle-quip[data-mood]{--ai-mood:#3298f2;border-color:var(--ai-mood);box-shadow:0 5px 18px color-mix(in srgb,var(--ai-mood) 28%,transparent);background:linear-gradient(145deg,color-mix(in srgb,var(--ai-mood) 24%,#17111f),#100b16);color:#f3efff}
+#dungeon-assistant .assistant-idle-quip[data-mood="normal"],#dungeon-assistant .assistant-message.from-ai[data-mood="normal"]{--ai-mood:#3298f2}
+#dungeon-assistant .assistant-idle-quip[data-mood="excited"],#dungeon-assistant .assistant-message.from-ai[data-mood="excited"]{--ai-mood:#f3c84b}
+#dungeon-assistant .assistant-idle-quip[data-mood="angry"],#dungeon-assistant .assistant-message.from-ai[data-mood="angry"]{--ai-mood:#ed514b}
+#dungeon-assistant .assistant-idle-quip[data-mood="suspicious"],#dungeon-assistant .assistant-message.from-ai[data-mood="suspicious"]{--ai-mood:#a66ae8}
+#dungeon-assistant .assistant-idle-quip[data-mood="panic"],#dungeon-assistant .assistant-message.from-ai[data-mood="panic"]{--ai-mood:#ff873d}
+#dungeon-assistant .assistant-idle-quip[data-mood="sad"],#dungeon-assistant .assistant-message.from-ai[data-mood="sad"]{--ai-mood:#4c83c8}
+#dungeon-assistant .assistant-idle-quip[data-mood="glitch"],#dungeon-assistant .assistant-message.from-ai[data-mood="glitch"]{--ai-mood:#45d6c5}
+#dungeon-assistant .assistant-idle-quip[data-mood]{border-color:var(--ai-mood);background:linear-gradient(145deg,color-mix(in srgb,var(--ai-mood) 24%,#17111f),#100b16)}
+#dungeon-assistant .assistant-message.from-ai[data-mood="excited"]{border-color:#b68a24;background:linear-gradient(145deg,#382b13,#17111e)}
+#dungeon-assistant .assistant-message.from-ai[data-mood="angry"]{border-color:#b34b46;background:linear-gradient(145deg,#3a191d,#17111e)}
+#dungeon-assistant .assistant-message.from-ai[data-mood="suspicious"]{border-color:#8956b7;background:linear-gradient(145deg,#2d1d3d,#17111e)}
+#dungeon-assistant .assistant-message.from-ai[data-mood="panic"]{border-color:#bb6338;background:linear-gradient(145deg,#3a2117,#17111e)}
+#dungeon-assistant .assistant-message.from-ai[data-mood="sad"]{border-color:#4c83c8;background:linear-gradient(145deg,#1d2940,#17111e)}
+#dungeon-assistant .assistant-message.from-ai[data-mood="glitch"]{border-color:#45d6c5;background:linear-gradient(145deg,#123b3b,#17111e);animation:assistant-glitch-flicker .3s steps(2,end) 3}
+#dungeon-assistant .assistant-launcher[data-mood="angry"] .assistant-face-mouth{width:14px;height:4px;border:2px solid currentColor;border-bottom:0;border-radius:12px 12px 0 0}
+#dungeon-assistant .assistant-launcher[data-mood="excited"] .assistant-face-mouth{width:17px;height:9px;border:2px solid currentColor;border-radius:3px 3px 12px 12px}
+#dungeon-assistant .assistant-launcher[data-mood="sad"] .assistant-face-mouth{width:14px;height:5px;border:2px solid currentColor;border-bottom:0;border-radius:12px 12px 0 0}
+#dungeon-assistant .assistant-launcher[data-mood="panic"] .assistant-face-mouth{width:7px;height:9px;border:2px solid currentColor;border-radius:50%}
+#dungeon-assistant .assistant-launcher[data-mood="suspicious"] .assistant-face-eyes i:first-child{transform:scaleY(.55) translateY(2px)}
+#dungeon-assistant .assistant-launcher[data-mood="glitch"] .assistant-face-eyes{animation:assistant-glitch-eyes .18s steps(2,end) infinite}
+@keyframes assistant-glitch-flicker{0%,100%{filter:none;transform:translateX(0)}25%{filter:hue-rotate(55deg);transform:translateX(-1px)}50%{filter:contrast(1.5);transform:translateX(1px)}}
+@keyframes assistant-glitch-eyes{0%{transform:translate(-2px,0) skewX(12deg)}50%{transform:translate(2px,1px) skewX(-12deg)}100%{transform:translate(0,0)}}
+@media(prefers-reduced-motion:reduce){.assistant-face-eyes,.assistant-face-eyes i,#dungeon-assistant .assistant-launcher[data-mood="glitch"],.assistant-launcher:before{animation:none!important}}
+
+#dungeon-assistant .assistant-message.from-ai[data-mood="normal"]{border-color:#397db9;background:linear-gradient(145deg,#142b43,#17111e)}
+
+/* Fluid Unhinged AI idle bubble; text remains in a stable, readable line box. */
+#dungeon-assistant .assistant-idle-quip{display:flex;align-items:center;gap:9px;max-width:min(310px,calc(100vw - 92px));padding:10px 13px 10px 10px;transform-origin:82% 100%;will-change:transform;backface-visibility:hidden}
+#dungeon-assistant .assistant-idle-quip.is-visible{animation:assistant-bubble-arrive .62s cubic-bezier(.2,.85,.25,1.18) both,assistant-bubble-drift var(--ai-duration,7s) ease-in-out .62s infinite alternate}
+#dungeon-assistant .assistant-idle-quip .assistant-face{flex:0 0 29px;width:29px;height:29px;gap:3px}
+#dungeon-assistant .assistant-idle-quip .assistant-face-eyes{height:9px;gap:6px}
+#dungeon-assistant .assistant-idle-quip .assistant-face-eyes i{width:5px;height:6px}
+#dungeon-assistant .assistant-idle-quip .assistant-face-mouth{width:10px;height:4px}
+#dungeon-assistant .assistant-idle-quip-text{display:block;min-width:0;flex:1;color:#f3efff;font-size:11px;font-weight:750;line-height:1.42;letter-spacing:.05px;overflow-wrap:anywhere;word-break:normal;text-align:left;transform:none!important;animation:none!important}
+#dungeon-assistant .assistant-launcher{transform-origin:50% 55%;will-change:transform}
+#dungeon-assistant .assistant-launcher:not(:active){animation:assistant-launcher-float var(--ai-duration,7s) ease-in-out var(--ai-delay,0s) infinite alternate}
+#dungeon-assistant .assistant-launcher-sigil{transform-origin:50% 50%;will-change:transform}
+#dungeon-assistant .assistant-launcher-sigil .assistant-face{animation:assistant-face-sway 3.7s ease-in-out infinite alternate}
+#dungeon-assistant .assistant-face-eyes{animation-duration:calc(3.4s + var(--ai-duration,7s)/3)}
+#dungeon-assistant .assistant-face-eyes i{animation-duration:calc(3.2s + var(--ai-duration,7s)/2)}
+#dungeon-assistant .assistant-face-mouth{transition:width .32s cubic-bezier(.2,.8,.2,1),height .32s cubic-bezier(.2,.8,.2,1),border-radius .32s ease,transform .32s ease,border .32s ease}
+#dungeon-assistant .assistant-launcher[data-mood="normal"] .assistant-face-mouth,#dungeon-assistant .assistant-idle-quip[data-mood="normal"] .assistant-face-mouth{width:14px;height:7px;border:2px solid currentColor;border-top:0;border-radius:0 0 14px 14px;transform:translateY(-1px)}
+#dungeon-assistant .assistant-launcher[data-mood="excited"] .assistant-face-mouth,#dungeon-assistant .assistant-idle-quip[data-mood="excited"] .assistant-face-mouth{width:18px;height:10px;border:2px solid currentColor;border-radius:3px 3px 12px 12px;background:currentColor;box-shadow:0 0 5px currentColor}
+#dungeon-assistant .assistant-launcher[data-mood="angry"] .assistant-face-mouth,#dungeon-assistant .assistant-idle-quip[data-mood="angry"] .assistant-face-mouth{width:15px;height:5px;border:2px solid currentColor;border-bottom:0;border-radius:12px 12px 1px 1px;transform:rotate(2deg)}
+#dungeon-assistant .assistant-launcher[data-mood="suspicious"] .assistant-face-mouth,#dungeon-assistant .assistant-idle-quip[data-mood="suspicious"] .assistant-face-mouth{width:12px;height:4px;border:2px solid currentColor;border-top:0;border-radius:0 0 10px 10px;transform:rotate(-9deg) translateX(2px)}
+#dungeon-assistant .assistant-launcher[data-mood="panic"] .assistant-face-mouth,#dungeon-assistant .assistant-idle-quip[data-mood="panic"] .assistant-face-mouth{width:8px;height:11px;border:2px solid currentColor;border-radius:50%;background:#140d1b}
+#dungeon-assistant .assistant-launcher[data-mood="sad"] .assistant-face-mouth,#dungeon-assistant .assistant-idle-quip[data-mood="sad"] .assistant-face-mouth{width:14px;height:6px;border:2px solid currentColor;border-bottom:0;border-radius:12px 12px 0 0;transform:translateY(3px)}
+#dungeon-assistant .assistant-launcher[data-mood="glitch"] .assistant-face-mouth,#dungeon-assistant .assistant-idle-quip[data-mood="glitch"] .assistant-face-mouth{width:17px;height:5px;border:0;border-top:2px solid currentColor;border-bottom:2px dashed currentColor;border-radius:0;transform:skewX(-18deg)}
+@keyframes assistant-bubble-arrive{0%{opacity:0;transform:translate(12px,12px) rotate(7deg) scale(.84)}65%{opacity:1;transform:translate(-2px,-2px) rotate(-2deg) scale(1.025)}100%{opacity:1;transform:translate(0,0) rotate(0) scale(1)}}
+@keyframes assistant-bubble-drift{0%{transform:translate3d(0,0,0) rotate(0)}28%{transform:translate3d(var(--ai-drift-x,2px),calc(var(--ai-drift-y,-3px)*-.55),0) rotate(calc(var(--ai-tilt,1deg)*-.55))}62%{transform:translate3d(calc(var(--ai-drift-x,2px)*-.65),var(--ai-drift-y,-3px),0) rotate(var(--ai-tilt,1deg))}100%{transform:translate3d(var(--ai-drift-x,2px),calc(var(--ai-drift-y,-3px)*-.35),0) rotate(calc(var(--ai-tilt,1deg)*.7))}}
+@keyframes assistant-launcher-float{0%{transform:translate3d(0,0,0) rotate(0)}50%{transform:translate3d(1px,-3px,0) rotate(1.4deg)}100%{transform:translate3d(-1px,1px,0) rotate(-1.1deg)}}
+@keyframes assistant-face-sway{0%{transform:translate3d(-1px,0,0) rotate(-4deg)}100%{transform:translate3d(1px,-1px,0) rotate(4deg)}}
+@media(max-width:390px){#dungeon-assistant .assistant-idle-quip{max-width:min(270px,calc(100vw - 82px));gap:7px;padding:9px 10px}#dungeon-assistant .assistant-idle-quip-text{font-size:10px;line-height:1.4}}
+@media(prefers-reduced-motion:reduce){#dungeon-assistant .assistant-idle-quip.is-visible,#dungeon-assistant .assistant-launcher:not(:active),#dungeon-assistant .assistant-launcher-sigil .assistant-face{animation:none!important}}
+
+/* AI character repair: horizontal message geometry, clean face, coordinated expression. */
+#dungeon-assistant .assistant-idle-quip,#dungeon-assistant-host .assistant-idle-quip,#dungeon-assistant .assistant-idle-quip .assistant-idle-quip-text,#dungeon-assistant-host .assistant-idle-quip .assistant-idle-quip-text{display:block!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;max-width:none!important;writing-mode:horizontal-tb!important;text-orientation:mixed!important;white-space:normal!important;overflow-wrap:break-word!important;word-break:normal!important;font-size:clamp(11px,2.8vw,13px)!important;line-height:1.45!important;text-align:left!important}
+#dungeon-assistant .assistant-idle-quip .assistant-face,#dungeon-assistant-host .assistant-idle-quip .assistant-face{flex:0 0 42px!important;width:42px!important;height:42px!important;min-width:42px!important;gap:5px!important}
+#dungeon-assistant .assistant-launcher-sigil{background:transparent!important;border:0!important;outline:0!important;box-shadow:none!important;border-radius:0!important}
+#dungeon-assistant .assistant-launcher-sigil:before,#dungeon-assistant .assistant-launcher-sigil:after{display:none!important;content:none!important}
+#dungeon-assistant .assistant-face{--ai-face-scale:1;gap:calc(5px * var(--ai-face-scale))!important;filter:drop-shadow(0 0 7px currentColor)!important;transform-origin:50% 50%;animation:assistant-eve-hover 4.8s ease-in-out infinite}
+#dungeon-assistant .assistant-face-eyes{height:calc(15px * var(--ai-face-scale))!important;gap:calc(11px * var(--ai-face-scale))!important;transform-origin:center;animation:assistant-eve-look 6.4s ease-in-out infinite!important}
+#dungeon-assistant .assistant-face-eyes i{width:calc(8px * var(--ai-face-scale))!important;height:calc(11px * var(--ai-face-scale))!important;border-radius:55% 55% 48% 48%!important;box-shadow:0 0 7px currentColor,0 0 14px currentColor!important;transform-origin:50% 75%;animation:assistant-eve-blink 5.2s ease-in-out infinite!important}
+#dungeon-assistant .assistant-face-eyes i:nth-child(2){animation-delay:.09s!important}
+#dungeon-assistant .assistant-face-mouth{width:calc(13px * var(--ai-face-scale))!important;height:calc(5px * var(--ai-face-scale))!important;min-width:0!important;margin-top:calc(1px * var(--ai-face-scale));border-width:2px!important;transform-origin:50% 0!important;transition:width .2s ease,height .2s ease,transform .2s ease,border-radius .2s ease,background .2s ease!important;animation:assistant-eve-mouth 2.8s ease-in-out infinite!important}
+#dungeon-assistant .assistant-launcher[data-mood="normal"] .assistant-face-mouth,#dungeon-assistant .assistant-idle-quip[data-mood="normal"] .assistant-face-mouth{width:calc(14px * var(--ai-face-scale))!important;height:calc(6px * var(--ai-face-scale))!important}
+#dungeon-assistant .assistant-launcher[data-mood="excited"] .assistant-face-mouth,#dungeon-assistant .assistant-idle-quip[data-mood="excited"] .assistant-face-mouth{width:calc(19px * var(--ai-face-scale))!important;height:calc(11px * var(--ai-face-scale))!important;transform:scale(1.08)!important}
+#dungeon-assistant .assistant-launcher[data-mood="angry"] .assistant-face-mouth,#dungeon-assistant .assistant-idle-quip[data-mood="angry"] .assistant-face-mouth{width:calc(16px * var(--ai-face-scale))!important;height:calc(4px * var(--ai-face-scale))!important;transform:rotate(3deg)!important}
+#dungeon-assistant .assistant-launcher[data-mood="suspicious"] .assistant-face-mouth,#dungeon-assistant .assistant-idle-quip[data-mood="suspicious"] .assistant-face-mouth{width:calc(11px * var(--ai-face-scale))!important;height:calc(4px * var(--ai-face-scale))!important;transform:rotate(-10deg) translateX(2px)!important}
+#dungeon-assistant .assistant-launcher[data-mood="panic"] .assistant-face-mouth,#dungeon-assistant .assistant-idle-quip[data-mood="panic"] .assistant-face-mouth{width:calc(8px * var(--ai-face-scale))!important;height:calc(12px * var(--ai-face-scale))!important;transform:scale(1.12)!important}
+#dungeon-assistant .assistant-launcher[data-mood="sad"] .assistant-face-mouth,#dungeon-assistant .assistant-idle-quip[data-mood="sad"] .assistant-face-mouth{width:calc(14px * var(--ai-face-scale))!important;height:calc(7px * var(--ai-face-scale))!important;transform:translateY(3px)!important}
+#dungeon-assistant .assistant-launcher[data-mood="glitch"] .assistant-face-mouth,#dungeon-assistant .assistant-idle-quip[data-mood="glitch"] .assistant-face-mouth{width:calc(18px * var(--ai-face-scale))!important;height:calc(5px * var(--ai-face-scale))!important;animation:assistant-glitch-flicker .2s steps(2,end) infinite!important}
+@keyframes assistant-eve-hover{0%,100%{transform:translate3d(0,0,0) scale(1)}25%{transform:translate3d(-1px,-2px,0) scale(1.025)}55%{transform:translate3d(1px,-4px,0) scale(1.04)}78%{transform:translate3d(0,-1px,0) scale(1.015)}}
+@keyframes assistant-eve-look{0%,18%,100%{transform:translateX(0)}25%,32%{transform:translateX(-3px)}58%,65%{transform:translateX(3px)}78%{transform:translateY(-2px)}}
+@keyframes assistant-eve-blink{0%,43%,47%,100%{transform:scaleY(1)}45%{transform:scaleY(.08)}}
+@keyframes assistant-eve-mouth{0%,100%{scale:1 1}42%{scale:1.08 1.12}50%{scale:.94 .88}62%{scale:1.04 1.05}}
+@media(max-width:390px){#dungeon-assistant .assistant-idle-quip,#dungeon-assistant-host .assistant-idle-quip{width:calc(100vw - 28px)!important;max-width:calc(100vw - 28px)!important;padding:10px 12px!important;gap:9px!important}#dungeon-assistant .assistant-idle-quip .assistant-face,#dungeon-assistant-host .assistant-idle-quip .assistant-face{flex-basis:38px!important;width:38px!important;height:38px!important;min-width:38px!important}}
+@media(prefers-reduced-motion:reduce){#dungeon-assistant .assistant-face,#dungeon-assistant .assistant-face-eyes,#dungeon-assistant .assistant-face-eyes i,#dungeon-assistant .assistant-face-mouth{animation:none!important}}
+
+
+/* Keep the AI orb clean: remove the nested aura rings, retain the blue luminous shell. */
+#dungeon-assistant .assistant-launcher-aura,
+#dungeon-assistant .assistant-launcher:before{
+ display:none!important;
+ content:none!important;
+}
+
+
+/* Animated digital-lightning edge for the roaming AI speech bubble. */
+.assistant-idle-quip{
+ isolation:isolate!important;
+ border:1px solid #55c9ff!important;
+ box-shadow:0 0 9px #25aaffaa,0 0 22px #168bff66,inset 0 0 13px #2e9dff22!important;
+}
+.assistant-idle-quip:before{
+ content:""!important;
+ position:absolute!important;
+ z-index:2!important;
+ inset:-2px!important;
+ padding:2px!important;
+ border:0!important;
+ border-radius:inherit!important;
+ pointer-events:none!important;
+ background:
+  repeating-conic-gradient(from 0deg,
+   #dffaff 0deg 3deg,
+   #43caff 3deg 7deg,
+   #087bff 7deg 10deg,
+   transparent 10deg 17deg,
+   #7beaff 17deg 19deg,
+   transparent 19deg 27deg);
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;
+ -webkit-mask-composite:xor!important;
+ mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;
+ mask-composite:exclude!important;
+ opacity:.9;
+ filter:drop-shadow(0 0 3px #39caff) drop-shadow(0 0 7px #168bff);
+ animation:assistant-digital-lightning 2.1s linear infinite,assistant-lightning-flicker 3.4s steps(1,end) infinite;
+}
+.assistant-idle-quip:after{
+ z-index:3!important;
+ filter:drop-shadow(0 0 4px #48caff);
+}
+@keyframes assistant-digital-lightning{
+ from{transform:rotate(0deg)}
+ to{transform:rotate(360deg)}
+}
+@keyframes assistant-lightning-flicker{
+ 0%,12%,14%,36%,39%,62%,100%{opacity:.88}
+ 13%,37%,63%{opacity:.42}
+ 64%{opacity:1}
+ 80%{opacity:.72}
+}
+@media(prefers-reduced-motion:reduce){
+ .assistant-idle-quip:before{animation:none!important;opacity:.9}
+}
+/* Unified AI character language: electric quip border and the same face in every location. */
+#dungeon-assistant-host .assistant-face,#dungeon-assistant .assistant-face,#dungeon-assistant-host .assistant-avatar .assistant-face{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:5px!important;color:#d9f5ff!important;filter:drop-shadow(0 0 7px #49bfff)!important}
+#dungeon-assistant-host .assistant-face-eyes,#dungeon-assistant .assistant-face-eyes{display:flex!important;align-items:center!important;justify-content:center!important;gap:11px!important}
+#dungeon-assistant-host .assistant-face-eyes i,#dungeon-assistant .assistant-face-eyes i{display:block!important;width:8px!important;height:11px!important;border-radius:55% 55% 48% 48%!important;background:#eafaff!important;box-shadow:0 0 7px #b8efff,0 0 14px #35aaff!important}
+#dungeon-assistant-host .assistant-face-mouth,#dungeon-assistant .assistant-face-mouth{display:block!important;width:14px!important;height:6px!important;min-width:0!important;border:0!important;border-radius:0 0 50% 50%!important;background:transparent!important;box-shadow:inset 0 -2px 0 #e8faff,0 2px 6px #49bfff55!important;transform-origin:50% 0!important;transition:width .18s ease,height .18s ease,background .18s ease,border-radius .18s ease,transform .18s ease!important}
+#dungeon-assistant-host .assistant-idle-quip.is-visible .assistant-face-mouth{width:14px!important;height:8px!important;border:0!important;border-radius:0 0 50% 50%!important;background:#e8faff!important;box-shadow:0 0 7px #9be8ff,0 0 13px #35aaff!important}
+#dungeon-assistant .assistant-launcher-pulse,#dungeon-assistant-host .assistant-launcher-pulse{display:none!important}
+#dungeon-assistant-host .assistant-idle-quip{border:1px solid transparent!important;background:linear-gradient(135deg,#09253b,#15152b) padding-box,conic-gradient(from var(--ai-electric-angle,0deg),#1266ff,#a8f4ff,#168cff,#e8fbff,#267dff,#1266ff) border-box!important;box-shadow:0 0 8px #25aaffaa,0 0 18px #168bff66,inset 0 0 12px #2e9dff22!important;animation:assistant-electric-border 2.4s linear infinite,assistant-electric-flicker 3.8s steps(1,end) infinite!important}
+#dungeon-assistant-host .assistant-idle-quip:before{content:""!important;position:absolute!important;inset:-2px!important;border-radius:inherit!important;pointer-events:none!important;background:repeating-linear-gradient(118deg,transparent 0 13px,#c9f7ff 14px,#3aaeff 15px,transparent 17px 29px);opacity:0!important;mix-blend-mode:screen!important;animation:assistant-lightning-snap 1.7s steps(1,end) infinite!important}
+#dungeon-assistant-host .assistant-idle-quip:after{border-color:#55c9ff!important;filter:drop-shadow(0 0 4px #4bc5ff)!important}
+@property --ai-electric-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
+@keyframes assistant-electric-border{to{--ai-electric-angle:360deg}}
+@keyframes assistant-electric-flicker{0%,8%,11%,62%,66%,100%{filter:brightness(1);box-shadow:0 0 8px #25aaffaa,0 0 18px #168bff66,inset 0 0 12px #2e9dff22}9%,10%,64%{filter:brightness(1.8);box-shadow:0 0 13px #c8f7ff,0 0 28px #168bffcc,inset 0 0 16px #8fe4ff66}}
+@keyframes assistant-lightning-snap{0%,72%,75%,100%{opacity:0}73%,74%{opacity:.7}}
+@media(prefers-reduced-motion:reduce){#dungeon-assistant-host .assistant-idle-quip{animation:none!important}#dungeon-assistant-host .assistant-idle-quip:before{animation:none!important;opacity:0!important}}
+
+
+/* Final AI speech-bubble treatment: lightning is the perimeter, never a layer over the text. */
+#dungeon-assistant-host .assistant-idle-quip{
+ --ai-mood:#3298f2;
+ --ai-mood-soft:rgba(50,152,242,.20);
+ --ai-mood-dark:#101d32;
+ position:relative!important;
+ isolation:isolate!important;
+ color:#f3f7ff!important;
+ border:2px solid var(--ai-mood)!important;
+ border-radius:14px!important;
+ background:linear-gradient(145deg,color-mix(in srgb,var(--ai-mood) 23%,#17111f),#100b16 78%)!important;
+ box-shadow:0 0 9px color-mix(in srgb,var(--ai-mood) 55%,transparent),0 0 20px var(--ai-mood-soft),inset 0 0 14px var(--ai-mood-soft)!important;
+ animation:none!important;
+ transition:background .24s ease,border-color .24s ease,box-shadow .24s ease,color .24s ease!important;
+}
+#dungeon-assistant-host .assistant-idle-quip:before{
+ content:""!important;
+ position:absolute!important;
+ z-index:-1!important;
+ inset:-2px!important;
+ padding:2px!important;
+ border-radius:inherit!important;
+ pointer-events:none!important;
+ background:repeating-conic-gradient(from 0deg,var(--ai-lightning) 0deg 3deg,var(--ai-mood) 3deg 8deg,transparent 8deg 17deg,var(--ai-lightning) 17deg 19deg,transparent 19deg 28deg);
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;
+ -webkit-mask-composite:xor!important;
+ mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;
+ mask-composite:exclude!important;
+ opacity:.95!important;
+ filter:drop-shadow(0 0 3px var(--ai-mood)) drop-shadow(0 0 6px var(--ai-mood))!important;
+ animation:assistant-perimeter-spark 2.8s ease-in-out infinite!important;
+}
+#dungeon-assistant-host .assistant-idle-quip:after{
+ z-index:1!important;
+ border-color:var(--ai-mood)!important;
+ filter:drop-shadow(0 0 4px var(--ai-mood))!important;
+}
+#dungeon-assistant-host .assistant-idle-quip .assistant-idle-quip-text{
+ position:relative!important;
+ z-index:2!important;
+ color:#f3f7ff!important;
+}
+#dungeon-assistant-host .assistant-idle-quip .assistant-face{position:relative!important;z-index:2!important;color:var(--ai-lightning)!important;filter:drop-shadow(0 0 7px var(--ai-mood))!important}
+#dungeon-assistant-host .assistant-idle-quip .assistant-face-eyes i{background:var(--ai-lightning)!important;box-shadow:0 0 7px var(--ai-lightning),0 0 14px var(--ai-mood)!important}
+#dungeon-assistant-host .assistant-idle-quip .assistant-face-mouth{box-shadow:inset 0 -2px 0 var(--ai-lightning),0 2px 6px var(--ai-mood)!important}
+#dungeon-assistant-host .assistant-idle-quip.is-visible .assistant-face-mouth{background:var(--ai-lightning)!important;box-shadow:0 0 7px var(--ai-lightning),0 0 13px var(--ai-mood)!important}
+#dungeon-assistant-host .assistant-idle-quip[data-mood="normal"]{--ai-mood:#3298f2;--ai-lightning:#dffaff;--ai-mood-soft:rgba(50,152,242,.2)}
+#dungeon-assistant-host .assistant-idle-quip[data-mood="excited"]{--ai-mood:#f3c84b;--ai-lightning:#fff5c2;--ai-mood-soft:rgba(243,200,75,.22)}
+#dungeon-assistant-host .assistant-idle-quip[data-mood="angry"]{--ai-mood:#ed514b;--ai-lightning:#ffe0dc;--ai-mood-soft:rgba(237,81,75,.22)}
+#dungeon-assistant-host .assistant-idle-quip[data-mood="suspicious"]{--ai-mood:#a66ae8;--ai-lightning:#f0ddff;--ai-mood-soft:rgba(166,106,232,.22)}
+#dungeon-assistant-host .assistant-idle-quip[data-mood="panic"]{--ai-mood:#ff873d;--ai-lightning:#ffe4cb;--ai-mood-soft:rgba(255,135,61,.22)}
+#dungeon-assistant-host .assistant-idle-quip[data-mood="sad"]{--ai-mood:#4c83c8;--ai-lightning:#dceaff;--ai-mood-soft:rgba(76,131,200,.22)}
+#dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"]{--ai-mood:#45d6c5;--ai-lightning:#d8fffa;--ai-mood-soft:rgba(69,214,197,.22)}
+@keyframes assistant-perimeter-spark{0%,100%{opacity:.86;filter:drop-shadow(0 0 3px var(--ai-mood)) drop-shadow(0 0 6px var(--ai-mood))}48%{opacity:1;filter:drop-shadow(0 0 5px var(--ai-lightning)) drop-shadow(0 0 11px var(--ai-mood))}}
+@media(prefers-reduced-motion:reduce){#dungeon-assistant-host .assistant-idle-quip:before{animation:none!important;opacity:.9!important}}
+
+
+/* GLITCH mood: the System has stopped pretending it is a stable piece of software. */
+#dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"]{
+ --ai-mood:#ff2bd6!important;
+ --ai-lightning:#c8ff00!important;
+ --ai-mood-soft:rgba(255,43,214,.34)!important;
+ background:linear-gradient(112deg,rgba(255,0,170,.24),transparent 28%,rgba(0,245,255,.2) 52%,transparent 73%,rgba(190,255,0,.17)),#100817!important;
+ border-color:#ff2bd6!important;
+ box-shadow:0 0 5px #ff2bd6,0 0 15px #ff2bd6,0 0 28px #00f5ff,inset 0 0 18px rgba(0,245,255,.25)!important;
+ animation:assistant-glitch-shell .19s steps(2,end) infinite!important;
+}
+#dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"]:before{
+ background:repeating-conic-gradient(from 0deg,#c8ff00 0deg 4deg,#ff2bd6 4deg 8deg,#00f5ff 8deg 12deg,transparent 12deg 18deg)!important;
+ opacity:1!important;
+ filter:drop-shadow(0 0 4px #ff2bd6) drop-shadow(0 0 9px #00f5ff)!important;
+ animation:assistant-glitch-edge .11s steps(2,end) infinite!important;
+}
+#dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"]:after{
+ border-color:#c8ff00!important;
+ filter:drop-shadow(0 0 5px #c8ff00) drop-shadow(0 0 9px #ff2bd6)!important;
+}
+#dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"] .assistant-idle-quip-text{
+ text-shadow:1px 0 #ff2bd6,-1px 0 #00f5ff,0 0 8px rgba(200,255,0,.5)!important;
+ animation:assistant-glitch-text .27s steps(2,end) infinite!important;
+}
+#dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"] .assistant-face{
+ filter:drop-shadow(2px 0 #ff2bd6) drop-shadow(-2px 0 #00f5ff) drop-shadow(0 0 9px #c8ff00)!important;
+ animation:assistant-glitch-face .24s steps(2,end) infinite!important;
+}
+#dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"] .assistant-face-eyes{
+ gap:8px!important;
+ animation:assistant-glitch-eyes .17s steps(2,end) infinite!important;
+}
+#dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"] .assistant-face-eyes i{
+ background:#c8ff00!important;
+ box-shadow:0 0 5px #c8ff00,0 0 12px #ff2bd6,0 0 18px #00f5ff!important;
+}
+#dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"] .assistant-face-mouth{
+ width:20px!important;height:8px!important;
+ border:0!important;border-radius:1px!important;
+ background:repeating-linear-gradient(90deg,#c8ff00 0 3px,#ff2bd6 3px 6px,#00f5ff 6px 9px)!important;
+ box-shadow:0 0 7px #ff2bd6,0 0 13px #00f5ff!important;
+ animation:assistant-glitch-mouth .13s steps(2,end) infinite!important;
+}
+@keyframes assistant-glitch-shell{
+ 0%,100%{transform:translate(0,0) skewX(0);filter:hue-rotate(0deg)}
+ 25%{transform:translate(1px,-1px) skewX(-.8deg);filter:hue-rotate(35deg)}
+ 50%{transform:translate(-1px,1px) skewX(.8deg);filter:hue-rotate(-35deg)}
+ 75%{transform:translate(1px,0) skewX(-.4deg);filter:hue-rotate(75deg)}
+}
+@keyframes assistant-glitch-edge{
+ 0%,100%{opacity:1;filter:drop-shadow(0 0 4px #ff2bd6) drop-shadow(0 0 9px #00f5ff)}
+ 50%{opacity:.55;filter:drop-shadow(0 0 8px #c8ff00) drop-shadow(0 0 16px #ff2bd6)}
+}
+@keyframes assistant-glitch-text{
+ 0%,100%{transform:translateX(0)}
+ 50%{transform:translateX(.7px)}
+}
+@keyframes assistant-glitch-face{
+ 0%,100%{transform:translate(0,0) rotate(0)}
+ 25%{transform:translate(1px,-1px) rotate(3deg)}
+ 50%{transform:translate(-1px,1px) rotate(-3deg)}
+ 75%{transform:translate(1px,0) rotate(1deg)}
+}
+@keyframes assistant-glitch-eyes{
+ 0%,100%{transform:translateX(0) scaleY(1)}
+ 50%{transform:translateX(2px) scaleY(.7)}
+}
+@keyframes assistant-glitch-mouth{
+ 0%,100%{transform:scaleX(1) scaleY(1)}
+ 50%{transform:scaleX(.65) scaleY(1.5)}
+}
+@media(prefers-reduced-motion:reduce){
+ #dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"],
+ #dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"]:before,
+ #dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"] .assistant-idle-quip-text,
+ #dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"] .assistant-face,
+ #dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"] .assistant-face-eyes,
+ #dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"] .assistant-face-mouth{animation:none!important}
+}
+
+/* AI DOCK — keep the avatar centered on the right edge and its speech beside it. */
+#dungeon-assistant-host{
+ position:fixed!important;
+ top:50%!important;
+ right:max(12px,env(safe-area-inset-right))!important;
+ bottom:auto!important;
+ left:auto!important;
+ width:auto!important;
+ height:auto!important;
+ transform:translateY(-50%)!important;
+ z-index:1200!important;
+}
+#dungeon-assistant-host .dungeon-assistant{
+ position:relative!important;
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:flex-end!important;
+}
+#dungeon-assistant-host .assistant-idle-quip{
+ position:absolute!important;
+ top:50%!important;
+ right:74px!important;
+ bottom:auto!important;
+ left:auto!important;
+ width:min(340px,calc(100vw - 108px))!important;
+ max-width:calc(100vw - 108px)!important;
+ max-height:38vh!important;
+ margin:0!important;
+ transform:translateY(-50%) scale(.97)!important;
+ transform-origin:right center!important;
+}
+#dungeon-assistant-host .assistant-idle-quip.is-visible{
+ opacity:1!important;
+ transform:translateY(-50%) scale(1)!important;
+ animation:none!important;
+}
+@media(max-width:430px){
+ #dungeon-assistant-host{right:max(10px,env(safe-area-inset-right))!important}
+ #dungeon-assistant-host .assistant-idle-quip{
+  right:68px!important;
+  width:calc(100vw - 94px)!important;
+  max-width:calc(100vw - 94px)!important;
+  gap:8px!important;
+  padding:10px 11px!important;
+ }
+ #dungeon-assistant-host .assistant-idle-quip .assistant-face{
+  flex-basis:34px!important;
+  width:34px!important;
+  height:34px!important;
+  min-width:34px!important;
+ }
+}
+
+/* Match the launcher face to the expressive face shown in idle transmissions. */
+#dungeon-assistant-host .assistant-launcher .assistant-face-mouth{
+ width:14px!important;height:6px!important;
+ border:0!important;border-radius:0 0 50% 50%!important;
+ background:transparent!important;
+ box-shadow:inset 0 -2px 0 currentColor!important;
+ transform:translateY(-1px)!important;
+ transition:width .18s ease,height .18s ease,border-radius .18s ease,background .18s ease,box-shadow .18s ease,transform .18s ease!important;
+}
+#dungeon-assistant-host .assistant-launcher[data-mood="normal"] .assistant-face-mouth,
+#dungeon-assistant-host .assistant-idle-quip[data-mood="normal"] .assistant-face-mouth{
+ width:14px!important;height:6px!important;border:0!important;
+ border-radius:0 0 50% 50%!important;background:transparent!important;
+ box-shadow:inset 0 -2px 0 currentColor!important;
+}
+#dungeon-assistant-host .assistant-launcher[data-mood="excited"] .assistant-face-mouth,
+#dungeon-assistant-host .assistant-idle-quip[data-mood="excited"] .assistant-face-mouth{
+ width:17px!important;height:10px!important;border:0!important;
+ border-radius:3px 3px 12px 12px!important;background:currentColor!important;
+ box-shadow:0 0 7px currentColor!important;
+}
+#dungeon-assistant-host .assistant-launcher[data-mood="angry"] .assistant-face-mouth,
+#dungeon-assistant-host .assistant-idle-quip[data-mood="angry"] .assistant-face-mouth{
+ width:15px!important;height:4px!important;border:0!important;
+ border-radius:2px!important;background:currentColor!important;
+ box-shadow:0 0 5px currentColor!important;transform:rotate(2deg)!important;
+}
+#dungeon-assistant-host .assistant-launcher[data-mood="suspicious"] .assistant-face-mouth,
+#dungeon-assistant-host .assistant-idle-quip[data-mood="suspicious"] .assistant-face-mouth{
+ width:11px!important;height:4px!important;border:0!important;
+ border-radius:0 0 9px 9px!important;background:transparent!important;
+ box-shadow:inset 0 -2px 0 currentColor!important;transform:rotate(-9deg) translateX(2px)!important;
+}
+#dungeon-assistant-host .assistant-launcher[data-mood="panic"] .assistant-face-mouth,
+#dungeon-assistant-host .assistant-idle-quip[data-mood="panic"] .assistant-face-mouth{
+ width:9px!important;height:11px!important;border:2px solid currentColor!important;
+ border-radius:50%!important;background:transparent!important;box-shadow:0 0 6px currentColor!important;
+}
+#dungeon-assistant-host .assistant-launcher[data-mood="sad"] .assistant-face-mouth,
+#dungeon-assistant-host .assistant-idle-quip[data-mood="sad"] .assistant-face-mouth{
+ width:14px!important;height:6px!important;border:0!important;
+ border-radius:50% 50% 0 0!important;background:transparent!important;
+ box-shadow:inset 0 2px 0 currentColor!important;transform:translateY(3px)!important;
+}
+#dungeon-assistant-host .assistant-launcher[data-mood="glitch"] .assistant-face-mouth,
+#dungeon-assistant-host .assistant-idle-quip[data-mood="glitch"] .assistant-face-mouth{
+ width:17px!important;height:6px!important;border:0!important;
+ border-top:2px solid currentColor!important;border-bottom:2px dashed currentColor!important;
+ border-radius:0!important;background:transparent!important;transform:skewX(-18deg)!important;
+}
+#dungeon-assistant-host .assistant-idle-quip{pointer-events:auto!important;cursor:pointer!important}
+#dungeon-assistant-host .assistant-idle-quip.is-user-dismissed{opacity:0!important;transform:translateY(-50%) scale(.94)!important;pointer-events:none!important}
+
+/* Idle speech is text-only; the docked avatar carries all facial expression. */
+#dungeon-assistant-host .assistant-idle-quip{
+ display:block!important;
+ flex-direction:initial!important;
+ gap:0!important;
+ padding:13px 16px!important;
+}
+#dungeon-assistant-host .assistant-idle-quip .assistant-idle-quip-text{
+ display:block!important;
+ width:100%!important;
+ min-width:0!important;
+ flex:1 1 auto!important;
+ margin:0!important;
+ text-align:left!important;
+}
+@media(max-width:430px){
+ #dungeon-assistant-host .assistant-idle-quip{padding:11px 13px!important}
+}
+
+/* THE SYSTEM'S LITTLE FAMILIAR — full-body motion, not a floating face alone. */
+#dungeon-assistant-host .assistant-launcher-sigil{
+ width:52px!important;height:56px!important;overflow:visible!important;
+}
+#dungeon-assistant-host .assistant-launcher-sigil .assistant-face.assistant-companion,
+#dungeon-assistant-host .assistant-avatar .assistant-face.assistant-companion{
+ position:relative!important;display:block!important;
+ width:50px!important;height:56px!important;overflow:visible!important;
+ color:#dffaff!important;filter:drop-shadow(0 0 7px #42bfff)!important;
+ animation:companion-hover 3.8s ease-in-out infinite!important;
+ transform-origin:50% 65%!important;
+}
+#dungeon-assistant-host .assistant-companion-aura{
+ position:absolute;inset:5px 5px 1px;border-radius:48%;
+ background:radial-gradient(ellipse,#39baff30 0%,#168bff12 52%,transparent 75%);
+ filter:blur(2px);animation:companion-aura 3.8s ease-in-out infinite;
+}
+#dungeon-assistant-host .assistant-companion-body{
+ position:absolute;left:13px;top:27px;width:24px;height:24px;
+ border:1.5px solid #9beaff;border-radius:42% 42% 48% 48%;
+ background:linear-gradient(145deg,#8deaff 0%,#277dbd 34%,#142b55 100%);
+ box-shadow:inset 0 0 7px #e8fdff99,0 0 9px #32baffaa;
+ transform-origin:50% 15%;animation:companion-body-bob 2.4s ease-in-out infinite;
+}
+#dungeon-assistant-host .assistant-companion-core{
+ position:absolute;left:8px;top:7px;width:7px;height:7px;border-radius:50%;
+ background:#fff8c9;box-shadow:0 0 5px #fff,0 0 11px #4ddaff;
+ animation:companion-core-pulse 1.8s ease-in-out infinite;
+}
+#dungeon-assistant-host .assistant-companion-head{
+ position:absolute;left:8px;top:4px;width:34px;height:29px;
+ display:flex!important;flex-direction:column!important;align-items:center!important;
+ justify-content:center!important;gap:4px!important;
+ border:1.5px solid #c4f5ff;border-radius:45% 45% 40% 40%;
+ background:radial-gradient(circle at 35% 20%,#b5f5ff 0%,#397fc1 30%,#14264d 82%);
+ box-shadow:inset 0 0 7px #eaffff99,0 0 10px #39baffaa;
+ z-index:3;transform-origin:50% 90%;animation:companion-head-tilt 5.5s ease-in-out infinite;
+}
+#dungeon-assistant-host .assistant-companion-head .assistant-face-eyes{
+ width:100%!important;height:8px!important;gap:7px!important;
+ animation:assistant-eve-look 6.4s ease-in-out infinite!important;
+}
+#dungeon-assistant-host .assistant-companion-head .assistant-face-eyes i{
+ width:5px!important;height:7px!important;border-radius:55%!important;
+ background:#f1ffff!important;box-shadow:0 0 5px #fff,0 0 9px #75e8ff!important;
+}
+#dungeon-assistant-host .assistant-companion-head .assistant-face-mouth{
+ width:8px!important;height:4px!important;margin:0!important;
+ border:0!important;border-radius:0 0 9px 9px!important;
+ background:transparent!important;box-shadow:inset 0 -1.5px 0 #efffff!important;
+ animation:assistant-eve-mouth 2.8s ease-in-out infinite!important;
+}
+#dungeon-assistant-host .assistant-companion-arm{
+ position:absolute;top:31px;width:10px;height:17px;z-index:2;
+ border:1.5px solid #8feaff;border-radius:8px;
+ background:linear-gradient(180deg,#5bc6ed,#1b477e);
+ box-shadow:0 0 6px #39baff77;transform-origin:50% 10%;
+}
+#dungeon-assistant-host .assistant-companion-arm-left{left:5px;transform:rotate(24deg);animation:companion-arm-left 2.8s ease-in-out infinite}
+#dungeon-assistant-host .assistant-companion-arm-right{right:5px;transform:rotate(-24deg);animation:companion-arm-right 2.8s ease-in-out infinite}
+#dungeon-assistant-host .assistant-companion-fin{
+ position:absolute;left:22px;top:48px;width:7px;height:7px;z-index:1;
+ border-radius:2px 2px 7px 7px;background:linear-gradient(#b7f6ff,#2689d0);
+ box-shadow:0 0 7px #43caff;transform-origin:50% 0;
+ animation:companion-fin 1.7s ease-in-out infinite;
+}
+#dungeon-assistant-host .assistant-launcher[data-mood="excited"] .assistant-companion,
+#dungeon-assistant-host .assistant-companion[data-mood="excited"]{animation:companion-excited .48s ease-in-out infinite alternate!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="angry"] .assistant-companion{animation:companion-angry .16s linear infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="suspicious"] .assistant-companion{animation:companion-suspicious 2.2s ease-in-out infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="panic"] .assistant-companion{animation:companion-panic .22s steps(2,end) infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="sad"] .assistant-companion{animation:companion-sad 2.8s ease-in-out infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="glitch"] .assistant-companion{animation:assistant-glitch-face .18s steps(2,end) infinite!important;filter:hue-rotate(115deg) drop-shadow(0 0 9px #ff2bd6)!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="excited"] .assistant-companion-arm-left{animation:companion-wave .32s ease-in-out infinite alternate}
+#dungeon-assistant-host .assistant-launcher[data-mood="excited"] .assistant-companion-arm-right{animation:companion-wave .32s ease-in-out infinite alternate-reverse}
+#dungeon-assistant-host .assistant-launcher[data-mood="angry"] .assistant-companion-arm{transform:rotate(68deg)!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="sad"] .assistant-companion-arm{transform:rotate(4deg)!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="panic"] .assistant-companion-arm{animation:companion-flail .16s linear infinite alternate}
+#dungeon-assistant-host .assistant-launcher[data-mood="panic"] .assistant-companion-head .assistant-face-mouth{width:6px!important;height:7px!important;border:1.5px solid #fff!important;border-radius:50%!important;box-shadow:0 0 5px #fff!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="angry"] .assistant-companion-head .assistant-face-mouth{width:9px!important;height:2px!important;border-radius:0!important;background:#fff!important;box-shadow:0 0 4px #fff!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="excited"] .assistant-companion-head .assistant-face-mouth{width:10px!important;height:6px!important;border-radius:3px 3px 9px 9px!important;background:#fff!important;box-shadow:0 0 5px #fff!important}
+@keyframes companion-hover{0%,100%{transform:translate3d(0,1px,0) rotate(-1deg)}50%{transform:translate3d(1px,-4px,0) rotate(1.5deg)}}
+@keyframes companion-aura{0%,100%{opacity:.55;transform:scale(.92)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes companion-body-bob{0%,100%{transform:rotate(-2deg) scaleX(1)}50%{transform:rotate(2deg) scaleX(1.04)}}
+@keyframes companion-core-pulse{0%,100%{opacity:.72;transform:scale(.9)}50%{opacity:1;transform:scale(1.18)}}
+@keyframes companion-head-tilt{0%,72%,100%{transform:rotate(0)}80%{transform:rotate(-7deg)}90%{transform:rotate(5deg)}}
+@keyframes companion-arm-left{0%,100%{transform:rotate(24deg)}50%{transform:rotate(9deg)}}
+@keyframes companion-arm-right{0%,100%{transform:rotate(-24deg)}50%{transform:rotate(-9deg)}}
+@keyframes companion-fin{0%,100%{transform:rotate(-5deg) scaleY(.9)}50%{transform:rotate(5deg) scaleY(1.15)}}
+@keyframes companion-excited{from{transform:translateY(-1px) rotate(-5deg) scale(1)}to{transform:translateY(-7px) rotate(5deg) scale(1.08)}}
+@keyframes companion-angry{0%,100%{transform:translateX(-1px) rotate(-3deg)}50%{transform:translateX(1px) rotate(3deg)}}
+@keyframes companion-suspicious{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(-3px,-1px) rotate(-9deg)}}
+@keyframes companion-panic{0%{transform:translate(-2px,-1px) rotate(-6deg)}100%{transform:translate(2px,1px) rotate(7deg)}}
+@keyframes companion-sad{0%,100%{transform:translateY(1px) rotate(1deg)}50%{transform:translateY(4px) rotate(-2deg)}}
+@keyframes companion-wave{from{transform:rotate(15deg)}to{transform:rotate(105deg)}}
+@keyframes companion-flail{from{transform:rotate(-65deg)}to{transform:rotate(80deg)}}
+@media(prefers-reduced-motion:reduce){
+ #dungeon-assistant-host .assistant-companion,
+ #dungeon-assistant-host .assistant-companion *{animation:none!important}
+}
+
+/* FAMILIAR REFINEMENT — circular face, monochrome blue/white/black identity. */
+#dungeon-assistant-host .assistant-companion-head{
+ left:8px!important;top:3px!important;width:34px!important;height:34px!important;
+ border-radius:50%!important;
+ border:2px solid #eafaff!important;
+ background:radial-gradient(circle at 34% 24%,#173b63 0%,#071321 62%,#02060c 100%)!important;
+ box-shadow:inset 0 0 8px #8bdfff55,0 0 0 2px #287fbd,0 0 12px #258edb!important;
+}
+#dungeon-assistant-host .assistant-companion-head .assistant-face-eyes{
+ height:9px!important;gap:7px!important;
+}
+#dungeon-assistant-host .assistant-companion-head .assistant-face-eyes i{
+ width:5px!important;height:7px!important;background:#fff!important;
+ box-shadow:0 0 5px #fff,0 0 10px #8bdfff!important;
+}
+#dungeon-assistant-host .assistant-companion-head .assistant-face-mouth{
+ width:9px!important;height:4px!important;border:0!important;
+ border-radius:0 0 10px 10px!important;background:transparent!important;
+ box-shadow:inset 0 -2px 0 #fff!important;
+}
+#dungeon-assistant-host .assistant-companion-body{
+ border-color:#b9eaff!important;
+ background:linear-gradient(145deg,#286da5 0%,#0b1b2c 52%,#02060c 100%)!important;
+ box-shadow:inset 0 0 7px #dff8ff55,0 0 9px #238bd088!important;
+}
+#dungeon-assistant-host .assistant-companion-core{
+ background:#fff!important;box-shadow:0 0 5px #fff,0 0 11px #7fdcff!important;
+}
+#dungeon-assistant-host .assistant-companion-arm{
+ border-color:#a9e4ff!important;
+ background:linear-gradient(180deg,#327fb5,#071321)!important;
+ box-shadow:0 0 6px #238bd088!important;
+}
+#dungeon-assistant-host .assistant-companion-fin{
+ background:linear-gradient(#e8faff,#1c6ea8)!important;
+ box-shadow:0 0 7px #43baff!important;
+}
+#dungeon-assistant-host .assistant-companion-aura{
+ background:radial-gradient(ellipse,#2c9ce833 0%,#123b631c 52%,transparent 75%)!important;
+}
+/* Keep the character's palette consistent in every mood; mood is expressed by movement. */
+#dungeon-assistant-host .assistant-launcher[data-mood] .assistant-companion,
+#dungeon-assistant-host .assistant-launcher[data-mood] .assistant-companion *{
+ --ai-mood:#3b9fe8;
+}
+#dungeon-assistant-host .assistant-launcher[data-mood="normal"] .assistant-companion{animation:companion-hover 4.2s ease-in-out infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="excited"] .assistant-companion{animation:companion-excited .62s ease-in-out infinite alternate!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="angry"] .assistant-companion{animation:companion-angry .22s ease-in-out infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="suspicious"] .assistant-companion{animation:companion-suspicious 2.6s ease-in-out infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="panic"] .assistant-companion{animation:companion-panic .3s steps(2,end) infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="sad"] .assistant-companion{animation:companion-sad 3.2s ease-in-out infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="glitch"] .assistant-companion{
+ animation:companion-glitch .28s steps(2,end) infinite!important;
+ filter:drop-shadow(0 0 7px #4bb7ff)!important;
+}
+#dungeon-assistant-host .assistant-launcher[data-mood="normal"] .assistant-companion-arm{animation:companion-arm-left 3.4s ease-in-out infinite}
+#dungeon-assistant-host .assistant-launcher[data-mood="excited"] .assistant-companion-arm-left{animation:companion-wave .38s ease-in-out infinite alternate!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="excited"] .assistant-companion-arm-right{animation:companion-wave .38s ease-in-out infinite alternate-reverse!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="angry"] .assistant-companion-arm{animation:companion-angry-arm .22s ease-in-out infinite alternate!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="suspicious"] .assistant-companion-head{animation:companion-head-suspicious 2.4s ease-in-out infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="panic"] .assistant-companion-arm{animation:companion-flail .2s linear infinite alternate!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="sad"] .assistant-companion-arm{animation:companion-sad-arm 3s ease-in-out infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="glitch"] .assistant-companion-arm,
+#dungeon-assistant-host .assistant-launcher[data-mood="glitch"] .assistant-companion-fin{animation:companion-glitch .2s steps(2,end) infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="panic"] .assistant-companion-head .assistant-face-mouth,
+#dungeon-assistant-host .assistant-launcher[data-mood="glitch"] .assistant-companion-head .assistant-face-mouth{
+ width:6px!important;height:7px!important;border:2px solid #fff!important;
+ border-radius:50%!important;background:transparent!important;box-shadow:0 0 5px #fff!important;
+}
+#dungeon-assistant-host .assistant-launcher[data-mood="angry"] .assistant-companion-head .assistant-face-mouth{
+ width:10px!important;height:2px!important;border-radius:0!important;
+ background:#fff!important;box-shadow:none!important;
+}
+#dungeon-assistant-host .assistant-launcher[data-mood="excited"] .assistant-companion-head .assistant-face-mouth{
+ width:10px!important;height:6px!important;border-radius:3px 3px 9px 9px!important;
+ background:#fff!important;box-shadow:0 0 5px #fff!important;
+}
+#dungeon-assistant-host .assistant-launcher[data-mood="sad"] .assistant-companion-head .assistant-face-mouth{
+ width:9px!important;height:4px!important;border-radius:50% 50% 0 0!important;
+ background:transparent!important;box-shadow:inset 0 2px 0 #fff!important;
+}
+@keyframes companion-angry-arm{from{transform:rotate(52deg)}to{transform:rotate(78deg)}}
+@keyframes companion-head-suspicious{0%,100%{transform:rotate(0) translateX(0)}50%{transform:rotate(-12deg) translateX(-2px)}}
+@keyframes companion-sad-arm{0%,100%{transform:rotate(8deg)}50%{transform:rotate(1deg) translateY(3px)}}
+@keyframes companion-glitch{0%{transform:translate(-2px,1px) skewX(-5deg)}25%{transform:translate(2px,-1px) skewX(7deg)}50%{transform:translate(-1px,-2px) scaleX(.92)}75%{transform:translate(1px,2px) scaleY(.94)}100%{transform:translate(0,0)}}
+@media(prefers-reduced-motion:reduce){
+ #dungeon-assistant-host .assistant-companion,
+ #dungeon-assistant-host .assistant-companion *{animation:none!important}
+}
+
+/* FINAL AI IDENTITY: one animated orb, no limbs, torso, tail or separate body. */
+#dungeon-assistant-host .assistant-launcher-sigil{
+ width:58px!important;height:58px!important;overflow:visible!important;
+ display:grid!important;place-items:center!important;
+}
+#dungeon-assistant-host .assistant-launcher-sigil .assistant-orb{
+ position:relative!important;display:block!important;
+ width:54px!important;height:54px!important;overflow:visible!important;
+ color:#fff!important;filter:drop-shadow(0 0 8px #278bd9)!important;
+ animation:orb-idle-float 4s ease-in-out infinite!important;
+ transform-origin:center!important;
+}
+#dungeon-assistant-host .assistant-orb-aura{
+ position:absolute!important;inset:-5px!important;border-radius:50%!important;
+ background:radial-gradient(circle,#329ce933 0%,#155b9a18 58%,transparent 72%)!important;
+ filter:blur(2px)!important;animation:orb-aura-pulse 3.2s ease-in-out infinite!important;
+}
+#dungeon-assistant-host .assistant-orb .assistant-companion-head{
+ position:absolute!important;inset:2px!important;width:auto!important;height:auto!important;
+ display:flex!important;flex-direction:column!important;align-items:center!important;
+ justify-content:center!important;gap:7px!important;
+ border:2px solid #dff6ff!important;border-radius:50%!important;
+ background:radial-gradient(circle at 34% 22%,#244b70 0%,#0b1b2d 46%,#02070d 100%)!important;
+ box-shadow:inset 0 0 12px #9bdfff55,inset 0 -8px 16px #000b,0 0 0 2px #287fbd,0 0 15px #258edb!important;
+ z-index:2!important;transform-origin:center!important;
+}
+#dungeon-assistant-host .assistant-orb .assistant-face-eyes{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ width:100%!important;height:10px!important;gap:10px!important;
+}
+#dungeon-assistant-host .assistant-orb .assistant-face-eyes i{
+ display:block!important;width:7px!important;height:9px!important;border-radius:50%!important;
+ background:#fff!important;box-shadow:0 0 5px #fff,0 0 11px #8bdfff!important;
+}
+#dungeon-assistant-host .assistant-orb .assistant-face-mouth{
+ display:block!important;width:13px!important;height:6px!important;margin:0!important;
+ border:0!important;border-radius:0 0 14px 14px!important;
+ background:transparent!important;box-shadow:inset 0 -2px 0 #fff!important;
+ transition:all .18s ease!important;
+}
+/* Mood identity: keep the orb blue/white/black and communicate emotion through motion. */
+#dungeon-assistant-host .assistant-launcher[data-mood="normal"] .assistant-orb{animation:orb-idle-float 4s ease-in-out infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="excited"] .assistant-orb{animation:orb-excited .55s ease-in-out infinite alternate!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="angry"] .assistant-orb{animation:orb-angry .19s linear infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="suspicious"] .assistant-orb{animation:orb-suspicious 2.4s ease-in-out infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="panic"] .assistant-orb{animation:orb-panic .24s steps(2,end) infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="sad"] .assistant-orb{animation:orb-sad 3s ease-in-out infinite!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="glitch"] .assistant-orb{animation:orb-glitch .23s steps(2,end) infinite!important;filter:drop-shadow(0 0 9px #5abaff)!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="excited"] .assistant-orb .assistant-face-mouth{width:15px!important;height:10px!important;border-radius:4px 4px 12px 12px!important;background:#fff!important;box-shadow:0 0 7px #fff!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="angry"] .assistant-orb .assistant-face-mouth{width:15px!important;height:2px!important;border-radius:0!important;background:#fff!important;box-shadow:none!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="suspicious"] .assistant-orb .assistant-face-mouth{width:10px!important;height:4px!important;transform:translateX(3px) rotate(-10deg)!important;border-radius:0 0 10px 10px!important;box-shadow:inset 0 -2px 0 #fff!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="panic"] .assistant-orb .assistant-face-mouth,
+#dungeon-assistant-host .assistant-launcher[data-mood="glitch"] .assistant-orb .assistant-face-mouth{width:9px!important;height:11px!important;border:2px solid #fff!important;border-radius:50%!important;background:transparent!important;box-shadow:0 0 6px #fff!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="sad"] .assistant-orb .assistant-face-mouth{width:13px!important;height:6px!important;border-radius:50% 50% 0 0!important;box-shadow:inset 0 2px 0 #fff!important;transform:translateY(3px)!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="angry"] .assistant-orb .assistant-face-eyes i:first-child{transform:rotate(18deg) translateY(2px)!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="angry"] .assistant-orb .assistant-face-eyes i:last-child{transform:rotate(-18deg) translateY(2px)!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="suspicious"] .assistant-orb .assistant-face-eyes{transform:translateX(2px) scaleY(.8)!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="sad"] .assistant-orb .assistant-face-eyes i{height:6px!important;transform:translateY(2px)!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="glitch"] .assistant-orb .assistant-face-eyes i:first-child{transform:scaleY(.5) translateX(-2px)!important}
+#dungeon-assistant-host .assistant-launcher[data-mood="glitch"] .assistant-orb .assistant-face-eyes i:last-child{transform:scaleY(1.35) translateX(2px)!important}
+@keyframes orb-idle-float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.025)}}
+@keyframes orb-aura-pulse{0%,100%{opacity:.55;transform:scale(.94)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes orb-excited{0%{transform:translateY(0) scale(1)}50%{transform:translateY(-7px) scale(1.08)}100%{transform:translateY(-2px) scale(1.03)}}
+@keyframes orb-angry{0%,100%{transform:translateX(-1.5px) rotate(-4deg)}50%{transform:translateX(1.5px) rotate(4deg)}}
+@keyframes orb-suspicious{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(-4px,-1px) rotate(-9deg)}}
+@keyframes orb-panic{0%{transform:translate(-2px,-2px) scale(.96)}50%{transform:translate(2px,1px) scale(1.04)}100%{transform:translate(-1px,2px) scale(.98)}}
+@keyframes orb-sad{0%,100%{transform:translateY(1px) scale(1)}50%{transform:translateY(4px) scale(.96)}}
+@keyframes orb-glitch{0%{transform:translate(-2px,1px) skewX(-7deg) scaleX(.96)}25%{transform:translate(2px,-1px) skewX(8deg)}50%{transform:translate(-1px,-2px) scaleY(.93)}75%{transform:translate(1px,2px) scaleX(1.04)}100%{transform:translate(0,0)}}
+@media(prefers-reduced-motion:reduce){
+ #dungeon-assistant-host .assistant-orb,#dungeon-assistant-host .assistant-orb *{animation:none!important}
+}
+
+/* Legacy prerecorded image removal: the live Canvas orb is the only avatar renderer. */
+#dungeon-assistant-host img[src$=".gif" i],
+#dungeon-assistant-host img[src*=".gif?" i]{
+ display:none!important;visibility:hidden!important;animation:none!important;
+}
+#dungeon-assistant-host .assistant-launcher{
+ background:transparent!important;border:0!important;outline:0!important;
+ box-shadow:none!important;border-radius:50%!important;padding:0!important;
+ overflow:visible!important;
+}
+#dungeon-assistant-host .assistant-launcher:before,
+#dungeon-assistant-host .assistant-launcher:after,
+#dungeon-assistant-host .assistant-launcher-aura,
+#dungeon-assistant-host .assistant-launcher-pulse{display:none!important;content:none!important}
+#dungeon-assistant-host .assistant-launcher-sigil,
+#dungeon-assistant-host .assistant-avatar{
+ background:transparent!important;border:0!important;outline:0!important;
+ box-shadow:none!important;border-radius:50%!important;
+}
+#dungeon-assistant-host .assistant-launcher-sigil{width:60px!important;height:60px!important;display:grid!important;place-items:center!important;overflow:visible!important}
+/* Live procedural purple AI orb — replaces the prerecorded GIF in every avatar slot. */
+#dungeon-assistant-host .assistant-orb-live{
+ display:block!important;width:100%!important;height:100%!important;max-width:none!important;
+ object-fit:contain!important;border:0!important;border-radius:50%!important;
+ background:transparent!important;box-shadow:none!important;overflow:visible!important;
+}
+#dungeon-assistant-host .assistant-launcher-sigil .assistant-orb-live{width:58px!important;height:58px!important}
+#dungeon-assistant-host .assistant-avatar .assistant-orb-live{width:38px!important;height:38px!important}
+#dungeon-assistant-host .assistant-launcher-sigil{overflow:visible!important}
+@media(prefers-reduced-motion:reduce){#dungeon-assistant-host .assistant-orb-live{animation:none!important}}
+
+/* Mobile-first four-tab navigation and secondary drawer */
+.main-nav{z-index:40;grid-template-columns:repeat(5,minmax(0,1fr));min-height:64px;padding:7px 10px calc(7px + env(safe-area-inset-bottom))}
+.main-nav button{min-width:0;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:19px}
+.main-nav small{font-size:8px;letter-spacing:.55px}
+.more-scrim{position:fixed;inset:0;z-index:45;background:#07050bcc;backdrop-filter:blur(3px)}
+.more-scrim[hidden]{display:none}
+.more-drawer{position:fixed;z-index:46;right:0;top:0;bottom:0;width:min(84vw,340px);padding:calc(18px + env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(160deg,#2b1e35,#120d19);border-left:1px solid #71577a;box-shadow:-18px 0 50px #0008;transform:translateX(105%);transition:transform .22s ease;display:flex;flex-direction:column;gap:9px}
+.more-drawer.is-open{transform:translateX(0)}
+.more-drawer-head{display:flex;align-items:center;justify-content:space-between;color:var(--gold);font:700 13px Georgia,serif;letter-spacing:2px;padding:5px 2px 16px;border-bottom:1px solid #ffffff20;margin-bottom:7px}
+.more-drawer button{min-height:50px;border:1px solid var(--line);border-radius:12px;background:#211729;color:var(--cream);padding:10px 13px;text-align:left;font-size:18px}
+.more-drawer button span{font-size:12px;font-weight:800;margin-left:9px}
+.more-drawer-head button{min-height:40px;width:40px;padding:0;text-align:center;font-size:24px;border:0;background:transparent}
+body.more-menu-open{overflow:hidden}
+@media(min-width:761px){.more-drawer{right:max(calc((100vw - 760px)/2),0px)}}
+@media(prefers-reduced-motion:reduce){.more-drawer{transition:none}}
+
+/* Home dashboard: combat-led progression and optional expedition supplies */
+.home-hunt-card,.home-expedition-cache{margin:14px 0;border:1px solid #624a69;border-radius:17px;background:linear-gradient(145deg,#2b1e35,#17111e);padding:16px;box-shadow:0 12px 28px #0002}
+.home-hunt-card-top,.home-expedition-cache-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.home-hunt-card h2,.home-expedition-cache h2{font-size:17px;margin:5px 0 0;color:var(--cream)}
+.home-hunt-floor,.home-cache-sigil{flex:0 0 auto;border:1px solid #735b79;border-radius:10px;padding:8px 10px;color:var(--gold);font-size:10px;font-weight:800}
+.home-cache-sigil{font-size:21px;line-height:1}
+.home-hunt-card p,.home-expedition-cache p{font-size:11px;line-height:1.55;margin:10px 0 13px}
+.home-hunt-vitals{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.home-hunt-vitals>div{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center}
+.home-hunt-vitals span,.home-cache-progress-label{font-size:9px;letter-spacing:.8px;color:var(--muted);font-weight:800}
+.home-hunt-vitals b,.home-cache-progress-label b{font-size:10px;color:var(--cream);font-variant-numeric:tabular-nums}
+.home-hunt-vitals i,.home-cache-progress{grid-column:1/-1;display:block;height:7px;border-radius:8px;background:#100c16;overflow:hidden;border:1px solid #ffffff14}
+.home-hunt-vitals i em,.home-cache-progress i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#8d5a9e,#e4bd70)}
+.home-hunt-vitals>div:first-child i em{background:linear-gradient(90deg,#a64d52,#df8b75)}
+.home-hunt-enter{width:100%;min-height:46px;margin-top:3px}
+.home-cache-progress-label{display:flex;justify-content:space-between;gap:8px;margin:12px 0 7px}
+.home-cache-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}
+.home-cache-footer>span{font-size:9px;font-weight:800;letter-spacing:.5px;color:var(--gold)}
+.home-cache-footer .action{min-height:42px}
+@media(max-width:390px){.home-hunt-card,.home-expedition-cache{padding:13px}.home-hunt-vitals{gap:8px}}
+
+/* LOGBOOK: one home for campaign, guild, bestiary and recovered lore */
+.logbook-hero{margin:0 0 16px;padding:22px 18px;border:1px solid #604d68;border-radius:18px;background:radial-gradient(circle at 90% 0%,#59406455,transparent 42%),linear-gradient(145deg,#2a1e33,#17111e)}
+.logbook-hero h1{margin:6px 0 8px;font-size:clamp(25px,7vw,34px);letter-spacing:1.3px}
+.logbook-hero p{font-size:12px;line-height:1.6;max-width:560px}
+.logbook-hero-stats{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.logbook-hero-stats span{padding:7px 9px;border:1px solid #ffffff20;border-radius:9px;color:#e8d6ad;font-size:9px;font-weight:800;letter-spacing:.6px}
+.logbook-stack{display:grid;gap:12px}
+.logbook-panel{min-width:0;border:1px solid #4b3b52;border-radius:15px;background:linear-gradient(145deg,#211927,#17131d);overflow:hidden}
+.logbook-panel>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:62px;padding:13px 15px;cursor:pointer;list-style:none}
+.logbook-panel>summary::-webkit-details-marker{display:none}
+.logbook-panel>summary span{display:grid;gap:4px}
+.logbook-panel>summary small{font-size:9px;letter-spacing:1px;color:#b59cbe;font-weight:800}
+.logbook-panel>summary b{font-size:13px;letter-spacing:.45px;color:var(--cream,#f0e8d8)}
+.logbook-panel>summary i{font-style:normal;font-size:20px;color:#d7b875;transition:transform .2s}
+.logbook-panel[open]>summary{border-bottom:1px solid #ffffff17}
+.logbook-panel[open]>summary i{transform:rotate(45deg)}
+.logbook-panel-body{padding:12px;min-width:0}
+.logbook-panel-body>.logbook-campaign-content,.logbook-panel-body>.rpg-page{max-width:none;margin:0;padding:0}
+.logbook-panel-body .guild-page,.logbook-panel-body .rpg-bestiary-board,.logbook-panel-body .logbook-lore-board{margin:0}
+.logbook-panel-body .guild-hero,.logbook-panel-body .rpg-section-head{margin-top:0}
+.logbook-campaign-content .quest-hero{margin-top:0}
+.logbook-campaign-content .quest-section{margin-top:14px}
+.logbook-lore-entry{margin:9px 0;padding:13px;border:1px solid #ffffff18;border-radius:12px;background:#100d16}
+.logbook-lore-entry small{font-size:9px;letter-spacing:.7px;color:#c1a0cb;font-weight:800}
+.logbook-lore-entry h3{margin:5px 0 6px;font-size:14px}
+.logbook-lore-entry p{margin:0;font-size:12px;line-height:1.55;color:#d0c5d5}
+.logbook-lore-entry span{display:block;margin-top:8px;color:#d8bd7f;font-size:9px;font-weight:800;letter-spacing:.5px}
+@media(max-width:390px){.logbook-hero{padding:18px 14px}.logbook-panel-body{padding:9px}.logbook-panel>summary{padding:12px}}
+
+/* Haven consolidation — shared Workshop and simplified destination hub */
+.haven-hub{display:grid;gap:18px;padding:clamp(12px,3vw,22px);max-width:980px;margin:0 auto}.haven-hero{position:relative;overflow:hidden;padding:24px;border:1px solid #735b75;border-radius:18px;background:radial-gradient(ellipse at 85% 15%,#69476b66,transparent 42%),linear-gradient(145deg,#21172b,#100d17 72%);box-shadow:0 16px 38px #0006}.haven-hero h1{font-size:clamp(30px,7vw,48px);letter-spacing:.12em;margin:5px 0}.haven-hero p{max-width:620px;color:#c8b9cf;font-size:13px;line-height:1.55}.haven-status{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:18px}.haven-status>div{padding:10px 8px;border:1px solid #5c4962;border-radius:10px;background:#100d18aa;min-width:0}.haven-status b,.haven-status small{display:block}.haven-status b{font-size:15px;color:#f3d18b;overflow-wrap:anywhere}.haven-status small{font-size:8px;letter-spacing:.1em;color:#bbaac4;margin-top:4px}.haven-section-heading{display:flex;justify-content:space-between;align-items:end;gap:10px}.haven-section-heading h2{font-size:18px;margin:4px 0}.haven-section-heading>span{font-size:9px;letter-spacing:.12em;color:#c5adcf}.haven-destination-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.haven-destination{position:relative;display:flex;align-items:center;gap:12px;min-width:0;min-height:132px;padding:14px;text-align:left;color:#f5edf7;border:1px solid #5a465f;border-radius:14px;background:linear-gradient(145deg,#281d31,#15101c);cursor:pointer}.haven-destination:focus-visible,.workshop-tabs button:focus-visible{outline:2px solid #f2cf8a;outline-offset:3px}.haven-destination-index{position:absolute;top:9px;right:11px;font-size:9px;color:#9f88a8}.haven-destination-art{display:grid;place-items:center;flex:0 0 54px;width:54px;height:64px;filter:drop-shadow(0 5px 10px #0008)}.haven-destination-art svg,.haven-destination-art img{max-width:100%;max-height:100%}.haven-destination-copy{display:grid;gap:4px;min-width:0}.haven-destination-copy small{font-size:8px;letter-spacing:.12em;color:#d6b87a}.haven-destination-copy b{font-size:13px;letter-spacing:.04em}.haven-destination-copy em{font-size:10px;line-height:1.4;color:#bcaec4;font-style:normal}.haven-destination-copy strong{font-size:8px;letter-spacing:.12em;color:#e8c986;margin-top:4px}.haven-destination-copy strong i{font-style:normal;margin-left:4px}.haven-footer-note{padding:15px;border-left:2px solid #b68a58;background:#17111d}.haven-footer-note p{font-size:11px;line-height:1.5;color:#c8b9cf}.workshop-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;padding:8px;border:1px solid #58445e;border-radius:12px;background:#110d18}.workshop-tabs button{flex:1;min-width:130px;min-height:44px;border:1px solid #594660;border-radius:8px;background:#21172a;color:#d9c9e0;font-size:10px;font-weight:900;letter-spacing:.08em;cursor:pointer}.workshop-tabs button.active{background:linear-gradient(135deg,#60445f,#30213c);border-color:#c39b65;color:#ffe2a7;box-shadow:inset 0 0 0 1px #c39b6533}.scene-workshop .district-environment{border-color:#886b57}.scene-workshop .facility-intro{margin-top:4px}
+@media(max-width:520px){.haven-destination-grid{grid-template-columns:1fr}.haven-destination{min-height:112px}.haven-status{grid-template-columns:repeat(2,minmax(0,1fr))}.haven-hero{padding:18px}}
+
+/* Workshop Alchemy: distinct combat and utility recipe groups */
+.rpg-alchemy-workshop{display:grid;gap:16px}.rpg-alchemy-category{border-color:#5f4b68;background:linear-gradient(145deg,#1b1422,#110e17)}.rpg-alchemy-category+.rpg-alchemy-category{border-color:#786044}.rpg-alchemy-category .rpg-section-head h3{letter-spacing:.04em}.rpg-active-elixir{padding:7px 9px;border-left:2px solid #d7b36f;background:#332719;color:#f2d39a;font-size:10px;font-weight:800;letter-spacing:.08em}
+
+/* Unified Haven Vault: legacy collection and dungeon combat inventory */
+.vault-rpg-inventory{margin-top:22px;padding:18px;border:1px solid #604b69;border-radius:18px;background:linear-gradient(145deg,#1b1422,#100d16)}
+.vault-rpg-inventory>.vault-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.vault-rpg-depth{font-size:10px;letter-spacing:.1em;color:#e7c78e;font-weight:800}
+.vault-rpg-inventory .rpg-subpanel{padding:0;border:0;background:transparent}
+.rpg-consumable-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px;margin-top:10px}
+.rpg-consumable-chip{display:flex;flex-direction:column;gap:4px;padding:10px;border:1px solid #57465e;border-radius:10px;background:#17121d}
+.rpg-consumable-chip>b{font-size:20px;color:#f2d39a}.rpg-consumable-chip>span{font-size:11px;font-weight:750;color:#f5edf8}.rpg-consumable-chip>small{font-size:9px;color:#d9b879;letter-spacing:.06em}
+
+/* Haven Market: distinct buy and sell workspaces */
+.market-overview{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:clamp(16px,3vw,24px);margin:16px 0;border:1px solid #725b75;border-radius:16px;background:radial-gradient(ellipse at 90% 0%,#805b6833,transparent 48%),linear-gradient(145deg,#211827,#100d16)}
+.market-overview h2{margin:5px 0 8px;font-size:clamp(22px,5vw,30px);letter-spacing:.07em}.market-overview p{max-width:590px;margin:0;color:#c4b9c9;font-size:13px;line-height:1.55}
+.market-purse{flex:0 0 auto;min-width:132px;padding:11px 13px;border:1px solid #947448;border-radius:12px;background:#2c211b;text-align:right}.market-purse small{display:block;color:#d8bd8a;font-size:9px;font-weight:800;letter-spacing:.12em}.market-purse b{display:block;margin-top:5px;color:#ffe2a0;font-size:19px;font-variant-numeric:tabular-nums}
+.market-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 16px;padding:5px;border:1px solid #514454;border-radius:13px;background:#100d16}.market-tabs button{min-width:0;min-height:48px;padding:9px 10px;border:1px solid transparent;border-radius:9px;background:transparent;color:#c8bdcc;font-size:11px;font-weight:900;letter-spacing:.06em}.market-tabs button.active{border-color:#9c7b4d;background:linear-gradient(135deg,#44301f,#29202a);color:#ffe4ad;box-shadow:inset 0 0 18px #c59b4b18}.market-tabs button small{display:block;margin-top:3px;color:#a99bad;font-size:9px;letter-spacing:.08em}
+.market-category-row{display:flex;gap:7px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:thin}.market-category-row .pill{flex:0 0 auto;min-height:40px}.market-category-row .pill small{margin-left:4px;opacity:.72;font-size:9px}
+.market-section-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin:10px 0 12px}.market-section-heading h3{margin:4px 0;font-size:17px}.market-section-heading p{margin:5px 0 0;color:#b9afc0;font-size:12px;line-height:1.5}.market-section-heading>b{flex:0 0 auto;color:#e8c98f;font-size:10px;letter-spacing:.08em}
+.market-empty{padding:22px 16px;margin:10px 0;border:1px dashed #65566a;border-radius:13px;background:#17121c;text-align:center;color:#d2c6d6}.market-empty>b{color:#e8c98f;font-size:11px;letter-spacing:.1em}.market-empty p{max-width:420px;margin:8px auto 14px;color:#b8adbd;font-size:12px;line-height:1.55}
+@media(max-width:520px){.market-overview{flex-direction:column}.market-purse{width:100%;text-align:left}.market-tabs button{font-size:10px;padding:8px 5px}.market-section-heading{flex-direction:column}.market-section-heading>b{align-self:flex-start}}
+
+
+/* Companion evolution forms: visible milestone aura changes without replacing saved companion art. */
+.companion-showcase.form-grown .companion-showcase-art{box-shadow:inset 0 0 24px #72c5ff22,0 0 16px #72c5ff22;border-color:#78bce8}
+.companion-showcase.form-veteran .companion-showcase-art{box-shadow:inset 0 0 28px #b47cff33,0 0 20px #a86cff44;border-color:#b78aff}
+.companion-showcase.form-ascended .companion-showcase-art{box-shadow:inset 0 0 34px #ffb75a44,0 0 24px #f4a64e55;border-color:#ffc16c}
+.companion-showcase.form-ancient .companion-showcase-art{box-shadow:inset 0 0 42px #ffe08a55,0 0 28px #ffd66d88;border-color:#ffe29a}
+.companion-showcase.form-grown .companion-showcase-art .game-art{filter:drop-shadow(0 0 8px #78cfff99)}
+.companion-showcase.form-veteran .companion-showcase-art .game-art{filter:drop-shadow(0 0 10px #bd8cffcc) saturate(1.15)}
+.companion-showcase.form-ascended .companion-showcase-art .game-art{filter:drop-shadow(0 0 12px #ffbd65dd) saturate(1.25)}
+.companion-showcase.form-ancient .companion-showcase-art .game-art{filter:drop-shadow(0 0 15px #ffe69b) saturate(1.4) brightness(1.08)}
+.companion-showcase.form-grown .companion-stage{color:#8ed5ff}
+.companion-showcase.form-veteran .companion-stage{color:#c69aff}
+.companion-showcase.form-ascended .companion-stage{color:#ffc16c}
+.companion-showcase.form-ancient .companion-stage{color:#ffe29a;text-shadow:0 0 10px #ffd66d88}
+
+
+/* Companion battle presence: expressive, restrained motion inside the encounter panel */
+.rpg-companion-presence{display:flex;align-items:center;gap:12px;min-height:68px;margin:12px 0;padding:11px 13px;border:1px solid #80658b;border-radius:13px;background:radial-gradient(ellipse at 12% 50%,#a77bc42b,transparent 55%),linear-gradient(110deg,#2a1d35,#17111f);box-shadow:inset 0 0 0 1px #fff1;overflow:hidden}
+.rpg-companion-sigil{flex:none;width:43px;height:43px;display:grid;place-items:center;border:1px solid #a985b8;border-radius:12px;background:#382743;color:#f3c56b;font:26px Georgia,serif;text-shadow:0 0 12px #e9bf7955}
+.rpg-companion-presence-copy{min-width:0;display:grid;gap:5px}
+.rpg-companion-presence-copy small{color:#d6b4e5;font-size:8px;font-weight:950;letter-spacing:1.2px}
+.rpg-companion-presence-copy b{color:#fff0d0;font-size:10px;line-height:1.45;font-weight:650}
+.rpg-companion-presence.reaction-attack .rpg-companion-sigil{animation:companion-strike .42s ease-out}
+.rpg-companion-presence.reaction-guard .rpg-companion-sigil{animation:companion-guard .5s ease-out}
+.rpg-companion-presence.reaction-hit .rpg-companion-sigil,.rpg-companion-presence.reaction-concern .rpg-companion-sigil{animation:companion-flinch .36s ease-out}
+@keyframes companion-strike{0%{transform:translateX(0) scale(1)}45%{transform:translateX(9px) scale(1.14)}100%{transform:translateX(0) scale(1)}}
+@keyframes companion-guard{0%{transform:scale(1)}45%{transform:scale(.88) rotate(-8deg)}100%{transform:scale(1)}}
+@keyframes companion-flinch{0%{transform:translateX(0)}30%{transform:translateX(-4px)}65%{transform:translateX(3px)}100%{transform:translateX(0)}}
+@media(prefers-reduced-motion:reduce){.rpg-companion-presence .rpg-companion-sigil{animation:none!important}}
+@media(max-width:390px){.rpg-companion-presence{gap:9px;padding:9px}.rpg-companion-sigil{width:39px;height:39px}.rpg-companion-presence-copy b{font-size:9px}}
+
+.rpg-companion-passive{display:block;color:#e8c78f!important;font-size:8px!important;letter-spacing:.45px;line-height:1.35;font-weight:800}
+
+
+.companion-bond-board{margin-top:18px;padding:18px;border:1px solid rgba(207,170,111,.2);border-radius:14px;background:linear-gradient(145deg,rgba(37,31,27,.92),rgba(17,19,23,.96))}.companion-bond-board h3{margin:5px 0 6px;color:#ead5b4}.companion-bond-board>p,.companion-bond-board>small{color:#aaa29a;font-size:12px;line-height:1.5}.companion-bond-list{display:grid;gap:10px;margin:14px 0}.companion-bond-card{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px;border:1px solid rgba(207,170,111,.14);border-radius:10px;background:rgba(0,0,0,.18)}.companion-bond-card>div{display:grid;gap:4px}.companion-bond-card small{color:#c8a875;font-size:9px;letter-spacing:1px;font-weight:800}.companion-bond-card b{color:#eee2d1;font-size:14px}.companion-bond-card p{margin:0;color:#a9a29a;font-size:11px}.companion-bond-card span{color:#d7c29f;font-size:10px;font-weight:800;letter-spacing:.5px}.companion-bond-card .action{flex:0 0 auto;min-height:42px;font-size:10px}@media(max-width:520px){.companion-bond-card{align-items:flex-start;flex-direction:column}.companion-bond-card .action{width:100%}}
+
+.companion-bond-card.is-bonded{border-color:rgba(207,170,111,.42);background:linear-gradient(110deg,rgba(153,111,58,.13),rgba(0,0,0,.18))}.companion-bond-card .companion-bond-title{display:inline-flex;align-items:center;gap:5px;width:max-content;color:#f0d39f;font-size:10px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}.companion-bond-card.is-bonded b{color:#fff0d4}
+
+.companion-memory,.companion-memory-complete,.companion-memory-locked{grid-column:1/-1;margin-top:8px;padding:11px;border:1px solid rgba(207,170,111,.2);border-radius:9px;background:rgba(7,9,12,.48)}.companion-memory>small,.companion-memory-complete>small{display:block;color:#e5c48e;font-size:9px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}.companion-memory p,.companion-memory-complete p{margin:6px 0;color:#c3b8a8;font-size:11px;line-height:1.55}.companion-memory>div{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.companion-memory .action{min-height:42px;white-space:normal;font-size:9px}.companion-memory-complete>b{color:#e8d2a9;font-size:9px;letter-spacing:.7px}.companion-memory-locked{color:#8f8981;font-size:8px;font-weight:800;letter-spacing:.7px}@media(max-width:520px){.companion-memory>div{grid-template-columns:1fr}}
+
+
+/* Facility scenes are built from independently addressable presentation layers.
+   Empty layers intentionally preserve the existing room art until approved assets are mapped. */
+.facility-interior{position:relative;isolation:isolate;}
+.facility-art-layers{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;isolation:isolate;}
+.facility-layer{position:absolute;display:block;pointer-events:none;}
+.facility-layer-backdrop{inset:0;z-index:0;background:linear-gradient(180deg,var(--room-wall-a,#38243f),var(--room-wall-b,#17101e) 72%,#0d0a12);}
+.facility-layer-stone{inset:0;z-index:1;opacity:.18;background:repeating-linear-gradient(90deg,transparent 0 48px,#ffffff0b 49px 50px),repeating-linear-gradient(0deg,transparent 0 35px,#00000016 36px 37px);mix-blend-mode:soft-light;}
+.facility-layer-light{inset:-20%;z-index:2;background:radial-gradient(ellipse at 50% 18%,var(--room-glow,#9e70c8) 0,transparent 38%);opacity:.13;filter:blur(18px);}
+.facility-layer-architecture{inset:0;z-index:3;border-bottom:1px solid color-mix(in srgb,var(--room-edge,#a783c5),transparent 50%);box-shadow:inset 0 0 28px #0008;}
+.facility-layer-midground{inset:auto 0 0;height:35%;z-index:4;background:linear-gradient(180deg,transparent,#100b1680);}
+.facility-layer-foreground{inset:auto 0 0;height:12px;z-index:5;background:linear-gradient(90deg,transparent,var(--room-edge,#a783c5) 50%,transparent);opacity:.28;}
+.interior-architecture{position:relative;z-index:1;}
+.interior-caption{position:relative;z-index:2;}
+
+
+/* Character-specific NPC identity fallbacks; final portraits can replace these later. */
+.npc-character:not(.npc-character-npc-gribnik) .goblin-ear,.npc-character:not(.npc-character-npc-gribnik) .goblin-brow,.npc-character:not(.npc-character-npc-gribnik) .goblin-eyes,.npc-character:not(.npc-character-npc-gribnik) .goblin-nose,.npc-character:not(.npc-character-npc-gribnik) .goblin-mouth,.npc-character:not(.npc-character-npc-gribnik) .goblin-fangs{display:none;}
+.npc-character:not(.npc-character-npc-gribnik) .npc-face{left:15px;top:15px;width:25px;height:31px;border-radius:44% 44% 38% 38%;background:linear-gradient(145deg,#d8b99a,#76574d);}
+.npc-character:not(.npc-character-npc-gribnik) .npc-hood{left:4px;width:47px;height:48px;clip-path:none;border-radius:24px 24px 12px 12px;}
+.npc-character:not(.npc-character-npc-gribnik) .npc-body{left:0;width:55px;height:57px;clip-path:polygon(20% 0,80% 0,100% 100%,0 100%);}
+.npc-character:not(.npc-character-npc-gribnik):before{content:"";position:absolute;z-index:4;pointer-events:none;}
+.npc-character-npc-vaultkeeper .npc-hood{background:linear-gradient(135deg,#8b8171,#25252b 72%);border-color:#b8a77f;}
+.npc-character-npc-vaultkeeper .npc-face{background:linear-gradient(180deg,#4d4d50,#202027);border:2px solid #b9a77d;}
+.npc-character-npc-vaultkeeper:before{left:13px;top:25px;width:29px;height:7px;border-top:2px solid #e4c77f;border-bottom:2px solid #7b6c50;}
+.npc-character-npc-vaultkeeper .npc-body{background:linear-gradient(90deg,#17191d,#74716a 48%,#202126);}
+.npc-character-npc-borin-ashbrand .npc-hood{background:linear-gradient(135deg,#b34e2d,#341a18 75%);border-color:#e5a06b;}
+.npc-character-npc-borin-ashbrand .npc-face{background:linear-gradient(180deg,#d8a078,#8e4c37);}
+.npc-character-npc-borin-ashbrand:before{left:15px;top:34px;width:25px;height:19px;background:linear-gradient(135deg,#d17a3e,#63301f);clip-path:polygon(0 0,100% 0,75% 100%,25% 100%);}
+.npc-character-npc-borin-ashbrand .npc-body{background:linear-gradient(90deg,#211413,#a44727 48%,#2a1512);}
+.npc-character-npc-maeve-veil .npc-hood{top:-3px;height:56px;border-radius:24px 24px 5px 5px;background:linear-gradient(135deg,#7dbba0,#18372f 75%);clip-path:polygon(50% 0,100% 25%,83% 100%,17% 100%,0 25%);}
+.npc-character-npc-maeve-veil .npc-face{background:linear-gradient(180deg,#b7d5bb,#5c8978);}
+.npc-character-npc-maeve-veil:before{left:17px;top:26px;width:21px;height:4px;background:#c9f4c9;box-shadow:0 0 8px #9af5c4;}
+.npc-character-npc-maeve-veil .npc-body{background:linear-gradient(90deg,#10251f,#4a9878 48%,#10251f);}
+.npc-character-npc-piper-pawkeeper .npc-hood{background:linear-gradient(135deg,#a4b978,#34462b 75%);border-radius:19px 19px 12px 12px;}
+.npc-character-npc-piper-pawkeeper:before{left:6px;top:-8px;width:44px;height:28px;background:linear-gradient(90deg,#7b9a5a 0 35%,transparent 36% 64%,#7b9a5a 65%);clip-path:polygon(0 100%,8% 0,42% 65%,58% 65%,92% 0,100% 100%);}
+.npc-character-npc-piper-pawkeeper .npc-body{background:linear-gradient(90deg,#27351d,#8cae65 48%,#27351d);}
+.npc-character-npc-archivist-vell .npc-hood{background:linear-gradient(135deg,#7f9bc7,#1c2947 75%);border-color:#c4d7ef;clip-path:polygon(50% 0,100% 35%,83% 100%,17% 100%,0 35%);}
+.npc-character-npc-archivist-vell:before{left:14px;top:12px;width:27px;height:4px;background:#d8e8f4;box-shadow:0 0 7px #8fb8ed;}
+.npc-character-npc-archivist-vell .npc-body{background:linear-gradient(90deg,#11192b,#455b87 48%,#11192b);}
+.npc-character-npc-captain-ironveil .npc-hood{background:linear-gradient(135deg,#c1c8d0,#3c4652 75%);border-color:#e0e4e8;border-radius:10px 10px 8px 8px;}
+.npc-character-npc-captain-ironveil .npc-face{background:linear-gradient(180deg,#4a5158,#1e252d);border:1px solid #aeb9c7;}
+.npc-character-npc-captain-ironveil:before{left:13px;top:25px;width:29px;height:5px;background:#b9d6e8;box-shadow:0 0 6px #9fc5df;}
+.npc-character-npc-captain-ironveil .npc-body{background:linear-gradient(90deg,#2a3542,#8d9ba9 48%,#293541);}
+.npc-character-npc-step-keeper .npc-hood{background:linear-gradient(135deg,#d6b46f,#514027 75%);border-color:#f1d99c;}
+.npc-character-npc-step-keeper:before{left:11px;top:-7px;width:34px;height:20px;border:2px solid #e8cf8d;border-bottom:0;border-radius:50% 50% 0 0;box-shadow:0 0 10px #d9b86b;}
+.npc-character-npc-step-keeper .npc-body{background:linear-gradient(90deg,#352918,#b58c43 48%,#352918);}
+.npc-character-npc-quest-registrar .npc-hood{background:linear-gradient(135deg,#9d7cbb,#32213f 75%);border-color:#e2c9e7;}
+.npc-character-npc-quest-registrar:before{left:27px;top:-10px;width:4px;height:25px;background:#e8d8ad;transform:rotate(24deg);}
+.npc-character-npc-quest-registrar .npc-body{background:linear-gradient(90deg,#261b32,#76518b 48%,#261b32);}
+.npc-character-npc-gribnik .gribnik-art{width:100%;height:100%;object-fit:contain;}
+
+
+/* Facility-specific display plinths: presentation-only scenery, independent of item values. */
+.facility-prop-bag{background:linear-gradient(180deg,#4b3826,#20170f);border-color:#b98a4b;border-bottom-color:#74502c;box-shadow:0 5px 10px #000b,inset 0 0 13px #d9a04a22;}
+.facility-prop-bag:after{content:"";position:absolute;bottom:-4px;left:12%;right:12%;height:5px;background:repeating-linear-gradient(90deg,#b78b4c 0 5px,#44301b 5px 9px);}
+.facility-prop-shop{background:linear-gradient(180deg,#624126,#21160f);border-color:#d9a85e;border-bottom-color:#8a5729;box-shadow:0 5px 10px #000b,inset 0 0 14px #e8b35a33;}
+.facility-prop-shop:after{content:"";position:absolute;left:15%;right:15%;top:9px;height:2px;background:repeating-linear-gradient(90deg,#f2d08b 0 3px,transparent 3px 8px);}
+.facility-prop-forge{background:linear-gradient(180deg,#692d20,#21100e);border-color:#ec8150;border-bottom-color:#7d3022;box-shadow:0 5px 10px #000b,inset 0 0 16px #f05d2c33;}
+.facility-prop-forge:after{content:"";position:absolute;left:8%;right:8%;bottom:6px;height:3px;background:linear-gradient(90deg,transparent,#ff9b50,transparent);box-shadow:0 0 9px #f06a36;}
+.facility-prop-alchemy{background:linear-gradient(180deg,#245342,#101d1a);border-color:#83d0a8;border-bottom-color:#326b54;box-shadow:0 5px 10px #000b,inset 0 0 16px #6be1ac33;}
+.facility-prop-alchemy:after{content:"";position:absolute;left:12%;right:12%;top:8px;height:3px;border-radius:50%;background:#a8f4c7;box-shadow:0 0 8px #72e8ad;}
+.facility-prop-pets{background:linear-gradient(180deg,#435b32,#172014);border-color:#b5d18a;border-bottom-color:#536f3c;box-shadow:0 5px 10px #000b,inset 0 0 14px #a9cf7033;}
+.facility-prop-pets:after{content:"";position:absolute;left:18%;right:18%;bottom:7px;height:7px;border-radius:50%;border:1px dashed #c6db94;}
+.facility-prop-relics{background:linear-gradient(180deg,#34486d,#111a2b);border-color:#a9c9ef;border-bottom-color:#536e9c;box-shadow:0 5px 10px #000b,inset 0 0 15px #77a7ed33;}
+.facility-prop-relics:after{content:"";position:absolute;left:50%;bottom:7px;width:24px;height:24px;transform:translateX(-50%) rotate(45deg);border:1px solid #b8d8ff66;}
+.facility-prop-armory{background:linear-gradient(180deg,#485461,#171e26);border-color:#c3d0dc;border-bottom-color:#687a8c;box-shadow:0 5px 10px #000b,inset 0 0 14px #b7cbe033;}
+.facility-prop-armory:after{content:"";position:absolute;left:10%;right:10%;bottom:8px;height:4px;background:repeating-linear-gradient(90deg,#c6d0dc 0 2px,transparent 2px 7px);}
+.facility-prop-rewards{background:linear-gradient(180deg,#5b4728,#21170d);border-color:#f0d18b;border-bottom-color:#896b36;box-shadow:0 5px 10px #000b,inset 0 0 15px #f3d28b33;}
+.facility-prop-rewards:after{content:"";position:absolute;left:50%;top:7px;width:20px;height:20px;transform:translateX(-50%);border:1px solid #f6dfab;border-radius:50%;box-shadow:0 0 8px #eacb7b66;}
+.facility-prop-shop .prop-art,.facility-prop-bag .prop-art,.facility-prop-forge .prop-art,.facility-prop-alchemy .prop-art,.facility-prop-pets .prop-art,.facility-prop-relics .prop-art,.facility-prop-armory .prop-art,.facility-prop-rewards .prop-art{position:relative;z-index:1;}
+@media(max-width:390px){.facility-prop-shop:after,.facility-prop-bag:after,.facility-prop-forge:after,.facility-prop-alchemy:after,.facility-prop-pets:after,.facility-prop-relics:after,.facility-prop-armory:after,.facility-prop-rewards:after{opacity:.75;}}
+
+
+/* Facility architecture identity pass: subtle structural silhouettes behind the room contents. */
+[data-facility-scene] .facility-layer-architecture:before,[data-facility-scene] .facility-layer-architecture:after{content:"";position:absolute;pointer-events:none;}
+[data-facility-scene="bag"] .facility-layer-architecture:before{inset:8% 7% 0;background:linear-gradient(90deg,#c6a36a44 0 3px,transparent 3px 18%,#c6a36a33 18% 19%,transparent 19% 81%,#c6a36a33 81% 82%,transparent 82% 97%,#c6a36a44 97%);border-top:2px solid #c6a36a44;}
+[data-facility-scene="bag"] .facility-layer-architecture:after{left:50%;top:8%;width:30%;height:34%;transform:translateX(-50%);border:2px solid #c6a36a33;border-bottom:0;border-radius:48% 48% 0 0;}
+[data-facility-scene="shop"] .facility-layer-architecture:before{inset:12% 5% 0;background:repeating-linear-gradient(90deg,transparent 0 23%,#e5b96b22 23.3% 23.8%,transparent 24% 48%);border-top:3px solid #e5b96b33;}
+[data-facility-scene="shop"] .facility-layer-architecture:after{left:12%;right:12%;top:18%;height:7%;border-top:2px solid #e5b96b33;border-bottom:1px solid #e5b96b22;}
+[data-facility-scene="forge"] .facility-layer-architecture:before{inset:0 8% 0;background:linear-gradient(90deg,#e9794822 0 4px,transparent 4px 22%,#e9794822 22% 23%,transparent 23% 77%,#e9794822 77% 78%,transparent 78% 96%,#e9794822 96%);}
+[data-facility-scene="forge"] .facility-layer-architecture:after{left:35%;right:35%;top:0;height:48%;border:3px solid #e9794822;border-bottom:0;border-radius:50% 50% 0 0;box-shadow:0 0 18px #e9794818;}
+[data-facility-scene="alchemy"] .facility-layer-architecture:before{inset:10% 9% 0;background:linear-gradient(90deg,#86d9ae22 0 2px,transparent 2px 30%,#86d9ae22 30% 31%,transparent 31% 69%,#86d9ae22 69% 70%,transparent 70% 98%);border-top:1px solid #86d9ae33;}
+[data-facility-scene="alchemy"] .facility-layer-architecture:after{left:50%;top:10%;width:42%;height:40%;transform:translateX(-50%);border:1px solid #86d9ae33;border-radius:45% 45% 8px 8px;box-shadow:inset 0 0 20px #86d9ae0d;}
+[data-facility-scene="pets"] .facility-layer-architecture:before{inset:9% 8% 0;background:linear-gradient(90deg,#b9d58a22 0 3px,transparent 3px 24%,#b9d58a22 24% 25%,transparent 25% 75%,#b9d58a22 75% 76%,transparent 76% 97%,#b9d58a22 97%);border-top:2px solid #b9d58a22;}
+[data-facility-scene="pets"] .facility-layer-architecture:after{left:20%;right:20%;top:9%;height:29%;border:2px solid #b9d58a22;border-bottom:0;border-radius:50% 50% 0 0;}
+[data-facility-scene="relics"] .facility-layer-architecture:before{inset:7% 6% 0;background:linear-gradient(90deg,#9bc8ff22 0 3px,transparent 3px 19%,#9bc8ff22 19% 20%,transparent 20% 80%,#9bc8ff22 80% 81%,transparent 81% 97%,#9bc8ff22 97%);border-top:2px solid #9bc8ff33;}
+[data-facility-scene="relics"] .facility-layer-architecture:after{left:39%;right:39%;top:8%;height:48%;border:2px solid #9bc8ff22;border-bottom:0;clip-path:polygon(50% 0,100% 18%,100% 100%,0 100%,0 18%);}
+[data-facility-scene="armory"] .facility-layer-architecture:before{inset:6% 6% 0;background:repeating-linear-gradient(90deg,transparent 0 17%,#c1cedb22 17.3% 18%,transparent 18.3% 34%);border-top:3px solid #c1cedb33;}
+[data-facility-scene="armory"] .facility-layer-architecture:after{left:8%;right:8%;top:18%;height:4px;background:linear-gradient(90deg,transparent,#c1cedb33 15% 85%,transparent);box-shadow:0 22px 0 #c1cedb1c,0 44px 0 #c1cedb14;}
+[data-facility-scene="rewards"] .facility-layer-architecture:before{inset:5% 8% 0;background:linear-gradient(90deg,#f0d18b33 0 3px,transparent 3px 20%,#f0d18b22 20% 21%,transparent 21% 79%,#f0d18b22 79% 80%,transparent 80% 97%,#f0d18b33 97%);border-top:2px solid #f0d18b44;}
+[data-facility-scene="rewards"] .facility-layer-architecture:after{left:30%;right:30%;top:5%;height:40%;border:2px solid #f0d18b33;border-bottom:0;border-radius:50% 50% 0 0;box-shadow:0 0 18px #f0d18b12;}
+@media(max-width:390px){[data-facility-scene] .facility-layer-architecture:before{opacity:.65;}[data-facility-scene] .facility-layer-architecture:after{opacity:.7;}}
+
+
+/* Location-aware lighting and atmosphere pass. All effects remain separate presentation layers. */
+[data-facility-scene] .facility-layer-light{opacity:.16;filter:blur(20px);}
+[data-facility-scene] .interior-light{opacity:.48;filter:blur(29px);}
+[data-facility-scene="bag"] .facility-layer-light{background:radial-gradient(ellipse at 50% 22%,#e7bd78 0,transparent 30%),radial-gradient(ellipse at 12% 68%,#b77c3b55 0,transparent 24%);opacity:.18;}
+[data-facility-scene="bag"] .interior-light{background:#d6a45e;opacity:.34;}
+[data-facility-scene="bag"] .interior-atmosphere i{background:#d9b77d;box-shadow:0 0 5px 1px #b8864a;}
+[data-facility-scene="shop"] .facility-layer-light{background:radial-gradient(ellipse at 50% 12%,#f2c77b 0,transparent 28%),radial-gradient(ellipse at 82% 48%,#d18a3d55 0,transparent 22%);opacity:.2;}
+[data-facility-scene="shop"] .interior-light{background:#e6b768;opacity:.4;}
+[data-facility-scene="shop"] .interior-atmosphere i{width:3px;height:3px;background:#f5d48d;box-shadow:0 0 7px 2px #c28b42;}
+[data-facility-scene="forge"] .facility-layer-light{background:radial-gradient(ellipse at 50% 74%,#f26a35 0,transparent 36%),radial-gradient(ellipse at 22% 25%,#e99a4d66 0,transparent 20%);opacity:.24;}
+[data-facility-scene="forge"] .interior-light{background:#f06a36;opacity:.55;filter:blur(34px);}
+[data-facility-scene="forge"] .interior-atmosphere i{width:3px;height:5px;border-radius:50%;background:#ff9a4e;box-shadow:0 0 8px 2px #ed6234;}
+[data-facility-scene="alchemy"] .facility-layer-light{background:radial-gradient(ellipse at 50% 28%,#8de8ba 0,transparent 30%),radial-gradient(ellipse at 84% 76%,#4ec99a55 0,transparent 24%);opacity:.2;}
+[data-facility-scene="alchemy"] .interior-light{background:#7de0b0;opacity:.38;filter:blur(32px);}
+[data-facility-scene="alchemy"] .interior-atmosphere i{width:5px;height:5px;background:#a4f2c9;box-shadow:0 0 9px 2px #4fce9a;border-radius:35% 65% 55% 45%;}
+[data-facility-scene="pets"] .facility-layer-light{background:radial-gradient(ellipse at 50% 20%,#c5df8e 0,transparent 31%),radial-gradient(ellipse at 18% 78%,#8cbf6b55 0,transparent 24%);opacity:.19;}
+[data-facility-scene="pets"] .interior-light{background:#b4d47e;opacity:.34;}
+[data-facility-scene="pets"] .interior-atmosphere i{width:3px;height:3px;background:#d5e9a6;box-shadow:0 0 8px 2px #a4c875;}
+[data-facility-scene="relics"] .facility-layer-light{background:radial-gradient(ellipse at 50% 22%,#9bc8ff 0,transparent 29%),radial-gradient(ellipse at 50% 82%,#628ee255 0,transparent 26%);opacity:.21;}
+[data-facility-scene="relics"] .interior-light{background:#8ab8f4;opacity:.42;}
+[data-facility-scene="relics"] .interior-atmosphere i{width:2px;height:6px;border-radius:1px;background:#c1dcff;box-shadow:0 0 8px 2px #7eaff2;}
+[data-facility-scene="armory"] .facility-layer-light{background:radial-gradient(ellipse at 50% 16%,#c4d3e4 0,transparent 27%),radial-gradient(ellipse at 10% 80%,#849bb655 0,transparent 24%);opacity:.17;}
+[data-facility-scene="armory"] .interior-light{background:#a9bdd3;opacity:.31;}
+[data-facility-scene="armory"] .interior-atmosphere i{width:2px;height:2px;background:#d5e1ed;box-shadow:0 0 5px 1px #9cb4cf;}
+[data-facility-scene="rewards"] .facility-layer-light{background:radial-gradient(ellipse at 50% 14%,#f5d98e 0,transparent 32%),radial-gradient(ellipse at 50% 75%,#d9a84d55 0,transparent 25%);opacity:.23;}
+[data-facility-scene="rewards"] .interior-light{background:#edca79;opacity:.43;}
+[data-facility-scene="rewards"] .interior-atmosphere i{width:3px;height:3px;background:#ffe8a9;box-shadow:0 0 9px 2px #d8ac57;}
+[data-facility-scene] .interior-atmosphere i:nth-child(3n){animation-duration:7.5s;}
+[data-facility-scene] .interior-atmosphere i:nth-child(3n + 1){animation-duration:5.2s;}
+@media(prefers-reduced-motion:reduce){[data-facility-scene] .interior-atmosphere i{animation:none;opacity:.28;}[data-facility-scene] .interior-light{filter:blur(22px);}}
+@media(max-width:390px){[data-facility-scene] .facility-layer-light{opacity:.13;}[data-facility-scene] .interior-light{opacity:.28;}}
+
+/* Approved environment art slots sit inside their matching independently movable scene layer. */
+.facility-art-slot-image{position:absolute;inset:0;display:block;width:100%;height:100%;max-width:none;max-height:none;pointer-events:none;user-select:none;object-position:center center;}
+.facility-layer-backdrop>.facility-art-slot-image{object-fit:cover;}
+.facility-layer-stone>.facility-art-slot-image{mix-blend-mode:soft-light;opacity:.42;}
+.facility-layer-light>.facility-art-slot-image{mix-blend-mode:screen;opacity:.65;filter:blur(2px);}
+.facility-layer-architecture>.facility-art-slot-image,.facility-layer-midground>.facility-art-slot-image,.facility-layer-foreground>.facility-art-slot-image{object-fit:contain;object-position:center bottom;}
+
+
+/* Navigation-anchored AI orb: keep the orb in its tab slot and let speech expand below the tabs. */
+.main-nav{
+ display:grid!important;
+ grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ grid-template-rows:auto!important;
+ align-items:start!important;
+ overflow:visible!important;
+ transition:min-height .38s cubic-bezier(.2,.75,.25,1),padding-bottom .38s cubic-bezier(.2,.75,.25,1);
+}
+.main-nav>[data-page="home"]{grid-column:1;grid-row:1}
+.main-nav>[data-page="combat"]{grid-column:2;grid-row:1}
+.main-nav>[data-page="facilities"]{grid-column:3;grid-row:1}
+.main-nav>[data-page="quests"]{grid-column:5;grid-row:1}
+.main-nav>[data-more-toggle]{grid-column:6;grid-row:1}
+#dungeon-assistant-host:not(.assistant-open){
+ position:relative!important;
+ inset:auto!important;
+ right:auto!important;
+ bottom:auto!important;
+ left:auto!important;
+ transform:none!important;
+ z-index:55!important;
+ grid-column:4!important;
+ grid-row:1!important;
+ justify-self:stretch!important;
+ align-self:start!important;
+ width:100%!important;
+ height:58px!important;
+ min-width:0!important;
+ margin:0!important;
+ padding:0!important;
+ transition:height .42s cubic-bezier(.2,.75,.25,1)!important;
+}
+#dungeon-assistant-host:not(.assistant-open).has-quip{height:104px!important}
+#dungeon-assistant-host:not(.assistant-open) .dungeon-assistant{display:block!important;position:static!important;width:100%!important;height:100%!important}
+#dungeon-assistant-host:not(.assistant-open) .assistant-launcher{
+ position:absolute!important;top:0!important;left:50%!important;right:auto!important;bottom:auto!important;
+ width:60px!important;height:58px!important;min-height:58px!important;
+ transform:translateX(-50%)!important;margin:0!important;padding:0!important;
+ display:grid!important;place-items:center!important;
+}
+#dungeon-assistant-host:not(.assistant-open) .assistant-launcher-sigil{width:58px!important;height:58px!important}
+#dungeon-assistant-host:not(.assistant-open) .assistant-idle-quip{
+ display:block!important;position:absolute!important;
+ left:calc(-300% - 12px)!important;right:auto!important;bottom:5px!important;
+ width:calc(600% + 24px)!important;max-width:none!important;
+ min-height:34px!important;margin:0!important;padding:8px 12px!important;
+ box-sizing:border-box!important;text-align:left!important;
+ border:1px solid #55c9ff!important;border-radius:10px!important;
+ background:linear-gradient(100deg,#101a30f5,#17112bf5)!important;
+ color:#e4f5ff!important;font-size:11px!important;line-height:1.35!important;
+ opacity:0!important;visibility:hidden!important;
+ transform:translateY(-5px)!important;pointer-events:none!important;
+ transition:opacity .28s ease,transform .38s cubic-bezier(.2,.75,.25,1),visibility .28s!important;
+}
+#dungeon-assistant-host:not(.assistant-open) .assistant-idle-quip:after{display:none!important}
+#dungeon-assistant-host:not(.assistant-open) .assistant-idle-quip.is-visible{
+ opacity:1!important;visibility:visible!important;transform:translateY(0)!important
+}
+#dungeon-assistant-host:not(.assistant-open) .assistant-window{display:none!important}
+#dungeon-assistant-host.assistant-open{position:fixed!important;right:max(16px,env(safe-area-inset-right))!important;bottom:max(18px,env(safe-area-inset-bottom))!important;left:auto!important;top:auto!important;z-index:1200!important}
+#dungeon-assistant-host.assistant-open .assistant-idle-quip{display:none!important}
+@media(max-width:600px){
+ .main-nav{column-gap:3px!important;padding-left:7px!important;padding-right:7px!important}
+ .main-nav button{min-width:0!important;padding-left:1px!important;padding-right:1px!important}
+ .main-nav button small{font-size:clamp(6px,1.7vw,8px)!important;letter-spacing:.2px!important}
+ #dungeon-assistant-host:not(.assistant-open) .assistant-idle-quip{font-size:10px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .main-nav,#dungeon-assistant-host:not(.assistant-open),#dungeon-assistant-host:not(.assistant-open) .assistant-idle-quip{transition:none!important}
+}
+
+/* Page back controls sit inside each tab's title row instead of consuming a separate row. */
+/* Back controls overlay the top-right corner of the page's own title section. */
+.duo-title-back-host{position:relative!important;display:block!important;min-width:0!important}
+.duo-title-back-host>.duo-page-backbar{position:absolute!important;top:14px!important;right:14px!important;left:auto!important;bottom:auto!important;z-index:20!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;margin:0!important;padding:0!important;min-height:0!important;width:auto!important}
+.duo-title-back-host>.duo-page-backbar .duo-back-button{min-height:32px!important;padding:6px 10px!important;white-space:nowrap!important}
+.duo-page-backbar-fallback{display:flex;justify-content:flex-end;align-items:center;margin:0 0 8px;min-height:30px}
+@media(max-width:480px){.duo-title-back-host>.duo-page-backbar{top:12px!important;right:12px!important}.duo-title-back-host>.duo-page-backbar .duo-back-button{min-height:30px!important;padding:5px 8px!important;font-size:8px!important}}
+/* Shared page-title coverage: position Back within the complete hero/header, never its text column. */
+#app>.rpg-page>.rpg-hero,
+#app>.haven-hub>.haven-hero,
+#app>.haven-hub>.haven-section-heading,
+#app>.facility-heading,
+#app>.vault-overview>.vault-title,
+#app>.market-overview,
+#app>.armory-hero,
+#app>.section-title,
+#app>.descent-heading,
+#app>.market-section-heading{position:relative!important}
+#app .duo-title-back-host{display:block!important;min-width:0!important}
+#app .duo-title-back-host>.duo-page-backbar{z-index:30!important}
+
+
+/* Vault density pass: keep useful resources visible with less vertical travel. */
+.vault-overview{padding:11px;margin:5px 0 8px;border-radius:12px}
+.vault-title h2{font-size:18px;margin:2px 0}
+.vault-title p{font-size:9px;line-height:1.35}
+.vault-chest-mark{width:42px;height:42px;border-radius:10px;font-size:25px}
+.vault-stat-row{gap:4px;margin-top:8px}
+.vault-stat-row>div{padding:6px 2px;border-radius:7px}
+.vault-stat-row b{font-size:15px}
+.vault-stat-row small{margin-top:2px;font-size:5.5px;letter-spacing:.25px}
+.vault-materials{margin:7px 0 9px;padding:8px 9px;border-radius:10px}
+.vault-materials .vault-section-head{margin:0 1px 4px}
+.vault-materials .vault-section-head h3{font-size:12px;margin:1px 0}
+.vault-materials .material-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:5px 0 0}
+.vault-materials .material-chip{padding:5px 2px;border-radius:7px}
+.vault-materials .material-chip span{font-size:13px}
+.vault-materials .material-chip b{font-size:12px;margin:1px 0}
+.vault-materials .material-chip small{font-size:5.5px;letter-spacing:0}
+.vault-equipped-strip{padding:8px;margin-bottom:8px;border-radius:10px}
+.vault-mini-slots{gap:5px;margin-top:6px}
+.vault-mini-slot{padding:6px 3px;gap:3px;border-radius:8px}
+.vault-mini-slot>span{font-size:18px}
+.vault-mini-slot b{font-size:7px}
+.vault-section-head{margin:8px 1px 5px}
+.vault-section-head h3{font-size:13px}
+.vault-filters{gap:4px;padding:1px 0 6px}
+.vault-filters .pill{padding:5px 8px;font-size:7px}
+.loot-grid{gap:7px}
+@media(max-width:620px){
+  .vault-overview{padding:9px}
+  .vault-title h2{font-size:17px}
+  .vault-materials{padding:7px}
+  .vault-materials .material-chip{padding:4px 1px}
+}
+
+/* Approved Haven NPC portraits use their dedicated FLUX source art; Gribnik remains on legacy artwork. */
+#app .npc-dedicated-art{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 8px 14px #000b);user-select:none;pointer-events:none}
+
+
+/* Final shell contract: navigation sits directly below the header.
+   Six visible positions keep the Orb at the true center while retaining Logbook. */
+html body .shell>header{
+ position:relative!important;top:auto!important;inset:auto!important;
+ display:flex!important;width:auto!important;min-height:60px!important;
+ margin:0 calc(clamp(11px,2.5vw,22px)*-1) 8px!important;
+}
+html body .shell>nav.main-nav{
+ position:relative!important;top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;
+ transform:none!important;display:grid!important;
+ grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ grid-template-rows:58px!important;grid-template-areas:"home hunt orb haven logbook more"!important;
+ align-items:center!important;justify-items:stretch!important;
+ width:100%!important;max-width:none!important;height:64px!important;min-height:64px!important;
+ margin:0 0 12px!important;padding:3px 6px!important;overflow:visible!important;
+}
+html body .shell>nav.main-nav>[data-page="home"]{grid-area:home!important;grid-column:auto!important;grid-row:1!important}
+html body .shell>nav.main-nav>[data-page="combat"]{grid-area:hunt!important;grid-column:auto!important;grid-row:1!important}
+html body .shell>nav.main-nav>#dungeon-assistant-host:not(.assistant-open){
+ grid-area:orb!important;grid-column:auto!important;grid-row:1!important;
+ position:relative!important;inset:auto!important;transform:none!important;
+ display:block!important;justify-self:stretch!important;align-self:center!important;
+ width:100%!important;height:58px!important;min-width:0!important;margin:0!important;padding:0!important;
+}
+html body .shell>nav.main-nav>[data-page="facilities"]{grid-area:haven!important;grid-column:auto!important;grid-row:1!important}
+html body .shell>nav.main-nav>[data-page="quests"]{grid-area:logbook!important;grid-column:auto!important;grid-row:1!important}
+html body .shell>nav.main-nav>[data-more-toggle]{grid-area:more!important;grid-column:auto!important;grid-row:1!important}
+html body .shell>nav.main-nav>#dungeon-assistant-host:not(.assistant-open) .dungeon-assistant{
+ display:block!important;position:static!important;width:100%!important;height:100%!important;
+}
+html body .shell>nav.main-nav>#dungeon-assistant-host:not(.assistant-open) .assistant-launcher{
+ position:absolute!important;top:50%!important;left:50%!important;right:auto!important;bottom:auto!important;
+ transform:translate(-50%,-50%)!important;width:48px!important;height:48px!important;min-height:48px!important;
+ margin:0!important;padding:0!important;display:grid!important;place-items:center!important;
+}
+html body .shell>nav.main-nav>#dungeon-assistant-host:not(.assistant-open) .assistant-launcher-sigil,
+html body .shell>nav.main-nav>#dungeon-assistant-host:not(.assistant-open) .assistant-launcher-sigil canvas{
+ width:44px!important;height:44px!important;
+}
+html body .shell>nav.main-nav>#dungeon-assistant-host.assistant-open{
+ position:fixed!important;right:max(16px,env(safe-area-inset-right))!important;
+ bottom:max(18px,env(safe-area-inset-bottom))!important;left:auto!important;top:auto!important;
+ z-index:1200!important;
+}
+@media(max-width:430px){
+ html body .shell>nav.main-nav{grid-template-rows:54px!important;height:60px!important;min-height:60px!important;padding-inline:3px!important;gap:1px!important}
+ html body .shell>nav.main-nav>#dungeon-assistant-host:not(.assistant-open){height:52px!important}
+ html body .shell>nav.main-nav>#dungeon-assistant-host:not(.assistant-open) .assistant-launcher{width:42px!important;height:42px!important;min-height:42px!important}
+ html body .shell>nav.main-nav>#dungeon-assistant-host:not(.assistant-open) .assistant-launcher-sigil,
+ html body .shell>nav.main-nav>#dungeon-assistant-host:not(.assistant-open) .assistant-launcher-sigil canvas{width:38px!important;height:38px!important}
+}
+
+
 /* Login artwork integration — Preview only. Artwork is served from the public-assets bucket. */
 .auth-overlay{
  isolation:isolate;overflow-y:auto;align-items:center;
@@ -1845,128 +3067,272 @@ dialog:has(.duo-back-button.dialog){padding-top:52px}
 @media(prefers-reduced-motion:reduce){.auth-card *{scroll-behavior:auto!important}}
 
 /* Reuse the remaining matching component frames only on controls that already exist. */
-.auth-card .auth-input-panel:first-of-type{background-image:linear-gradient(#171318d9,#171318e8),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/login/panels/login-input-panel.png");background-size:cover;background-position:center}
-.auth-card .auth-input-panel:nth-of-type(2){background-image:linear-gradient(#171318d9,#171318e8),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/login/panels/login-password-panel.png");background-size:cover;background-position:center}
-.auth-card .auth-message{padding:9px 12px;border:1px solid #80634b;border-radius:9px;background:linear-gradient(#171318d9,#171318e8),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/login/panels/login-message-panel.png") center/cover}
-.auth-card #auth-submit{background-image:linear-gradient(#d7b77855,#9b6b3455),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/login/buttons/login-primary.png");background-size:100% 100%;background-position:center}
-.auth-card #guest-button{background-image:linear-gradient(#2a202055,#17131855),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/login/buttons/continue.png");background-size:100% 100%;background-position:center}
-.auth-card #auth-forgot{border:1px solid #8a6b4d;border-radius:8px;padding:10px 14px;color:#e4c58f;background:linear-gradient(#17131866,#17131866),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/login/buttons/forgot-password.png") center/100% 100%}
-.auth-card #auth-resend{background-image:linear-gradient(#2a202055,#17131855),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/login/buttons/sign-up.png");background-size:100% 100%}
-.auth-card .auth-decoration img{content:url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/login/decorations/login-divider-secondary.png")}
+.auth-card .auth-input-panel:first-of-type{background-image:linear-gradient(#171318d9,#171318e8),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Panels/login-input-panel.png");background-size:cover;background-position:center}
+.auth-card .auth-input-panel:nth-of-type(2){background-image:linear-gradient(#171318d9,#171318e8),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Panels/login-password-panel.png");background-size:cover;background-position:center}
+.auth-card .auth-message{padding:9px 12px;border:1px solid #80634b;border-radius:9px;background:linear-gradient(#171318d9,#171318e8),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Panels/login-message-panel.png") center/cover}
+.auth-card #auth-submit{background-image:linear-gradient(#d7b77855,#9b6b3455),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Buttons/login-primary.png");background-size:100% 100%;background-position:center}
+.auth-card #guest-button{background-image:linear-gradient(#2a202055,#17131855),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Buttons/continue.png");background-size:100% 100%;background-position:center}
+.auth-card #auth-forgot{border:1px solid #8a6b4d;border-radius:8px;padding:10px 14px;color:#e4c58f;background:linear-gradient(#17131866,#17131866),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Buttons/forgot-password.png") center/100% 100%}
+.auth-card #auth-resend{background-image:linear-gradient(#2a202055,#17131855),url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Buttons/sign-up.png");background-size:100% 100%}
+.auth-card .auth-decoration img{content:url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Decoration/login-divider-secondary.png")}
 
 
-/* LoginV2: one full-screen authored composition with only functional controls layered on top. */
-.auth-overlay{
- position:fixed!important;inset:0!important;z-index:9999!important;
- display:flex!important;align-items:center!important;justify-content:center!important;
- overflow:auto!important;padding:0!important;margin:0!important;
- background:#080b10!important;backdrop-filter:none!important;isolation:isolate!important;
+/* Login artwork polish: preserve the source art's contrast and avoid doubled baked-in button lettering. */
+.auth-backdrop{opacity:1}
+.auth-overlay:before{background:linear-gradient(180deg,#08070b18,#08070b48 72%,#08070b78)}
+.auth-card .auth-input-panel:first-of-type,
+.auth-card .auth-input-panel:nth-of-type(2){
+  background-color:#171318;
+  background-image:url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Panels/login-input-panel.png");
+  background-size:100% 100%;background-repeat:no-repeat;background-position:center;
 }
-.auth-overlay:before{display:none!important}
-.auth-backdrop,.auth-title-plaque,.auth-login-orb,.auth-decoration{display:none!important}
-.auth-card{
- position:relative!important;display:block!important;
- width:min(100vw,66.6667dvh)!important;max-width:none!important;
- aspect-ratio:2/3!important;height:auto!important;max-height:none!important;
- overflow:visible!important;padding:0!important;margin:0 auto!important;
- border:0!important;border-radius:0!important;background:transparent!important;
- box-shadow:none!important;
+.auth-card .auth-input-panel:nth-of-type(2){
+  background-image:url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Panels/login-password-panel.png");
 }
-.auth-login-v2-art{
- position:absolute!important;inset:0!important;display:block!important;
- width:100%!important;height:100%!important;object-fit:contain!important;
+.auth-card .auth-message{
+  background-color:#171318;
+  background-image:url("https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Panels/login-message-panel.png");
+  background-size:100% 100%;background-repeat:no-repeat;background-position:center;
 }
-.auth-v2-live{position:absolute!important;inset:0!important;z-index:3!important}
-.auth-v2-live form{position:absolute!important;inset:0!important;margin:0!important}
-.auth-v2-field{position:absolute!important;left:25.5%!important;width:49%!important;height:4.2%!important}
-.auth-v2-email{top:39.2%!important}
-.auth-v2-password{top:49.5%!important}
-.auth-v2-field input{
- display:block!important;box-sizing:border-box!important;
- width:100%!important;height:100%!important;min-height:0!important;
- margin:0!important;padding:0 3%!important;border:0!important;border-radius:7px!important;
- outline:none!important;background:rgba(8,12,19,.96)!important;
- color:#f7edda!important;font:500 clamp(10px,1.65vw,16px)/1.2 system-ui,sans-serif!important;
- box-shadow:inset 0 1px 7px #000b!important;
+.auth-card #auth-submit{
+  background-image:none!important;
+  background-color:#b9823f;
+  background:linear-gradient(180deg,#f0c77e 0%,#d39b4d 52%,#a86e31 100%)!important;
+  border:1px solid #edc77f!important;
+  color:#21160d!important;
+  box-shadow:inset 0 1px 0 #fff6c9,0 3px 10px #0008!important;
 }
-.auth-v2-field input:focus{outline:2px solid #55caff!important;outline-offset:2px!important}
-.auth-v2-field input::placeholder{color:#9a9da6!important}
-.auth-v2-submit{
- position:absolute!important;left:23.5%!important;top:59.5%!important;
- width:53%!important;height:6.4%!important;min-height:0!important;
- padding:0!important;border:0!important;background:transparent!important;
- box-shadow:none!important;opacity:1!important;cursor:pointer!important;
+
+
+/* Compact login fields: reduce the oversized framed controls on mobile and desktop. */
+.auth-card .auth-input-panel{
+  margin:7px 0!important;
+  padding:7px 10px 8px!important;
+  border-radius:10px;
 }
-.auth-v2-feedback{
- position:absolute!important;left:25%!important;top:68.5%!important;
- width:50%!important;min-height:2%!important;max-height:5%!important;
- overflow:auto!important;color:#f2d7a5!important;text-align:center!important;
- font:600 clamp(8px,1.2vw,12px)/1.35 system-ui,sans-serif!important;
- text-shadow:0 1px 3px #000!important;pointer-events:none!important;
+.auth-card .auth-input-panel label{
+  display:block;
+  margin:0 0 4px!important;
+  font-size:8px!important;
+  line-height:1.15!important;
+  letter-spacing:1.1px!important;
 }
-.auth-v2-resend{
- position:absolute!important;left:25%!important;top:81.5%!important;
- width:50%!important;height:5.5%!important;min-height:0!important;
- padding:0!important;border:0!important;background:transparent!important;
- color:transparent!important;font-size:0!important;box-shadow:none!important;
-}
-.auth-v2-mode{
- position:absolute!important;left:30%!important;top:94%!important;
- width:40%!important;display:flex!important;justify-content:center!important;gap:10px!important;
-}
-.auth-v2-mode button,.auth-v2-forgot,.auth-v2-guest,.auth-v2-back,.auth-v2-signout{
- min-height:0!important;padding:3px 5px!important;border:0!important;
- background:#10151dcc!important;color:#f1d7a7!important;
- font:700 8px/1.2 system-ui,sans-serif!important;letter-spacing:.3px!important;
-}
-.auth-v2-forgot{position:absolute!important;right:24%!important;top:72%!important}
-.auth-v2-guest{position:absolute!important;left:36%!important;top:90%!important;width:28%!important;opacity:0!important}
-.auth-v2-back,.auth-v2-signout{position:absolute!important;left:36%!important;top:90%!important;width:28%!important}
-.auth-v2-live .auth-small{position:absolute!important;left:20%!important;top:91%!important;width:60%!important;margin:0!important;color:#eadfcf!important;font-size:0!important}
-.auth-v2-live .platform-picker{
- position:absolute!important;left:18%!important;top:73%!important;width:64%!important;
- z-index:5!important;max-height:16%!important;overflow:auto!important;
- padding:8px!important;border:1px solid #b58a50!important;border-radius:8px!important;
- background:#10131af2!important;color:#f5e2c0!important;font-size:10px!important;
-}
-.auth-v2-live .platform-picker legend{font-size:9px!important}
-.auth-v2-live .platform-option{display:flex!important;align-items:center!important;gap:6px!important}
-.auth-v2-live .platform-option input{width:auto!important;height:auto!important}
-.auth-v2-live .platform-hint{font-size:8px!important}
-.auth-v2-live .auth-v2-mode{z-index:7!important}
-.auth-v2-live button:disabled{opacity:.45!important}
-@media(max-aspect-ratio:2/3){
- .auth-card{width:100vw!important;height:auto!important}
+.auth-card .auth-input-panel input{
+  min-height:38px!important;
+  height:38px!important;
+  padding:8px 11px!important;
+  font-size:14px!important;
+  line-height:1.2!important;
+  border-radius:7px!important;
 }
 @media(max-width:520px){
- .auth-v2-field input{font-size:13px!important}
- .auth-v2-feedback{font-size:9px!important}
+  .auth-card .auth-input-panel{margin:6px 0!important;padding:6px 9px 7px!important}
+  .auth-card .auth-input-panel label{font-size:7.5px!important;margin-bottom:3px!important}
+  .auth-card .auth-input-panel input{height:36px!important;min-height:36px!important;padding:7px 10px!important;font-size:14px!important}
 }
 
 
-/* LoginV2 center Orb — reuse the live in-game assistant Orb animation and tap response. */
-.auth-v2-live{z-index:3!important}
-.auth-v2-center-orb{
- position:absolute!important;left:44.4%!important;top:27.3%!important;
- display:grid!important;place-items:center!important;box-sizing:border-box!important;
- width:11.2%!important;height:7.5%!important;min-height:0!important;padding:0!important;
- border:1px solid #8bd9ff!important;border-radius:50%!important;
- background:radial-gradient(circle at 32% 24%,#58c7ff 0%,#167bc7 43%,#084078 100%)!important;
- color:#effaff!important;box-shadow:0 0 0 4px #168bd333,0 8px 28px #000a,inset 0 0 15px #d8f5ff66!important;
- overflow:visible!important;cursor:pointer!important;z-index:5!important;
- transition:background .2s,border-color .2s,box-shadow .2s!important;
+/* Fit the complete login experience inside short mobile viewports. */
+@media(max-width:520px){
+  .auth-overlay{
+    box-sizing:border-box!important;
+    min-height:100dvh!important;
+    height:100dvh!important;
+    overflow-y:auto!important;
+    align-items:center!important;
+    justify-content:center!important;
+    padding: max(8px,env(safe-area-inset-top)) 8px max(8px,env(safe-area-inset-bottom))!important;
+  }
+  .auth-card{
+    width:100%!important;
+    max-height:calc(100dvh - max(16px,env(safe-area-inset-top) + env(safe-area-inset-bottom)))!important;
+    overflow-y:auto!important;
+    padding:12px 13px!important;
+    margin:auto!important;
+  }
+  .auth-title-plaque{
+    width:min(76%,250px)!important;
+    max-height:76px!important;
+    margin:0 auto 3px!important;
+  }
+  .auth-login-orb{width:38px!important;right:8px!important;top:8px!important}
+  .auth-card .auth-sub{font-size:7px!important;line-height:1.25!important;margin:0 35px 7px!important}
+  .auth-card .auth-buttons{margin:6px 0 8px!important;gap:7px!important}
+  .auth-card .auth-buttons button,.auth-card .auth-wide{min-height:36px!important;padding:7px 9px!important}
+  .auth-card .auth-input-panel{margin:5px 0!important;padding:5px 8px 6px!important}
+  .auth-card .auth-input-panel label{font-size:7px!important;margin-bottom:2px!important}
+  .auth-card .auth-input-panel input{height:34px!important;min-height:34px!important;padding:6px 9px!important;font-size:14px!important}
+  .auth-card #auth-submit{min-height:38px!important;margin-top:2px!important}
+  .auth-card .auth-message{margin:7px 0!important;padding:7px 9px!important;font-size:11px!important;line-height:1.35!important}
+  .auth-card .auth-divider{margin:6px 0!important;font-size:9px!important}
+  .auth-card .auth-small{margin:6px 0!important;font-size:10px!important;line-height:1.3!important}
+  .auth-decoration{margin:5px auto 0!important}
+  .auth-decoration img{max-height:20px!important;width:min(72%,220px)!important}
 }
-.auth-v2-center-orb:before{content:"";position:absolute;inset:-5px;border:1px solid #55bfff55;border-radius:50%;transform:none;animation:assistant-orb-breathe 3.2s ease-in-out infinite;pointer-events:none}
-.auth-v2-center-orb:after{content:"";position:absolute;inset:4px;border:1px solid #e1f7ff77;border-radius:50%;pointer-events:none}
-.auth-v2-orb-sigil{position:relative;z-index:1;color:#fff;font:900 clamp(18px,3.4vw,34px)/1 system-ui,sans-serif;text-shadow:0 1px 9px #002e65;filter:drop-shadow(0 0 5px #d8f5ff)}
-.auth-v2-center-orb:active{transform:scale(.96)!important}
-.auth-v2-orb-reply{
- position:absolute!important;left:25%!important;top:36%!important;width:50%!important;z-index:6!important;
- box-sizing:border-box!important;padding:9px 12px!important;border:1px solid #65b9e8!important;border-radius:11px!important;
- background:linear-gradient(145deg,#12283df2,#111724f5)!important;color:#e8f6ff!important;
- font:700 clamp(9px,1.35vw,13px)/1.45 system-ui,sans-serif!important;text-align:center!important;
- box-shadow:0 8px 24px #000b,0 0 16px #168bd344!important;pointer-events:none!important;
+@media(max-height:740px) and (max-width:520px){
+  .auth-card{padding:9px 11px!important}
+  .auth-title-plaque{max-height:62px!important;width:min(70%,220px)!important}
+  .auth-card .auth-sub{margin-bottom:5px!important}
+  .auth-card .auth-buttons{margin:4px 0 6px!important}
+  .auth-card .auth-input-panel{margin:4px 0!important;padding:4px 7px 5px!important}
+  .auth-card .auth-input-panel input{height:31px!important;min-height:31px!important}
+  .auth-card .auth-message{margin:5px 0!important;padding:6px 8px!important}
+  .auth-card .auth-divider{margin:4px 0!important}
+  .auth-card .auth-small{margin:4px 0!important}
 }
-.auth-v2-orb-reply[hidden]{display:none!important}
-@keyframes assistant-orb-breathe{0%,100%{opacity:.35;transform:scale(.96)}50%{opacity:.85;transform:scale(1.06)}}
-@media(prefers-reduced-motion:reduce){.auth-v2-center-orb:before{animation:none!important;opacity:.5}}
+
+
+/* Final login input alignment and fit inside the ornate frame artwork. */
+.auth-card .auth-input-panel{
+  padding:6px 9px!important;
+}
+.auth-card .auth-input-panel label{
+  display:block!important;
+  width:100%!important;
+  text-align:center!important;
+  margin:0 auto 3px!important;
+}
+.auth-card .auth-input-panel input{
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  height:30px!important;
+  min-height:30px!important;
+  padding:5px 9px!important;
+  font-size:13px!important;
+  line-height:1.15!important;
+  border-width:1px!important;
+}
+@media(max-width:520px){
+  .auth-card .auth-input-panel{padding:5px 8px!important}
+  .auth-card .auth-input-panel label{text-align:center!important;margin-bottom:2px!important}
+  .auth-card .auth-input-panel input{
+    width:100%!important;height:28px!important;min-height:28px!important;
+    padding:4px 8px!important;font-size:13px!important;
+  }
+}
+
+
+
+
+
+
+/* LoginV2 fire, blue rune cracks, and ambient energy surges removed. */
+
+/* LoginV2 — single responsive artboard with live, accessible auth controls layered above it. */
+.auth-overlay{
+  position:fixed!important;inset:0!important;z-index:9999!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  overflow:auto!important;padding:0!important;margin:0!important;
+  background:#080b10!important;backdrop-filter:none!important;isolation:isolate!important;
+}
+.auth-overlay:before,.auth-backdrop,.auth-title-plaque,.auth-login-orb,.auth-decoration{display:none!important}
+.auth-card{
+  position:relative!important;display:block!important;
+  width:min(100vw,66.6667dvh)!important;max-width:100vw!important;
+  aspect-ratio:2/3!important;height:auto!important;max-height:none!important;
+  overflow:hidden!important;padding:0!important;margin:0 auto!important;
+  border:0!important;border-radius:0!important;background:#080b10!important;
+  background-image:none!important;box-shadow:none!important;
+}
+.auth-card>.auth-login-v2-art{
+  position:absolute!important;inset:0!important;z-index:0!important;
+  display:block!important;width:100%!important;height:100%!important;
+  object-fit:fill!important;object-position:center!important;
+  opacity:1!important;visibility:visible!important;
+}
+.auth-card>.auth-v2-live{position:absolute!important;inset:0!important;z-index:2!important}
+.auth-v2-live form{position:absolute!important;inset:0!important;margin:0!important}
+.auth-v2-field{
+  position:absolute!important;left:24.4%!important;width:51.5%!important;
+  height:6.1%!important;z-index:4!important;
+}
+.auth-v2-email{top:38.3%!important}
+.auth-v2-password{top:47.5%!important}
+.auth-v2-field label{
+  position:absolute!important;width:1px!important;height:1px!important;
+  padding:0!important;margin:-1px!important;overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;
+}
+.auth-v2-field input{
+  position:absolute!important;inset:0!important;display:block!important;
+  box-sizing:border-box!important;width:100%!important;height:100%!important;min-height:0!important;
+  margin:0!important;padding:0 3%!important;border:0!important;border-radius:8px!important;
+  outline:none!important;background:rgba(4,10,18,.92)!important;color:#fff2d9!important;
+  font:500 clamp(11px,1.65vw,16px)/1.2 system-ui,sans-serif!important;
+  box-shadow:inset 0 1px 7px #000b!important;
+}
+.auth-v2-field input:focus{
+  outline:2px solid rgba(85,202,255,.85)!important;outline-offset:1px!important;
+  background:rgba(4,10,18,.98)!important;
+}
+.auth-v2-field input::placeholder{color:#9a9da6!important}
+.auth-card #auth-submit.auth-v2-submit{
+  position:absolute!important;left:24.5%!important;top:59.5%!important;
+  width:52%!important;height:6.2%!important;min-height:0!important;
+  margin:0!important;padding:0!important;display:block!important;
+  border:0!important;border-radius:0!important;background:transparent!important;
+  background-image:none!important;color:transparent!important;font-size:0!important;line-height:0!important;
+  box-shadow:none!important;text-shadow:none!important;opacity:1!important;cursor:pointer!important;
+  -webkit-appearance:none!important;appearance:none!important;z-index:6!important;
+}
+.auth-v2-guest{
+  position:absolute!important;left:25.3%!important;top:72%!important;
+  width:49.5%!important;height:5.3%!important;min-height:0!important;
+  margin:0!important;padding:0!important;border:0!important;border-radius:14px!important;
+  background:transparent!important;background-image:none!important;color:transparent!important;
+  font-size:0!important;line-height:0!important;box-shadow:none!important;
+  opacity:0!important;pointer-events:auto!important;cursor:pointer!important;z-index:7!important;
+}
+.auth-v2-feedback{
+  position:absolute!important;left:22%!important;top:82%!important;width:56%!important;
+  min-height:0!important;max-height:6%!important;overflow:auto!important;
+  color:#f2d7a5!important;text-align:center!important;
+  font:600 clamp(8px,1.2vw,12px)/1.35 system-ui,sans-serif!important;
+  text-shadow:0 1px 3px #000!important;pointer-events:none!important;z-index:8!important;
+}
+.auth-v2-feedback:empty{display:none!important}
+.auth-v2-resend,.auth-v2-forgot,.auth-v2-back,.auth-v2-signout,.auth-buttons{display:none!important}
+.auth-v2-live .auth-small{position:absolute!important;left:20%!important;top:76%!important;width:60%!important;margin:0!important;font-size:0!important;line-height:0!important}
+.auth-v2-live:after{display:none!important;content:none!important}
+@media(max-width:520px){
+  .auth-v2-field input{font-size:13px!important}
+  .auth-v2-feedback{font-size:9px!important}
+}
+
+
+/* Removed obsolete fire and energy animation overrides. */
+
+
+/* Centered animated login Orb: reuse the exact procedural assistant smoke renderer. */
+.auth-v2-orb{position:absolute!important;left:50%!important;top:22%!important;transform:translateX(-50%)!important;display:grid!important;place-items:center!important;width:17%!important;max-width:76px!important;aspect-ratio:1!important;margin:0!important;padding:0!important;border:0!important;border-radius:50%!important;background:transparent!important;box-shadow:none!important;z-index:5!important;cursor:pointer!important;pointer-events:auto!important;-webkit-tap-highlight-color:transparent!important}
+.auth-v2-orb canvas{display:block!important;width:100%!important;height:100%!important;max-width:100%!important;object-fit:contain!important;background:transparent!important;pointer-events:none!important}
+.auth-v2-orb:focus-visible{outline:2px solid #e8c47e!important;outline-offset:4px!important}
+
+
+/* Login Orb refinement: seat the renderer inside the illustrated ring and make its replies feel spoken by the Orb. */
+.auth-v2-orb{top:15.5%!important}
+.auth-v2-feedback:not(:empty){
+  left:59%!important;top:17%!important;width:34%!important;
+  max-height:none!important;overflow:visible!important;
+  box-sizing:border-box!important;padding:8px 10px!important;
+  border:1px solid rgba(224,184,112,.72)!important;
+  border-radius:12px 12px 12px 3px!important;
+  background:linear-gradient(145deg,rgba(31,17,47,.97),rgba(9,13,25,.96))!important;
+  box-shadow:0 5px 18px rgba(0,0,0,.58),inset 0 0 12px rgba(151,79,224,.16)!important;
+  color:#f5dfb8!important;text-align:left!important;
+  font:600 clamp(8px,1.15vw,11px)/1.35 system-ui,sans-serif!important;
+  text-shadow:0 1px 3px #000!important;pointer-events:none!important;z-index:9!important;
+}
+.auth-v2-feedback:not(:empty)::before{
+  content:"";position:absolute;left:-8px;bottom:13px;width:0;height:0;
+  border-top:7px solid transparent;border-bottom:7px solid transparent;
+  border-right:8px solid rgba(224,184,112,.72);
+}
+@media(max-width:520px){
+  .auth-v2-feedback:not(:empty){padding:6px 8px!important;font-size:9px!important}
+}
+
+
