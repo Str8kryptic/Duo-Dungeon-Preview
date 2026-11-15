@@ -90,6 +90,7 @@ jobs:
           run_check "Application JavaScript syntax" node --check app.js
           run_check "Guild JavaScript syntax" node --check guild.js
           run_check "Adventurer's Guild tests" node scripts/test-guild.mjs
+          run_check "Activity progression rewards" node scripts/test-activity-progression.mjs
           run_check "Adventurer's Path tests" node scripts/test-adventurers-path.mjs
           run_check "Adventurer's Path JavaScript syntax" node --check adventurers-path.js
           run_check "Authentication JavaScript syntax" node --check auth.js
