@@ -165,7 +165,7 @@ async function loadAccount(u,afterSignup){
   initialSave.number=crawlerNumber;await persist(initialSave);localStorage.removeItem(CLAIM_KEY);
  }
  try{localStorage.setItem(OFFLINE_SAVE_PREFIX+user.id,JSON.stringify(initialSave));localStorage.setItem(OFFLINE_BASE_PREFIX+user.id,JSON.stringify(initialSave))}catch(storageError){}
- startIdleSessionWatch();root.classList.add("hidden");resolveReady();
+ lastActivityWrite=0;writeLastActivity();startIdleSessionWatch();root.classList.add("hidden");resolveReady();
  if(afterSignup){window.location.href=new URL("setup.html",window.location.href).href;return}
  if(new URLSearchParams(location.search).get("welcome")==="1"){window.location.replace(new URL("setup.html",window.location.href).href);return}
  if(window.__DUO_APP_READY__)window.location.reload();
