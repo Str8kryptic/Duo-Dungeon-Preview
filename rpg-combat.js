@@ -469,6 +469,11 @@
     state.guildStats.crafts = (Number(state.guildStats.crafts) || 0) + 1;
   }
 
+  function awardCraftingProgress(state, action) {
+    var ledger = typeof window !== "undefined" && window.DUO_ACTIVITY_ENGINE;
+    if (ledger && typeof ledger.awardCraftingXP === "function") ledger.awardCraftingXP(state, action);
+  }
+
   function craftPotion(state, r, hooks) {
     var materials = r.inventory.materials;
     if ((materials.bitter_herb || 0) < 2 || (materials.venom_gland || 0) < 1) {
@@ -479,6 +484,7 @@
     materials.venom_gland -= 1;
     r.inventory.potions += 1;
     recordCraftActivity(state);
+    awardCraftingProgress(state, "craft-healing");
     log(r, "Crafted 1 Field Healing Draught. The alchemist is only mildly alarmed.");
     notify(hooks, "Field Healing Draught crafted.");
     refresh(hooks);
@@ -503,6 +509,7 @@
     Object.keys(recipe.costs).forEach(function (id) { r.inventory.materials[id] -= recipe.costs[id]; });
     r.inventory.gear.push(item.id);
     recordCraftActivity(state);
+    awardCraftingProgress(state, "forge:" + item.id);
     log(r, "Forged " + item.name + ". The forge approves. The monster probably won't.");
     notify(hooks, item.name + " forged and added to your equipment pack.");
     refresh(hooks);
@@ -517,6 +524,7 @@
       r.inventory.consumables[recipe.id] = (Number(r.inventory.consumables[recipe.id]) || 0) + 1;
     }
     recordCraftActivity(state);
+    awardCraftingProgress(state, "brew:" + recipe.id);
     log(r, "Brewed " + recipe.name + ".");
     notify(hooks, recipe.name + " brewed.");
     refresh(hooks);
@@ -579,6 +587,7 @@
       Object.keys(staminaRecipe.costs).forEach(function (id) { r.inventory.materials[id] -= staminaRecipe.costs[id]; });
       r.stamina = Math.min(r.maxStamina, r.stamina + 25);
       recordCraftActivity(state);
+      awardCraftingProgress(state, "brew:stamina");
       log(r, "Used " + staminaRecipe.name + ". 25 stamina restored.");
       notify(hooks, "25 stamina restored.");
       refresh(hooks);
