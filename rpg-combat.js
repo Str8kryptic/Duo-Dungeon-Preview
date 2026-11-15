@@ -836,7 +836,7 @@
       collapsibleSection("ALCHEMY LAB", renderAlchemy(state, r), false) +
       collapsibleSection("SEALED LOOT", '<section class="rpg-subpanel"><div class="rpg-section-head"><div><div class="rpg-eyebrow">REWARD CACHE</div><h3>Sealed Loot</h3></div><span class="rpg-count">' + r.inventory.lootBoxes + ' CACHES</span></div><p class="rpg-section-hint">Monster loot caches contain equipment appropriate to your deepest unlocked floor.</p><button class="rpg-action-primary rpg-craft-button" data-rpg-action="open-cache" ' + (r.inventory.lootBoxes > 0 ? "" : "disabled") + '>◇ OPEN LOOT CACHE</button></section>', false) +
       collapsibleSection("EQUIPMENT & MATERIALS", renderInventory(r), false) +
-      '<p class="rpg-footnote">Combat uses stamina, never Step Power. Basic attacks run automatically while this page is open; you control special attacks, guarding, and healing.</p></div>';
+      '<p class="rpg-footnote">Combat uses stamina. Basic attacks run automatically while this page is open; you control special attacks, guarding, and healing.</p></div>';
   }
   window.DUO_RPG_COMBAT = {
     ensure: ensure,
