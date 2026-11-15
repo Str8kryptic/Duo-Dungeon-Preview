@@ -1,27 +1,27 @@
 // Exact catalog, relics, milestone rewards, and item-specific AI descriptions extracted from the recovered Scriptable source.
 const achievements = [
-  {at:1000,name:"FIRST FOOTFALL",msg:"The dungeon has detected forward motion. A promising development.",coins:50,xp:50},
-  {at:5000,name:"MILE MARKER",msg:"Five thousand steps. The goblins are pretending not to be impressed.",coins:150,xp:100},
-  {at:10000,name:"THE DAILY DESCENT",msg:"Ten thousand steps. Your legs have entered the chat.",coins:300,xp:200},
-  {at:25000,name:"ROAD WARRIOR",msg:"Twenty-five thousand steps. The goblins have started measuring your shadow. Please hydrate, champion.",coins:500,xp:350},
-  {at:50000,name:"THE LONG MARCH",msg:"Fifty thousand steps. The dungeon has ordered better shoes.",coins:1000,xp:750},
-  {at:100000,name:"PATHFINDER",msg:"One hundred thousand steps. The map is beginning to fear you.",coins:2000,xp:1500},
-  {at:250000,name:"THE WANDERING LEGEND",msg:"A quarter million steps. Your footprints have their own fan club.",coins:5000,xp:3500},
-  {at:500000,name:"MASTER OF THE MILE",msg:"Half a million steps. Even the ancient stones recognize your gait.",coins:10000,xp:7500},
-  {at:1000000,name:"THE ETERNAL WAYFARER",msg:"One million steps. The dungeon has run out of sarcastic remarks. Almost.",coins:25000,xp:15000}
+  {at:1,name:"FIRST BLOOD",msg:"Your first monster is down. The dungeon has updated its threat assessment.",coins:50,xp:50},
+  {at:5,name:"PROBLEM SOLVER",msg:"Five monsters defeated. The local monster population has filed a complaint.",coins:150,xp:100},
+  {at:10,name:"HUNT REGULAR",msg:"Ten victories. The Guild is beginning to recognize your face.",coins:300,xp:200},
+  {at:25,name:"RUBBLE MAKER",msg:"Twenty-five monsters defeated. The dungeon maintenance budget is in danger.",coins:500,xp:350},
+  {at:50,name:"ELITE MENACE",msg:"Fifty victories. Even the elite monsters are checking the roster.",coins:1000,xp:750},
+  {at:100,name:"WARDEN'S NIGHTMARE",msg:"One hundred monsters defeated. The Warden has changed the locks.",coins:2000,xp:1500},
+  {at:250,name:"DUNGEON LEGEND",msg:"Two hundred and fifty victories. Your name is now a warning.",coins:5000,xp:3500},
+  {at:500,name:"MASTER OF THE HUNT",msg:"Five hundred monsters defeated. The Guild has run out of paperwork.",coins:10000,xp:7500},
+  {at:1000,name:"THE ETERNAL DELVER",msg:"One thousand victories. The dungeon would like to unsubscribe.",coins:25000,xp:15000}
 ];
 const dailyAchievements = [
-  {at:1000,name:"WARMING UP",msg:"A thousand steps. The dungeon has noticed you left the chair.",coins:25,xp:15},
-  {at:5000,name:"DAILY TRAILBLAZER",msg:"Five thousand steps. Your daily contract is complete.",coins:100,xp:75},
-  {at:10000,name:"TEN THOUSAND CLUB",msg:"The daily target is yours. The goblins demand a rematch.",coins:250,xp:150},
-  {at:15000,name:"EXTRA MILE",msg:"Fifteen thousand steps. Someone is showing off.",coins:350,xp:250},
-  {at:20000,name:"IRON SOLES",msg:"Twenty thousand steps. The dungeon recommends a comfortable chair.",coins:500,xp:400}
+  {at:1,name:"FIRST CONTACT",msg:"One monster down. A productive start.",coins:25,xp:15},
+  {at:2,name:"DOUBLE TROUBLE",msg:"Two monsters defeated. The dungeon is taking notes.",coins:100,xp:75},
+  {at:3,name:"DAILY HUNTER",msg:"Three victories. The Guild approves. Reluctantly.",coins:250,xp:150},
+  {at:5,name:"EXTRACTION TEAM",msg:"Five monsters defeated. Try not to bring them all home.",coins:350,xp:250},
+  {at:8,name:"IRON WILL",msg:"Eight victories. Someone is showing off.",coins:500,xp:400}
 ];
 const itemAIComments = {
  sword:"The blade hums with the confidence of a weapon that has never once paid rent. Try not to swing it at your furniture.",
  axe:"A goblin artisan made this from premium bad ideas. The edge is sharp; your strategy remains questionable.",
  dagger:"Tiny, dramatic, and wildly overconfident. Much like the person holding it.",
- doomblade:"It remembers every 100 steps. It refuses to discuss the incident with the laundry goblin.",
+ doomblade:"It remembers every monster defeated. It refuses to discuss the incident with the laundry goblin.",
  helmet:"A crown fit for someone who has mistaken confidence for a safety feature.",
  armor:"The goblin stitching is surprisingly sturdy. The smell is a separate side quest.",
  cloak:"It conceals your silhouette and, mercifully, some of your decisions.",
@@ -35,7 +35,7 @@ const itemAIComments = {
  title3:"The title is impressive. I have updated the org chart so the dungeon knows who to blame.",
  potion:"A volatile little confidence boost. Follow the timer; do not challenge the bottle.",
  greed:"The goblins have bottled their worst financial instincts. You are welcome.",
- wisdom:"A concentrated lesson in getting more from every 100 steps. Finally, studying pays. Barely.",
+ wisdom:"A concentrated lesson in getting more from every Hunt reward. Finally, studying pays. Barely.",
  fortune:"Fortune smiles briefly. Do not make it weird.",
  blood:"Potent, dramatic, and absolutely not approved by the dungeon wellness committee.",
  scholar:"A scholarly brew for ambitious minds and questionable reading habits.",
@@ -46,20 +46,20 @@ const itemAIComments = {
  phoenix:"One glorious second chance, bottled. Try not to waste it on something silly."
 };
 const shopItems = [
-{id:"identity_random",name:"Crawler Number Reassignment",type:"identity",rarity:"Epic",price:15000,desc:"A sanctioned identity reroll. Cost: 10 Step Dust + 5 Mimic Shards."},
-{id:"identity_custom",name:"Bespoke Crawler Number License",type:"identity",rarity:"Mythic",price:50000,desc:"Cost: 50 Step Dust + 25 Mimic Shards + 10 Dragon Scales. Choose a six-digit Delver Number."},
-{id:"sword",name:"Legendary Trail Slayer",type:"weapon",rarity:"Legendary",price:8500,set:"Royal",effects:{xp:.10},desc:"Forged from the tears of overworked goblins. +10% XP per 100 steps."},
-{id:"axe",name:"Goblin Cleaver",type:"weapon",rarity:"Rare",price:1400,set:"Goblin",effects:{coins:.15},desc:"For chopping questionable decisions. +15% coins per 100 steps."},
-{id:"dagger",name:"Pocket Knife of Regret",type:"weapon",rarity:"Common",price:300,effects:{xp:.03},desc:"Small weapon. Massive disappointment. +3% XP per 100 steps."},
-{id:"doomblade",name:"Blade of Endless March",type:"weapon",rarity:"Epic",price:4200,set:"Royal",effects:{xp:.10,coins:.05},desc:"The blade has seen things. +10% XP and +5% coins per 100 steps."},
-{id:"helmet",name:"Crown of Questionable Decisions",type:"armor",rarity:"Legendary",price:7800,set:"Royal",effects:{coins:.10},desc:"Protects absolutely nothing important. +10% coins per 100 steps."},
-{id:"armor",name:"Goblin Dungeon Armor",type:"armor",rarity:"Rare",price:1500,set:"Goblin",effects:{coins:.05,xp:.05},desc:"Fashionable. Probably uncomfortable. +5% coins and XP per 100 steps."},
+{id:"identity_random",name:"Crawler Number Reassignment",type:"identity",rarity:"Epic",price:15000,desc:"A sanctioned identity reroll. Cost: 10 Dust + 5 Mimic Shards."},
+{id:"identity_custom",name:"Bespoke Crawler Number License",type:"identity",rarity:"Mythic",price:50000,desc:"Cost: 50 Dust + 25 Mimic Shards + 10 Dragon Scales. Choose a six-digit Delver Number."},
+{id:"sword",name:"Legendary Trail Slayer",type:"weapon",rarity:"Legendary",price:8500,set:"Royal",effects:{xp:.10},desc:"Forged from the tears of overworked goblins. +10% XP from Hunt rewards."},
+{id:"axe",name:"Goblin Cleaver",type:"weapon",rarity:"Rare",price:1400,set:"Goblin",effects:{coins:.15},desc:"For chopping questionable decisions. +15% coins from Hunt rewards."},
+{id:"dagger",name:"Pocket Knife of Regret",type:"weapon",rarity:"Common",price:300,effects:{xp:.03},desc:"Small weapon. Massive disappointment. +3% XP from Hunt rewards."},
+{id:"doomblade",name:"Blade of Endless March",type:"weapon",rarity:"Epic",price:4200,set:"Royal",effects:{xp:.10,coins:.05},desc:"The blade has seen things. +10% XP and +5% coins from Hunt rewards."},
+{id:"helmet",name:"Crown of Questionable Decisions",type:"armor",rarity:"Legendary",price:7800,set:"Royal",effects:{coins:.10},desc:"Protects absolutely nothing important. +10% coins from Hunt rewards."},
+{id:"armor",name:"Goblin Dungeon Armor",type:"armor",rarity:"Rare",price:1500,set:"Goblin",effects:{coins:.05,xp:.05},desc:"Fashionable. Probably uncomfortable. +5% coins and XP from Hunt rewards."},
 {id:"cloak",name:"Cloak of Bad Decisions",type:"armor",rarity:"Epic",price:3800,effects:{xp:.10,rare:.05},desc:"Hides your terrible choices. +10% XP and +5% rare finds."},
-{id:"cap",name:"Helmet of Mild Competence",type:"armor",rarity:"Common",price:400,effects:{coins:.02},desc:"It is a helmet. Congratulations. +2% coins per 100 steps."},
-{id:"goblin",name:"Annoying Dungeon Goblin",type:"companion",rarity:"Common",price:650,effects:{coins:.05},desc:"Steals snacks and questions your life. +5% coins per 100 steps."},
-{id:"dragon",name:"Pocket Dungeon Dragon",type:"companion",rarity:"Epic",price:4800,effects:{xp:.10},desc:"Breathes fire and makes terrible decisions. +10% XP per 100 steps."},
-{id:"cat",name:"Murderous Dungeon Cat",type:"companion",rarity:"Rare",price:1900,effects:{coins:.10},desc:"Judges you silently. +10% coins per 100 steps."},
-{id:"demon",name:"Tiny Apocalypse Demon",type:"companion",rarity:"Legendary",price:10500,effects:{xp:.15},desc:"Your personal agent of chaos. +15% XP per 100 steps."},
+{id:"cap",name:"Helmet of Mild Competence",type:"armor",rarity:"Common",price:400,effects:{coins:.02},desc:"It is a helmet. Congratulations. +2% coins from Hunt rewards."},
+{id:"goblin",name:"Annoying Dungeon Goblin",type:"companion",rarity:"Common",price:650,effects:{coins:.05},desc:"Steals snacks and questions your life. +5% coins from Hunt rewards."},
+{id:"dragon",name:"Pocket Dungeon Dragon",type:"companion",rarity:"Epic",price:4800,effects:{xp:.10},desc:"Breathes fire and makes terrible decisions. +10% XP from Hunt rewards."},
+{id:"cat",name:"Murderous Dungeon Cat",type:"companion",rarity:"Rare",price:1900,effects:{coins:.10},desc:"Judges you silently. +10% coins from Hunt rewards."},
+{id:"demon",name:"Tiny Apocalypse Demon",type:"companion",rarity:"Legendary",price:10500,effects:{xp:.15},desc:"Your personal agent of chaos. +15% XP from Hunt rewards."},
 {id:"title1",name:"Professional Disaster",type:"title",rarity:"Rare",price:1200,desc:"A title you probably deserve."},
 {id:"title2",name:"Lord of the Long March",type:"title",rarity:"Epic",price:4200,desc:"Your kingdom is made of questionable decisions and unpaid goblin invoices."},
 {id:"title3",name:"Supreme Crawler",type:"title",rarity:"Legendary",price:12500,desc:"The AI fears your existence."},
@@ -80,12 +80,12 @@ const shopItems = [
 {id:"phoenix",name:"Phoenix Tears",type:"potion",rarity:"Mythic",price:3500,potion:{kind:"achievement",charges:1,effect:{achievement:1}},desc:"Doubles the next daily achievement reward."}
 ];
 const relicCatalog=[
-{id:"hinge_relic",name:"Relic of the First Footstep",rarity:"Common",desc:"A fossilized fragment from the First Footstep. +1% XP forever.",effects:{xp:.01}},
+{id:"hinge_relic",name:"Relic of the First Victory",rarity:"Common",desc:"A fossilized fragment from the first monster defeated. +1% XP forever.",effects:{xp:.01}},
 {id:"mimic_eye",name:"Mimic's Glass Eye",rarity:"Rare",desc:"It watches your wallet. +1% rare-find chance.",effects:{rare:.01}},
 {id:"gilded_tooth",name:"Gilded Goblin Tooth",rarity:"Rare",desc:"A tiny monument to poor dental choices. +1% coins forever.",effects:{coins:.01}},
 {id:"dragon_scale_relic",name:"Cinderheart Scale",rarity:"Epic",desc:"Still warm. +2% XP forever.",effects:{xp:.02}},
 {id:"royal_seal",name:"Seal of the Lost King",rarity:"Epic",desc:"A royal stamp of approval. +2% coins forever.",effects:{coins:.02}},
-{id:"void_shard",name:"Shard of the Unstepping Void",rarity:"Legendary",desc:"Reality has a dent now. +2% coins, XP and rare finds.",effects:{coins:.02,xp:.02,rare:.02}}
+{id:"void_shard",name:"Shard of the Hollow Void",rarity:"Legendary",desc:"Reality has a dent now. +2% coins, XP and rare finds.",effects:{coins:.02,xp:.02,rare:.02}}
 ];
 
 Object.assign(itemAIComments,{
@@ -102,7 +102,7 @@ Object.assign(itemAIComments,{
   cat:"The cat has inspected your dungeon, rejected the furniture, and decided you may remain. It occasionally finds extra coin. +10% coins.",
   demon:"A tiny apocalypse with excellent punctuality and a deeply concerning employee handbook. +15% XP.",
   title1:"The registry has reluctantly certified you as a Professional Disaster. It is not a compliment, but it is official.",
-  title2:"A title of considerable authority over daily steps, dungeon corridors, and one goblin who still disputes the promotion.",
+  title2:"A title of considerable authority over daily Hunts, dungeon corridors, and one goblin who still disputes the promotion.",
   title3:"Supreme Delver. The dungeon has updated its emergency procedures and added your portrait.",
   potion:"A cloudy tonic that smells like a wizard's laboratory after a plumbing incident. +10% XP for 10 minutes.",
   greed:"The goblins distilled their favorite personality flaw and put it in a bottle. +50% coins for 30 minutes. Financially irresponsible, but effective.",
