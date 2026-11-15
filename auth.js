@@ -42,7 +42,8 @@ var loginBackgroundStatus=root.querySelector("#auth-message");
 if(loginBackgroundVideo){
   var loginVideoSource=loginBackgroundVideo.querySelector("source");
   if(loginVideoSource)loginVideoSource.src="https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Backgrounds/LoginV3.mp4?v=20261115b";
-  loginBackgroundVideo.removeAttribute("poster");
+  // Keep LoginV2 visible until Safari has decoded the first LoginV3 frame.
+  loginBackgroundVideo.setAttribute("poster","https://xuxwwpfeenaaxzfspiiq.supabase.co/storage/v1/object/public/public-assets/Login/Backgrounds/LoginV2.png");
   loginBackgroundVideo.addEventListener("loadeddata",function(){
     if(loginBackgroundStatus)loginBackgroundStatus.textContent="";
     console.info("[Duo Dungeon LoginV3] First video frame loaded.",{readyState:loginBackgroundVideo.readyState,currentSrc:loginBackgroundVideo.currentSrc});
