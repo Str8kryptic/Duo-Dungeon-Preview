@@ -24,6 +24,8 @@ assert.equal(rpg.stamina, 100);
 assert.equal(rpg.hp, 100);
 assert.equal(state.rpgCombat, rpg, "combat data should live in its own save namespace");
 
+assert.equal(combat.renderHotbar(state), "", "battle hotbar should stay hidden without an active battle");
+
 const board = combat.render(state);
 assert.match(board, /Cave Stalker/);
 assert.match(board, /Crypt Guardian/);
@@ -32,6 +34,8 @@ assert.match(board, /Combat uses stamina/);
 
 combat.handleAction(state, "hunt:cave-stalker", hooks);
 assert.ok(rpg.battle, "unlocked monster should start a battle");
+assert.match(combat.renderHotbar(state), /duo-battle-hotbar/, "active battle should expose the floating hotbar");
+assert.match(combat.renderHotbar(state), /data-rpg-action="flee"/, "hotbar should expose a stop action");
 assert.equal(rpg.stamina, 90, "hunting should spend stamina, not Step Power");
 assert.equal(state.descent.depth, 1, "hunting should not change Descent progress");
 
@@ -39,6 +43,7 @@ rpg.battle.hp = 1;
 rpg.battle.quickReadyAt = 0;
 combat.handleAction(state, "quick-strike", hooks);
 assert.equal(rpg.battle, null, "defeating a monster should end the encounter");
+assert.equal(combat.renderHotbar(state), "", "hotbar should disappear immediately when the battle ends");
 assert.equal(rpg.kills["cave-stalker"], 1);
 assert.ok(rpg.xp >= 28, "victory should award combat XP");
 
