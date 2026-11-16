@@ -155,17 +155,17 @@ jobs:
           repo='Str8kryptic/Duo-Dungeon'
           tag='chapter-one-sci-fi-v9.4'
           archive='Duo_Dungeon_Chapter_One_All_35_Floor_Art_Integrated_v9_4.zip'
-          if ! gh release view "$tag" --repo "$repo" >/dev/null 2>&1; then
-            echo "Chapter One release not yet uploaded; preserve framework viewer."
+          asset_names="$(gh release view "$tag" --repo "$repo" --json assets --jq '.assets[].name' 2>/dev/null || true)"
+          if ! grep -Eq "^($archive|$archive\\.part01)$" <<< "$asset_names"; then
+            echo 'Full Chapter One archive not attached; allow Lite release fallback.'
           else
             stage="$(mktemp -d)"
-            if gh release download "$tag" --repo "$repo" --pattern "$archive" --dir "$stage" 2>/dev/null; then
-              echo "Full Chapter One ZIP downloaded."
+            if grep -Fxq "$archive" <<< "$asset_names"; then
+              gh release download "$tag" --repo "$repo" --pattern "$archive" --dir "$stage"
             else
-              echo "Full ZIP not attached; downloading six smaller parts."
               gh release download "$tag" --repo "$repo" --pattern "$archive.part*" --dir "$stage"
               for i in 01 02 03 04 05 06; do
-                test -s "$stage/$archive.part$i" || { echo "::error::Missing Chapter One archive part$i"; exit 1; }
+                test -s "$stage/$archive.part$i" || { echo "::error::Missing archive part$i"; exit 1; }
               done
               cat "$stage/$archive.part"{01,02,03,04,05,06} > "$stage/$archive"
             fi
@@ -175,28 +175,13 @@ jobs:
             test -f "$source_dir/src/app.js"
             test -f "$source_dir/data/asset_registry.json"
             (cd "$source_dir" && npm test && npm run validate && npm run qa:chapter-one)
-            python3 - "$source_dir" <<'PY'
-            import hashlib, json, pathlib, sys
-            root=pathlib.Path(sys.argv[1])
-            assets=json.loads((root/"data/asset_registry.json").read_text())
-            floors=[a for a in assets if a.get("entityType")=="floor"]
-            assert len(floors)==35, f"Expected 35 floors; found {len(floors)}"
-            for a in floors:
-                assert a["path"].endswith(".png"), f"Unmigrated SVG: {a['id']}"
-                p=root/a["path"]
-                assert p.is_file(), f"Missing PNG: {p}"
-                expected=a.get("sha256")
-                if expected:
-                    digest=hashlib.sha256(p.read_bytes()).hexdigest()
-                    assert digest==expected, f"Wrong artwork bytes: {a['id']}"
-            print("PASS: 35 canonical floor PNGs match their immutable release hashes")
-            PY
+            python3 -c 'import hashlib,json,pathlib,sys;root=pathlib.Path(sys.argv[1]);a=json.loads((root/"data/asset_registry.json").read_text());f=[x for x in a if x.get("entityType")=="floor"];assert len(f)==35;assert all(x["path"].endswith(".png") and (root/x["path"]).is_file() and (not x.get("sha256") or hashlib.sha256((root/x["path"]).read_bytes()).hexdigest()==x["sha256"]) for x in f)' "$source_dir"
             mkdir -p chapter-one-alpha/src chapter-one-alpha/data chapter-one-alpha/assets
             cp "$source_dir/index.html" "$source_dir/styles.css" "$source_dir/package.json" chapter-one-alpha/
-            find "$source_dir/src" -maxdepth 1 -name "*.js" -type f -exec cp -p {} chapter-one-alpha/src/ \;
-            cp "$source_dir/data/"*.json chapter-one-alpha/data/
+            rsync -a "$source_dir/src/" chapter-one-alpha/src/
+            rsync -a "$source_dir/data/" chapter-one-alpha/data/
             rsync -a "$source_dir/assets/" chapter-one-alpha/assets/
-            echo "PASS: actual Chapter One v9.4 runtime staged under /chapter-one-alpha/."
+            echo 'PASS: original full-art v9.4 staged under /chapter-one-alpha/.'
           fi
       - name: Stage verified playable Lite Chapter One if full release is unavailable
         shell: bash
@@ -205,7 +190,49 @@ jobs:
         run: |
           set -euo pipefail
           repo='Str8kryptic/Duo-Dungeon'
-          if gh release view chapter-one-sci-fi-v9.4 --repo "$repo" >/dev/null 2>&1; then
+          if gh release view chapter-one-sci-fi-v9.4 --repo "$repo" --json assets --jq '.assets[].name' 2>/dev/null | grep -Eq '^Duo_Dungeon_Chapter_One_All_35_Floor_Art_Integrated_v9_4[.]zip([.]part01)?
+            echo 'Full release is available; keep full-quality runtime staging.'
+          else
+            lite_tag='chapter-one-sci-fi-v9.4-lite'
+            lite_zip='Duo_Dungeon_Chapter_One_Playable_Lite_v9_4.zip'
+            lite_url='https://github.com/user-attachments/files/34939853/Duo_Dungeon_Chapter_One_Playable_Lite_v9_4.zip'
+            gh release view "$lite_tag" --repo "$repo" >/dev/null
+            stage="$(mktemp -d)"
+            # This release carries a GitHub user-attachment in its description, not a GitHub Release asset.
+            curl --fail --location --retry 3 --silent --show-error "$lite_url" -o "$stage/$lite_zip"
+            echo "6ed291a091b19d13c1c132c14f5f59c208ef3ec4d8e07ce1d1925ce557c79df3  $stage/$lite_zip" | sha256sum -c -
+            unzip -q "$stage/$lite_zip" -d "$stage/app"
+            test -f "$stage/app/src/app.js"
+            test -f "$stage/app/data/asset_registry.json"
+            # Lite intentionally uses archived SVGs instead of production PNG masters.
+            # Run all gameplay and contract suites; full-raster provenance suites remain mandatory for the full release.
+            (cd "$stage/app" && node --test $(find tests -maxdepth 1 -name '*.test.js' ! -name 'art-production.test.js' ! -name 'floor-art-production.test.js' ! -name 'svg-raster-migration.test.js' | sort) && npm run validate && npm run qa:chapter-one)
+            mkdir -p chapter-one-alpha
+            cp "$stage/app/index.html" "$stage/app/styles.css" "$stage/app/package.json" chapter-one-alpha/
+            rsync -a "$stage/app/src/" chapter-one-alpha/src/
+            rsync -a "$stage/app/data/" chapter-one-alpha/data/
+            rsync -a "$stage/app/assets/" chapter-one-alpha/assets/
+            echo 'PASS: exact playable Lite v9.4 installed under /chapter-one-alpha/, no legacy files replaced.'
+          fi
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+        with:
+          enablement: true
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: .
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5
+# Trigger Preview to pick up the latest approved Development shell repair.
+
+# Rebuild Preview with latest centered navigation shell.
+
+# Rebuild Preview with the corrected five-slot centered Orb navigation.
+
+# Sync Preview to Development clean-artwork reset commit bf7fab0.
+; then
             echo 'Full release is available; keep full-quality runtime staging.'
           else
             lite_tag='chapter-one-sci-fi-v9.4-lite'
