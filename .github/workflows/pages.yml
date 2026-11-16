@@ -46,6 +46,22 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           rsync -a --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' development-source/ ./
+      - name: Checkout isolated Orb rebuild for login verification
+        if: github.event_name != 'pull_request'
+        uses: actions/checkout@v7
+        with:
+          repository: Str8kryptic/Duo-Dungeon
+          ref: feature/orb-v2-login-entry
+          token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
+          path: orb-rebuild-source
+      - name: Verify isolated Orb login and gameplay prototype
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd orb-rebuild-source && node --check app.js && node --check login.js && node --test tests/login-static.test.js)
+          grep -q 'id="login-root"' orb-rebuild-source/index.html
+          grep -q 'CONTINUE TO PROTOTYPE AS GUEST' orb-rebuild-source/login.js
       # Re-run deployment after the global backdrop replacement and cache-bust.
       - name: Verify approved global dungeon background
         if: github.event_name != 'pull_request'
@@ -141,6 +157,24 @@ jobs:
         run: |
           mkdir -p phase4
           rsync -a --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' phase4-source/ phase4/
+      # The clean-slate Orb game is additive; never replace legacy Development or Chapter One.
+      - name: Checkout isolated Orb rebuild source
+        uses: actions/checkout@v7
+        with:
+          repository: Str8kryptic/Duo-Dungeon
+          ref: feature/orb-v2-login-entry
+          token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
+          path: orb-rebuild-source
+      - name: Stage isolated Orb login and guest game under /orb-rebuild/
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p orb-rebuild/assets
+          cp orb-rebuild-source/index.html orb-rebuild-source/styles.css orb-rebuild-source/app.js orb-rebuild-source/login.css orb-rebuild-source/login.js orb-rebuild/
+          cp orb-rebuild-source/assets/orb-login.svg orb-rebuild/assets/
+          test -s orb-rebuild/index.html
+          test -s orb-rebuild/assets/orb-login.svg
+          grep -q 'id="login-root"' orb-rebuild/index.html
       # Chapter One is an isolated, additive site. The legacy preview is never replaced.
       - name: Prepare Node 22 for Chapter One release verification
         uses: actions/setup-node@v4
