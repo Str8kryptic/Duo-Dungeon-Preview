@@ -159,7 +159,16 @@ jobs:
             echo "Chapter One release not yet uploaded; preserve framework viewer."
           else
             stage="$(mktemp -d)"
-            gh release download "$tag" --repo "$repo" --pattern "$archive" --dir "$stage"
+            if gh release download "$tag" --repo "$repo" --pattern "$archive" --dir "$stage" 2>/dev/null; then
+              echo "Full Chapter One ZIP downloaded."
+            else
+              echo "Full ZIP not attached; downloading six smaller parts."
+              gh release download "$tag" --repo "$repo" --pattern "$archive.part*" --dir "$stage"
+              for i in 01 02 03 04 05 06; do
+                test -s "$stage/$archive.part$i" || { echo "::error::Missing Chapter One archive part$i"; exit 1; }
+              done
+              cat "$stage/$archive.part"{01,02,03,04,05,06} > "$stage/$archive"
+            fi
             echo "ab1bef6271067034da7c19df39e7b1c08cecd210db4503baa6fb5e5b99f44766  $stage/$archive" | sha256sum -c -
             unzip -q "$stage/$archive" -d "$stage"
             source_dir="$stage/duo-dungeon-registry-pack"
