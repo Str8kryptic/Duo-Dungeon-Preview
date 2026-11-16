@@ -195,11 +195,12 @@ jobs:
           else
             lite_tag='chapter-one-sci-fi-v9.4-lite'
             lite_zip='Duo_Dungeon_Chapter_One_Playable_Lite_v9_4.zip'
-            lite_url='https://github.com/user-attachments/files/34939853/Duo_Dungeon_Chapter_One_Playable_Lite_v9_4.zip'
-            gh release view "$lite_tag" --repo "$repo" >/dev/null
-            stage="$(mktemp -d)"
-            # This release carries a GitHub user-attachment in its description, not a GitHub Release asset.
-            curl --fail --location --retry 3 --silent --show-error "$lite_url" -o "$stage/$lite_zip"
+            lite_assets="$(gh release view "$lite_tag" --repo "$repo" --json assets --jq '.assets[].name' 2>/dev/null || true)"
+            if ! grep -Fxq "$lite_zip" <<< "$lite_assets"; then
+              echo 'Playable Lite release exists without a downloadable Release asset; preserve framework viewer.'
+            else
+              stage="$(mktemp -d)"
+              gh release download "$lite_tag" --repo "$repo" --pattern "$lite_zip" --dir "$stage"
             echo "6ed291a091b19d13c1c132c14f5f59c208ef3ec4d8e07ce1d1925ce557c79df3  $stage/$lite_zip" | sha256sum -c -
             unzip -q "$stage/$lite_zip" -d "$stage/app"
             test -f "$stage/app/src/app.js"
@@ -213,6 +214,7 @@ jobs:
             rsync -a "$stage/app/data/" chapter-one-alpha/data/
             rsync -a "$stage/app/assets/" chapter-one-alpha/assets/
             echo 'PASS: exact playable Lite v9.4 installed under /chapter-one-alpha/, no legacy files replaced.'
+            fi
           fi
       - name: Configure Pages
         uses: actions/configure-pages@v6
