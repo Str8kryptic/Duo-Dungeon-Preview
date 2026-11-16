@@ -156,6 +156,7 @@ jobs:
           else
             stage="$(mktemp -d)"
             gh release download "$tag" --repo "$repo" --pattern "$archive" --dir "$stage"
+            echo "ab1bef6271067034da7c19df39e7b1c08cecd210db4503baa6fb5e5b99f44766  $stage/$archive" | sha256sum -c -
             unzip -q "$stage/$archive" -d "$stage"
             source_dir="$stage/duo-dungeon-registry-pack"
             test -f "$source_dir/src/app.js"
