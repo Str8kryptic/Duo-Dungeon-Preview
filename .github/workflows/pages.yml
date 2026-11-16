@@ -162,21 +162,21 @@ jobs:
             test -f "$source_dir/data/asset_registry.json"
             (cd "$source_dir" && npm test && npm run validate && npm run qa:chapter-one)
             python3 - "$source_dir" <<'PY'
-import hashlib, json, pathlib, sys
-root=pathlib.Path(sys.argv[1])
-assets=json.loads((root/"data/asset_registry.json").read_text())
-floors=[a for a in assets if a.get("entityType")=="floor"]
-assert len(floors)==35, f"Expected 35 floors; found {len(floors)}"
-for a in floors:
-    assert a["path"].endswith(".png"), f"Unmigrated SVG: {a['id']}"
-    p=root/a["path"]
-    assert p.is_file(), f"Missing PNG: {p}"
-    expected=a.get("sha256")
-    if expected:
-        digest=hashlib.sha256(p.read_bytes()).hexdigest()
-        assert digest==expected, f"Wrong artwork bytes: {a['id']}"
-print("PASS: 35 canonical floor PNGs match their immutable release hashes")
-PY
+            import hashlib, json, pathlib, sys
+            root=pathlib.Path(sys.argv[1])
+            assets=json.loads((root/"data/asset_registry.json").read_text())
+            floors=[a for a in assets if a.get("entityType")=="floor"]
+            assert len(floors)==35, f"Expected 35 floors; found {len(floors)}"
+            for a in floors:
+                assert a["path"].endswith(".png"), f"Unmigrated SVG: {a['id']}"
+                p=root/a["path"]
+                assert p.is_file(), f"Missing PNG: {p}"
+                expected=a.get("sha256")
+                if expected:
+                    digest=hashlib.sha256(p.read_bytes()).hexdigest()
+                    assert digest==expected, f"Wrong artwork bytes: {a['id']}"
+            print("PASS: 35 canonical floor PNGs match their immutable release hashes")
+            PY
             mkdir -p chapter-one-alpha/src chapter-one-alpha/data chapter-one-alpha/assets
             cp "$source_dir/index.html" "$source_dir/styles.css" "$source_dir/package.json" chapter-one-alpha/
             find "$source_dir/src" -maxdepth 1 -name "*.js" -type f -exec cp -p {} chapter-one-alpha/src/ \;
