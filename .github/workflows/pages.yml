@@ -227,6 +227,9 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v5
+      - name: Smoke-test live Chapter One after Pages deployment
+        if: success()
+        run: python3 .github/scripts/check-chapter-one-live.py
 # Trigger Preview to pick up the latest approved Development shell repair.
 
 # Rebuild Preview with latest centered navigation shell.
