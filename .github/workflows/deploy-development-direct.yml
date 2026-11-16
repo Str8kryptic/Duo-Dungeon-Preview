@@ -1,7 +1,6 @@
 name: Deploy Development source to Preview (direct)
+# Manual-only fallback: avoid racing the canonical Preview Pages deployment.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
