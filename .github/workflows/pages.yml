@@ -141,6 +141,54 @@ jobs:
         run: |
           mkdir -p phase4
           rsync -a --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' phase4-source/ phase4/
+      # Chapter One is an isolated, additive site. The legacy preview is never replaced.
+      - name: Prepare Node 22 for Chapter One release verification
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Stage verified Chapter One v9.4 release when available
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
+        run: |
+          set -euo pipefail
+          repo='Str8kryptic/Duo-Dungeon'
+          tag='chapter-one-sci-fi-v9.4'
+          archive='Duo_Dungeon_Chapter_One_All_35_Floor_Art_Integrated_v9_4.zip'
+          if ! gh release view "$tag" --repo "$repo" >/dev/null 2>&1; then
+            echo "Chapter One release not yet uploaded; preserve framework viewer."
+          else
+            stage="$(mktemp -d)"
+            gh release download "$tag" --repo "$repo" --pattern "$archive" --dir "$stage"
+            echo "ab1bef6271067034da7c19df39e7b1c08cecd210db4503baa6fb5e5b99f44766  $stage/$archive" | sha256sum -c -
+            unzip -q "$stage/$archive" -d "$stage"
+            source_dir="$stage/duo-dungeon-registry-pack"
+            test -f "$source_dir/src/app.js"
+            test -f "$source_dir/data/asset_registry.json"
+            (cd "$source_dir" && npm test && npm run validate && npm run qa:chapter-one)
+            python3 - "$source_dir" <<'PY'
+            import hashlib, json, pathlib, sys
+            root=pathlib.Path(sys.argv[1])
+            assets=json.loads((root/"data/asset_registry.json").read_text())
+            floors=[a for a in assets if a.get("entityType")=="floor"]
+            assert len(floors)==35, f"Expected 35 floors; found {len(floors)}"
+            for a in floors:
+                assert a["path"].endswith(".png"), f"Unmigrated SVG: {a['id']}"
+                p=root/a["path"]
+                assert p.is_file(), f"Missing PNG: {p}"
+                expected=a.get("sha256")
+                if expected:
+                    digest=hashlib.sha256(p.read_bytes()).hexdigest()
+                    assert digest==expected, f"Wrong artwork bytes: {a['id']}"
+            print("PASS: 35 canonical floor PNGs match their immutable release hashes")
+            PY
+            mkdir -p chapter-one-alpha/src chapter-one-alpha/data chapter-one-alpha/assets
+            cp "$source_dir/index.html" "$source_dir/styles.css" "$source_dir/package.json" chapter-one-alpha/
+            find "$source_dir/src" -maxdepth 1 -name "*.js" -type f -exec cp -p {} chapter-one-alpha/src/ \;
+            cp "$source_dir/data/"*.json chapter-one-alpha/data/
+            rsync -a "$source_dir/assets/" chapter-one-alpha/assets/
+            echo "PASS: actual Chapter One v9.4 runtime staged under /chapter-one-alpha/."
+          fi
       - name: Configure Pages
         uses: actions/configure-pages@v6
         with:
