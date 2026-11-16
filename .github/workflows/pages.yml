@@ -142,6 +142,10 @@ jobs:
           mkdir -p phase4
           rsync -a --exclude='.git/' --exclude='.github/' --exclude='supabase/' --exclude='README.md' phase4-source/ phase4/
       # Chapter One is an isolated, additive site. The legacy preview is never replaced.
+      - name: Prepare Node 22 for Chapter One release verification
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: Stage verified Chapter One v9.4 release when available
         shell: bash
         env:
