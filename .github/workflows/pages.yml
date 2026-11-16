@@ -219,7 +219,9 @@ jobs:
             unzip -q "$stage/$lite_zip" -d "$stage/app"
             test -f "$stage/app/src/app.js"
             test -f "$stage/app/data/asset_registry.json"
-            (cd "$stage/app" && npm test && npm run validate && npm run qa:chapter-one)
+            # Lite intentionally uses archived SVGs instead of production PNG masters.
+            # Run all gameplay and contract suites; full-raster provenance suites remain mandatory for the full release.
+            (cd "$stage/app" && node --test $(find tests -maxdepth 1 -name '*.test.js' ! -name 'art-production.test.js' ! -name 'floor-art-production.test.js' ! -name 'svg-raster-migration.test.js' | sort) && npm run validate && npm run qa:chapter-one)
             mkdir -p chapter-one-alpha
             cp "$stage/app/index.html" "$stage/app/styles.css" "$stage/app/package.json" chapter-one-alpha/
             rsync -a "$stage/app/src/" chapter-one-alpha/src/
