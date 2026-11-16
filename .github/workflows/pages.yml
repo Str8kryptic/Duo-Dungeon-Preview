@@ -261,6 +261,20 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v5
+      - name: Smoke-test live isolated Orb login after Pages deployment
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://str8kryptic.github.io/Duo-Dungeon-Preview/orb-rebuild"
+          folder="$(mktemp -d)"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/" -o "$folder/index.html"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/login.js" -o "$folder/login.js"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/assets/orb-login.svg" -o "$folder/orb-login.svg"
+          grep -Fq 'id="login-root"' "$folder/index.html"
+          grep -Fq 'CONTINUE TO PROTOTYPE AS GUEST' "$folder/login.js"
+          grep -Fq '<svg' "$folder/orb-login.svg"
+          echo "PASS: /orb-rebuild/ login, guest entry and Orb vector are live."
       - name: Smoke-test live Chapter One after Pages deployment
         if: success()
         run: python3 .github/scripts/check-chapter-one-live.py
