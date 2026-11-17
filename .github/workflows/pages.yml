@@ -282,7 +282,7 @@ jobs:
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/assets/area-gates.svg" -o "$folder/gates.svg"
           grep -Fq 'Tactical Dressing Deck' "$folder/equipment.js"
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/equipment-data.js" -o "$folder/equipment-data.js"
-          grep -Fq 'No verified equipment source' "$folder/equipment-data.js"
+          grep -Fq 'getSnapshot:normalize' "$folder/equipment-data.js"
           grep -Fq 'HIDE ART CONCEPT PREVIEW' "$folder/equipment.js"
           grep -Fq '<svg' "$folder/armory.svg"
           grep -Fq '<svg' "$folder/gates.svg"
