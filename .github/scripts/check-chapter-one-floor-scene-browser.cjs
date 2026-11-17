@@ -12,7 +12,7 @@ const base="https://str8kryptic.github.io/Duo-Dungeon-Preview/chapter-one-alpha/
   try {
     const page=await browser.newPage({viewport:{width:390,height:844}});
     await page.goto(base,{waitUntil:"networkidle",timeout:60000});
-    await page.locator('button[data-nav="explore"]').click();
+    await page.locator('nav.navigation button[data-nav="explore"]').click();
     await page.waitForSelector('[data-art-preview="35"]',{timeout:15000});
     assert.equal(await page.locator('[data-art-preview]').count(),35,"All 35 floor art preview controls must exist");
     const locked=page.locator('button[data-floor="2"]');
@@ -39,7 +39,7 @@ const base="https://str8kryptic.github.io/Duo-Dungeon-Preview/chapter-one-alpha/
     assert.equal(await page.evaluate(()=>JSON.stringify({...localStorage})),saveBefore,"Artwork browsing must never change save data");
     await page.locator('button[data-floor="1"]:not([data-action])').click();
     assert.ok((await page.locator('.scene>img').getAttribute("src")).includes('flr_01_cryo_spillway.webp'),"Returning to gameplay must show the active floor");
-    await page.locator('button[data-nav="home"]').click();
+    await page.locator('nav.navigation button[data-nav="home"]').click();
     assert.equal(await page.locator('.scene>img').getAttribute('src'),'assets/refuge-floor0.svg',"Refuge must show its own scene");
     console.log("PASS original floor art browser: image matched each floor, every image loaded, saves and locks unchanged, Refuge restored");
   } finally {await browser.close();}
