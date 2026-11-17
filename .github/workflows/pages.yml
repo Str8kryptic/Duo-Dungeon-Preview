@@ -421,7 +421,7 @@ jobs:
           done
           # Request the real public images; file presence in a git checkout
           # alone is not sufficient to prove GitHub Pages deployed them.
-          for file in assets/refuge-floor0.svg assets/floors/flr_01_cryo_spillway.webp assets/floors/flr_18_neural_hive.webp assets/floors/flr_35_drowned_reactor_throne.webp; do
+          for file in assets/refuge-floor0.svg assets/floors/flr_01_cryo_spillway.webp assets/floors/flr_18_fractured_plenum.webp assets/floors/flr_35_drowned_reactor_throne.webp; do
             curl --fail --silent --show-error --location --retry 8 --retry-delay 3 --retry-all-errors "$base/$file" -o "$temp/$(basename "$file")"
             test -s "$temp/$(basename "$file")"
           done
