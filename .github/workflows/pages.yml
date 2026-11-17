@@ -364,34 +364,29 @@ jobs:
           test -s orb-rebuild/campaign/src/app.js
           test -s orb-rebuild/campaign/data/asset_registry.json
           echo 'PASS: verified Chapter One runtime available at /orb-rebuild/campaign/ for Floor 1–10 milestone.'
-      # Beta-only Chapter One v9.7: pinned tested package, never replace Preview root
-      # or the existing /chapter-one-alpha/ and /orb-rebuild/ experiences.
-      - name: Stage verified v9.7 Chapter One public beta at /chapter-one-beta/
+      # Isolated public beta. Pin the exact commit that passed the full
+      # Chapter One v9.7 game/browser/package verification workflow.
+      - name: Checkout pinned v9.7 beta source (sparse, read only)
+        uses: actions/checkout@v4
+        with:
+          repository: Str8kryptic/Duo-Dungeon
+          ref: 6455b39334b15620ab5e08c52fe6c8160a9fbcf1
+          token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
+          path: beta-chapter-source
+          sparse-checkout: |
+            chapter-one-alpha/release-candidate-v9_7_experimental
+          sparse-checkout-cone-mode: true
+          persist-credentials: false
+      - name: Stage exact verified Chapter One beta at /chapter-one-beta/
         shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
         run: |
           set -euo pipefail
-          test -n "$GH_TOKEN" || { echo "::error::Preview sync token missing"; exit 1; }
-          repo='Str8kryptic/Duo-Dungeon'
-          run_id='44114754105'
           expected_sha='6455b39334b15620ab5e08c52fe6c8160a9fbcf1'
-          actual_sha="$(gh run view "$run_id" --repo "$repo" --json headSha --jq '.headSha')"
-          conclusion="$(gh run view "$run_id" --repo "$repo" --json conclusion --jq '.conclusion')"
-          test "$actual_sha" = "$expected_sha" || { echo "::error::Unapproved beta source SHA"; exit 1; }
-          test "$conclusion" = 'success' || { echo "::error::Beta source checks not passing"; exit 1; }
-          staging="$(mktemp -d)"
-          gh run download "$run_id" --repo "$repo" --name Duo-Dungeon-Chapter-One-v9_7-Experimental-Equipment --dir "$staging"
-          archive="$staging/Duo_Dungeon_Chapter_One_v9_7_Experimental_Equipment_Playable.zip"
-          test -s "$archive"
-          unzip -tq "$archive" >/dev/null
-          mkdir -p "$staging/extracted"
-          unzip -q "$archive" -d "$staging/extracted"
-          source_dir="$staging/extracted/release-candidate-v9_7_experimental"
+          test "$(git -C beta-chapter-source rev-parse HEAD)" = "$expected_sha"
+          source_dir='beta-chapter-source/chapter-one-alpha/release-candidate-v9_7_experimental'
           for file in index.html styles.css duo-orb.css src/app.js src/assistant-orb.js src/duo-voice.js data/experimental_weapon_profiles.json README_EQUIPMENT_PLAYTEST.md; do
-            test -s "$source_dir/$file" || { echo "::error::Beta package missing $file"; exit 1; }
+            test -s "$source_dir/$file" || { echo "::error::Beta source missing $file"; exit 1; }
           done
-          # Only this dedicated beta directory is replaced. Existing site remains untouched.
           mkdir -p chapter-one-beta
           rsync -a --delete "$source_dir/" chapter-one-beta/
           node --check chapter-one-beta/src/app.js
@@ -399,7 +394,9 @@ jobs:
           node --check chapter-one-beta/src/game.js
           (cd chapter-one-beta && node --test tests/duo-voice.test.js tests/armor-slots.test.js)
           echo "$expected_sha" > chapter-one-beta/BETA_SOURCE_SHA.txt
-          echo 'PASS: pinned, validated v9.7 staged at /chapter-one-beta/ only.'
+          # Never publish the other checked-out private repository inside Pages.
+          rm -rf beta-chapter-source
+          echo 'PASS: pinned, verified v9.7 game staged at /chapter-one-beta/ only.'
       - name: Configure Pages
         uses: actions/configure-pages@v6
         with:
