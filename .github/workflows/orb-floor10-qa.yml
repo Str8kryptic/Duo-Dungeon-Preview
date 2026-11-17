@@ -19,6 +19,8 @@ jobs:
           token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
       - name: Install Chromium driver
         run: npm install --no-save playwright-core@1.58.2
+      - name: Accept real Floor 1 choices, reload, and objective
+        run: node tests/campaign-floor1-regression.cjs
       - name: Run live Floor 1–10 expedition navigation probe
         run: node tests/campaign-floor10-probe.cjs
 
