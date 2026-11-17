@@ -438,7 +438,7 @@ jobs:
           grep -Fq 'CROSSFADE_SECONDS=3' "$temp/soundtrack.js"
           grep -Fq 'crossfadeLevels' "$temp/soundtrack.js"
           grep -Fq 'selfLoop' "$temp/soundtrack.js"
-          grep -Fq 'equal-power' "$temp/soundtrack.js"
+          grep -Fq 'Math.sin(t*Math.PI/2)' "$temp/soundtrack.js"
           grep -Fq 'The Weight of the Deep' "$temp/legacy_audio_playlist.json"
           grep -Fq '4qFFnU_MGSEBkvnfqkDzD_music_generated.mp3' "$temp/legacy_audio_playlist.json"
           grep -Fq 'tutorial-next-highlight' "$temp/app.js"
