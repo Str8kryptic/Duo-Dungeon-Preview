@@ -409,6 +409,12 @@ jobs:
           NODE_PATH: ${{ runner.temp }}/orb-browser/node_modules
         run: |
           node orb-rebuild-source/tests/campaign-floor1-regression.cjs
+      - name: Verify integrated Weapons and Armor guide across mobile and desktop
+        if: success()
+        shell: bash
+        env:
+          NODE_PATH: ${{ runner.temp }}/orb-browser/node_modules
+        run: node orb-rebuild-source/tests/equipment-authority-browser.cjs
       - name: Upload real campaign screenshots
         if: always()
         uses: actions/upload-artifact@v4
