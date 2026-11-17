@@ -177,6 +177,13 @@ jobs:
           ref: feature/orb-v2-equipment-pages-art
           token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
           path: orb-rebuild-source
+      - name: Checkout Weapons Authority for staged in-game catalog
+        uses: actions/checkout@v7
+        with:
+          repository: Str8kryptic/Duo-Dungeon
+          ref: feature/orb-weapons-floor35-integration
+          token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
+          path: weapon-authority-source
       - name: Stage isolated Orb login and guest game under /orb-rebuild/
         shell: bash
         run: |
