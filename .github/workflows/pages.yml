@@ -345,6 +345,7 @@ jobs:
           ORB_QA_OUTPUT: ${{ runner.temp }}/orb-campaign-qa
         run: |
           node orb-rebuild-source/tests/campaign-live-browser.cjs
+      # Advance the tutorial in an isolated browser session to observe genuine exploration controls.
       - name: Inspect real Chapter One Explore and Floor 10 controls
         if: success()
         shell: bash
