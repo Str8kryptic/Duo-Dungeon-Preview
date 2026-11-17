@@ -24,3 +24,5 @@ jobs:
 
       - name: Probe real Floor 1 decision, engagement and reload
         run: node tests/campaign-floor1-playthrough-probe.cjs
+      - name: Diagnose Floor 1 environmental decision and persistence
+        run: node tests/campaign-floor1-choice-diagnostic.cjs
