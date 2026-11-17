@@ -335,6 +335,7 @@ jobs:
         shell: bash
         run: |
           npm install --prefix "$RUNNER_TEMP/orb-browser" --no-save playwright-core@1.58.2
+      # Browser QA waits for the campaign document URL, not the iframe's initial blank document.
       - name: Verify actual live Orb tutorial and embedded campaign at three viewport sizes
         if: success()
         shell: bash
