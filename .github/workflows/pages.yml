@@ -370,7 +370,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: Str8kryptic/Duo-Dungeon
-          ref: 6d286b10eee4f5309ea4bb102e513fd78e462649
+          ref: 6c55078a9846f3747293e0b82f63b0fc231dbb65
           token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
           path: beta-chapter-source
           sparse-checkout: |
@@ -381,7 +381,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          expected_sha='6d286b10eee4f5309ea4bb102e513fd78e462649'
+          expected_sha='6c55078a9846f3747293e0b82f63b0fc231dbb65'
           test "$(git -C beta-chapter-source rev-parse HEAD)" = "$expected_sha"
           source_dir='beta-chapter-source/chapter-one-alpha/release-candidate-v9_7_experimental'
           for file in index.html styles.css duo-orb.css src/app.js src/assistant-orb.js src/duo-voice.js data/experimental_weapon_profiles.json README_EQUIPMENT_PLAYTEST.md; do
@@ -431,7 +431,7 @@ jobs:
           grep -Fq 'assistant-orb.js' "$temp/index.html"
           grep -Fq 'DUO_ORB' "$temp/assistant-orb.js"
           grep -Fq 'duoSystemMessage' "$temp/app.js"
-          grep -Fxq '6d286b10eee4f5309ea4bb102e513fd78e462649' "$temp/BETA_SOURCE_SHA.txt"
+          grep -Fxq '6c55078a9846f3747293e0b82f63b0fc231dbb65' "$temp/BETA_SOURCE_SHA.txt"
           node -e "const fs=require('fs');const j=JSON.parse(fs.readFileSync(process.argv[1]));if(j.maxFloor!==35||j.weapons.length!==90)process.exit(1)" "$temp/experimental_weapon_profiles.json"
           echo "PASS: public v9.7 beta assets and pinned revision are live at $base/"
       - name: Smoke-test live isolated Orb login after Pages deployment
