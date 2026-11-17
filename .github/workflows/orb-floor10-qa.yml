@@ -21,6 +21,8 @@ jobs:
         run: npm install --no-save playwright-core@1.58.2
       - name: Inspect campaign combat and defensive options
         run: node tests/campaign-combat-source-probe.cjs
+      - name: Inspect real crafting and equipment preparation for Floor 6
+        run: node tests/campaign-gear-readiness.cjs
       - name: Accept real Floor 1–9 sequential campaign clearance
         env:
           ORB_MAX_FLOOR: "9"
