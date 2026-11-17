@@ -329,6 +329,28 @@ jobs:
       - name: Smoke-test live Chapter One after Pages deployment
         if: success()
         run: python3 .github/scripts/check-chapter-one-live.py
+
+      - name: Prepare browser driver for integrated Chapter One smoke test
+        if: success()
+        shell: bash
+        run: |
+          npm install --prefix "$RUNNER_TEMP/orb-browser" --no-save playwright-core@1.58.2
+      - name: Verify actual live Orb tutorial and embedded campaign at three viewport sizes
+        if: success()
+        shell: bash
+        env:
+          NODE_PATH: ${{ runner.temp }}/orb-browser/node_modules
+          ORB_QA_OUTPUT: ${{ runner.temp }}/orb-campaign-qa
+        run: |
+          node orb-rebuild-source/tests/campaign-live-browser.cjs
+      - name: Upload real campaign screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: orb-integrated-campaign-qa
+          path: ${{ runner.temp }}/orb-campaign-qa/
+          if-no-files-found: ignore
+
 # Trigger Preview to pick up the latest approved Development shell repair.
 
 # Rebuild Preview with latest centered navigation shell.
