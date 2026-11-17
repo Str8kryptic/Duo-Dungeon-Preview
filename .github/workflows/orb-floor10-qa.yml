@@ -1,0 +1,23 @@
+name: Orb Floor 1–10 Focused Browser QA
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/orb-floor10-qa.yml'
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Check out latest Orb development source
+        uses: actions/checkout@v4
+        with:
+          repository: Str8kryptic/Duo-Dungeon
+          ref: feature/orb-v2-equipment-pages-art
+          token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
+      - name: Install Chromium driver
+        run: npm install --no-save playwright-core@1.58.2
+      - name: Run live Floor 1–10 expedition navigation probe
+        run: node tests/campaign-floor10-probe.cjs
