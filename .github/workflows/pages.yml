@@ -277,6 +277,21 @@ jobs:
           test -s chapter-one-alpha/index.html
           mkdir -p orb-rebuild/campaign
           rsync -a chapter-one-alpha/ orb-rebuild/campaign/
+          # Preserve the validated Chapter One engine; overlay only accessibility CSS/JS.
+          cp orb-rebuild-source/campaign-ux.css orb-rebuild-source/campaign-ux.js orb-rebuild/campaign/
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("orb-rebuild/campaign/index.html")
+          html=p.read_text()
+          assert "</head>" in html and "</body>" in html
+          assert "campaign-ux.css" not in html and "campaign-ux.js" not in html
+          html=html.replace("</head>",'<link rel="stylesheet" href="./campaign-ux.css"></head>',1)
+          html=html.replace("</body>",'<script src="./campaign-ux.js" defer></script></body>',1)
+          p.write_text(html)
+          PY
+          node --check orb-rebuild/campaign/campaign-ux.js
+          test -s orb-rebuild/campaign/campaign-ux.css
+          grep -Fq 'campaign-ux.js' orb-rebuild/campaign/index.html
           test -s orb-rebuild/campaign/src/app.js
           test -s orb-rebuild/campaign/data/asset_registry.json
           echo 'PASS: verified Chapter One runtime available at /orb-rebuild/campaign/ for Floor 1–10 milestone.'
@@ -321,6 +336,8 @@ jobs:
           grep -Fq 'id="campaign-runtime"' "$folder/index.html"
           grep -Fq 'BEGIN DESCENT' "$folder/login.js"
           test -s "$folder/campaign-app.js"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/campaign/campaign-ux.js" -o "$folder/campaign-ux.js"
+          grep -Fq 'window.scrollTo(0,0)' "$folder/campaign-ux.js"
           grep -Fq '<svg' "$folder/armory.svg"
           grep -Fq '<svg' "$folder/gates.svg"
           grep -Fq '<svg' "$folder/orb-login.svg"
