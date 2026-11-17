@@ -37,7 +37,7 @@ const base="https://str8kryptic.github.io/Duo-Dungeon-Preview/chapter-one-alpha/
       console.log("PASS floor",i,id,result.width+"x"+result.height);
     }
     assert.equal(await page.evaluate(()=>JSON.stringify({...localStorage})),saveBefore,"Artwork browsing must never change save data");
-    await page.locator('button[data-floor="1"]').click();
+    await page.locator('button[data-floor="1"]:not([data-action])').click();
     assert.ok((await page.locator('.scene>img').getAttribute("src")).includes('flr_01_cryo_spillway.webp'),"Returning to gameplay must show the active floor");
     await page.locator('button[data-nav="home"]').click();
     assert.equal(await page.locator('.scene>img').getAttribute('src'),'assets/refuge-floor0.svg',"Refuge must show its own scene");
