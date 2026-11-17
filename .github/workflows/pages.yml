@@ -265,7 +265,7 @@ jobs:
             v94='Duo_Dungeon_Chapter_One_Playable_Lite_v9_4.zip'
             if grep -Fxq "$v96" <<< "$lite_assets"; then
               lite_zip="$v96"
-              expected='de5ff53115de2503a900d0c1b1d1d5d8af0d673b8dcffd8656d08b90e2c0d797'
+              expected='86d18b12ac1d070fdb0fc614908e7c8e406d51fd3ac2c01b8c67ccb64ddd50a5'
               is_warden_v95=true
               original_floor_art_v96=true
             elif grep -Fxq "$v95" <<< "$lite_assets"; then
