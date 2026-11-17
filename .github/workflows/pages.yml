@@ -345,6 +345,12 @@ jobs:
           ORB_QA_OUTPUT: ${{ runner.temp }}/orb-campaign-qa
         run: |
           node orb-rebuild-source/tests/campaign-live-browser.cjs
+      - name: Inspect real Chapter One Explore and Floor 10 controls
+        if: success()
+        shell: bash
+        env:
+          NODE_PATH: ${{ runner.temp }}/orb-browser/node_modules
+        run: node orb-rebuild-source/tests/campaign-floor10-probe.cjs
       - name: Upload real campaign screenshots
         if: always()
         uses: actions/upload-artifact@v4
