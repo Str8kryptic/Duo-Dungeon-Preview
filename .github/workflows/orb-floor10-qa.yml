@@ -26,3 +26,5 @@ jobs:
         run: node tests/campaign-floor1-playthrough-probe.cjs
       - name: Diagnose Floor 1 environmental decision and persistence
         run: node tests/campaign-floor1-choice-diagnostic.cjs
+      - name: Inspect original room-choice handler and event precedence
+        run: node tests/campaign-room-event-source-probe.cjs
