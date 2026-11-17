@@ -285,21 +285,7 @@ jobs:
               test -s "$stage/app/assets/enemies/enm_warden_enforcer.png"
               test -s "$stage/app/assets/thumbnails/enemies/enm_warden_enforcer_128.png"
               test -s "$stage/app/assets/thumbnails/enemies/enm_warden_enforcer_256.png"
-              python3 - "$stage/app" <<'PY'
-              import hashlib, json, pathlib, sys
-              root=pathlib.Path(sys.argv[1])
-              registry=json.loads((root/'data/asset_registry.json').read_text())
-              enemy=[a for a in registry if a.get('entityId')=='enm_warden_enforcer']
-              assert len(enemy)==1
-              a=enemy[0]
-              assert a['id']=='asset_enm_warden_enforcer' and a['path']=='assets/enemies/enm_warden_enforcer.png'
-              assert a['status']=='production_approved' and a['reviewApproved'] is True
-              assert hashlib.sha256((root/a['path']).read_bytes()).hexdigest()=='a6a4a03905e66f6207b8055f4ee468d0bac1516369a76ed6b2682aca350ab81a'
-              floors=json.loads((root/'data/floors.json').read_text())
-              assert floors[8]['enemyIds']==['enm_warden_enforcer'] and len(floors)==35
-              assert all(next(a for a in registry if a.get('entityId')==eid)['path'].endswith('.png') for floor in floors[:10] for eid in floor['enemyIds'])
-              print('PASS: approved original Floor 9 enforcer art, PNG enemies 1–10, unchanged floor IDs')
-              PY
+              python3 .github/scripts/validate-chapter-one-warden-v95.py "$stage/app"
             fi
             # Compatible Lite tests; production raster provenance still requires original full-art release.
             (cd "$stage/app" && node --test $(find tests -maxdepth 1 -name '*.test.js' ! -name 'art-production.test.js' ! -name 'floor-art-production.test.js' ! -name 'svg-raster-migration.test.js' | sort) && npm run validate && npm run qa:chapter-one)
