@@ -55,12 +55,20 @@ jobs:
           ref: feature/orb-v2-equipment-pages-art
           token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
           path: orb-rebuild-source
+      - name: Checkout Weapons Authority (catalog data only)
+        if: github.event_name != 'pull_request'
+        uses: actions/checkout@v7
+        with:
+          repository: Str8kryptic/Duo-Dungeon
+          ref: feature/orb-weapons-floor35-integration
+          token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
+          path: weapon-authority-source
       - name: Verify isolated Orb login and gameplay prototype
         if: github.event_name != 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
-          (cd orb-rebuild-source && node --check app.js && node --check login.js && node --check orb-shell.js && node --check intro.js && node --check equipment-data.js && node --check equipment.js && node --test tests/login-static.test.js tests/equipment-ui.test.js tests/equipment-data.test.js)
+          (cd orb-rebuild-source && node --check app.js && node --check login.js && node --check orb-shell.js && node --check equipment-registry.js && node --check intro.js && node --check equipment-data.js && node --check equipment.js && node --test tests/login-static.test.js tests/equipment-ui.test.js tests/equipment-data.test.js)
           grep -q 'id="login-root"' orb-rebuild-source/index.html
           grep -Fq 'BEGIN DESCENT' orb-rebuild-source/login.js
           grep -Fq 'id="campaign-runtime"' orb-rebuild-source/index.html
@@ -174,7 +182,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p orb-rebuild/assets
-          cp orb-rebuild-source/index.html orb-rebuild-source/styles.css orb-rebuild-source/app.js orb-rebuild-source/login.css orb-rebuild-source/login.js orb-rebuild-source/equipment.css orb-rebuild-source/equipment-data.js orb-rebuild-source/equipment.js orb-rebuild-source/orb-shell.js orb-rebuild-source/orb-shell.css orb-rebuild-source/phase0.html orb-rebuild/
+          cp orb-rebuild-source/index.html orb-rebuild-source/styles.css orb-rebuild-source/app.js orb-rebuild-source/login.css orb-rebuild-source/login.js orb-rebuild-source/equipment.css orb-rebuild-source/equipment-data.js orb-rebuild-source/equipment.js orb-rebuild-source/orb-shell.js orb-rebuild-source/orb-shell.css orb-rebuild-source/equipment-registry.js orb-rebuild-source/phase0.html orb-rebuild/
           cp orb-rebuild-source/intro.html orb-rebuild-source/intro.css orb-rebuild-source/intro.js orb-rebuild/
           node --check orb-rebuild/intro.js
           test -s orb-rebuild/intro.html
@@ -275,6 +283,18 @@ jobs:
           test -s chapter-one-alpha/src/app.js
           test -s chapter-one-alpha/data/asset_registry.json
           test -s chapter-one-alpha/index.html
+          mkdir -p orb-rebuild/equipment-catalog
+          cp weapon-authority-source/weapons/weapon-catalog.json weapon-authority-source/weapons/weapon-release-manifest.json orb-rebuild/equipment-catalog/
+          node --check orb-rebuild/equipment-registry.js
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const path='orb-rebuild/equipment-catalog/';
+          const catalog=JSON.parse(fs.readFileSync(path+'weapon-catalog.json'));
+          const release=JSON.parse(fs.readFileSync(path+'weapon-release-manifest.json'));
+          if(Object.keys(catalog.families||{}).length!==15 || release.launchBaseCount!==90 || release.expansionBaseCount!==60 || release.expansionSpecialCount!==13 || release.maxLaunchFloor!==35)throw Error('Weapon authority scope mismatch');
+          if(release.entries.filter(e=>e.release==='launch-floor-35' && e.minFloor<=10).length!==45)throw Error('Floor 1-10 weapon concept gates mismatch');
+          console.log('PASS: canonical Weapons branch staged for in-game catalog, all real acquisition/combat gates unchanged');
+          NODE
           mkdir -p orb-rebuild/campaign
           rsync -a chapter-one-alpha/ orb-rebuild/campaign/
           # Apply the exact UI-event fix ONLY to the staged Preview copy.
@@ -340,6 +360,10 @@ jobs:
           grep -Fq 'game.src = "./campaign/"' "$folder/orb-shell.js"
           grep -Fq 'id="campaign-runtime"' "$folder/index.html"
           grep -Fq 'BEGIN DESCENT' "$folder/login.js"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/equipment-registry.js" -o "$folder/equipment-registry.js"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/equipment-catalog/weapon-catalog.json" -o "$folder/weapon-catalog.json"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/equipment-catalog/weapon-release-manifest.json" -o "$folder/weapon-release-manifest.json"
+          grep -Fq 'OrbEquipmentRegistry' "$folder/equipment-registry.js"
           test -s "$folder/campaign-app.js"
           grep -Fq 'if(b.dataset.floor&&!b.dataset.action)' "$folder/campaign-app.js"
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/campaign/campaign-ux.js" -o "$folder/campaign-ux.js"
