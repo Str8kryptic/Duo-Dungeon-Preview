@@ -378,6 +378,13 @@ jobs:
         env:
           NODE_PATH: ${{ runner.temp }}/orb-browser/node_modules
         run: node orb-rebuild-source/tests/campaign-floor10-probe.cjs
+      - name: Verify live Floor 1 choices, reload and objective progression
+        if: success()
+        shell: bash
+        env:
+          NODE_PATH: ${{ runner.temp }}/orb-browser/node_modules
+        run: |
+          node orb-rebuild-source/tests/campaign-floor1-regression.cjs
       - name: Upload real campaign screenshots
         if: always()
         uses: actions/upload-artifact@v4
