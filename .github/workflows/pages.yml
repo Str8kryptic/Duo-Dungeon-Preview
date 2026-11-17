@@ -61,7 +61,9 @@ jobs:
           set -euo pipefail
           (cd orb-rebuild-source && node --check app.js && node --check login.js && node --check equipment-data.js && node --check equipment.js && node --test tests/login-static.test.js tests/equipment-ui.test.js tests/equipment-data.test.js)
           grep -q 'id="login-root"' orb-rebuild-source/index.html
-          grep -q 'CONTINUE TO PROTOTYPE AS GUEST' orb-rebuild-source/login.js
+          grep -Fq 'START CHAPTER ONE / FLOOR 1–10' orb-rebuild-source/login.js
+          node --check orb-rebuild-source/intro.js
+          grep -Fq 'floor-ten-briefing' orb-rebuild-source/intro.html
       # Re-run deployment after the global backdrop replacement and cache-bust.
       - name: Verify approved global dungeon background
         if: github.event_name != 'pull_request'
