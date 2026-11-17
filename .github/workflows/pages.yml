@@ -348,6 +348,7 @@ jobs:
           node orb-rebuild-source/tests/campaign-live-browser.cjs
       # Advance the tutorial in an isolated browser session to observe genuine exploration controls.
       # Refresh this QA after the live-HUD milestone overlay and expedition screen wait updates.
+      # Include Refuge/Expedition Gate navigation diagnostics from the latest source branch.
       - name: Inspect real Chapter One Explore and Floor 10 controls
         if: success()
         shell: bash
