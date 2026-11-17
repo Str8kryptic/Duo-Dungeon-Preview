@@ -370,7 +370,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: Str8kryptic/Duo-Dungeon
-          ref: 2d3443f7ee3cd9961ba210f3462e7bae0d70f3ce
+          ref: 0ea213dc678bad36904c7547255fe77a7d3e2482
           token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
           path: beta-chapter-source
           sparse-checkout: |
@@ -381,7 +381,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          expected_sha='2d3443f7ee3cd9961ba210f3462e7bae0d70f3ce'
+          expected_sha='0ea213dc678bad36904c7547255fe77a7d3e2482'
           test "$(git -C beta-chapter-source rev-parse HEAD)" = "$expected_sha"
           source_dir='beta-chapter-source/chapter-one-alpha/release-candidate-v9_7_experimental'
           for file in index.html styles.css duo-orb.css combat-hud.css user-hologram.css entry-gate.css soundtrack.css src/app.js src/entry-gate.js src/tutorial-guide.js src/expedition-ui.js src/story-thread.js src/salvage-ui.js src/soundtrack.js src/combat-hud.js src/assistant-orb.js src/duo-voice.js data/legacy_audio_playlist.json data/experimental_weapon_profiles.json README_EQUIPMENT_PLAYTEST.md; do
@@ -435,18 +435,18 @@ jobs:
           grep -Fq 'mountWelcomeDelver' "$temp/app.js"
           grep -Fq 'Welcome, Delver.' "$temp/tutorial-guide.js"
           grep -Fq 'createDuoAudioPlayer' "$temp/app.js"
-          grep -Fq 'CROSSFADE_SECONDS=4' "$temp/soundtrack.js"
+          grep -Fq 'CROSSFADE_SECONDS=3' "$temp/soundtrack.js"
           grep -Fq 'crossfadeLevels' "$temp/soundtrack.js"
-          grep -Fq "startFade('out'" "$temp/soundtrack.js"
-          grep -Fq "startFade('in'" "$temp/soundtrack.js"
-          grep -Fq 'Cryostasis: First Contact' "$temp/legacy_audio_playlist.json"
-          grep -Fq 'The Last Anchor Falls Silent' "$temp/legacy_audio_playlist.json"
+          grep -Fq 'selfLoop' "$temp/soundtrack.js"
+          grep -Fq 'equal-power' "$temp/soundtrack.js"
+          grep -Fq 'The Weight of the Deep' "$temp/legacy_audio_playlist.json"
+          grep -Fq '4qFFnU_MGSEBkvnfqkDzD_music_generated.mp3' "$temp/legacy_audio_playlist.json"
           grep -Fq 'tutorial-next-highlight' "$temp/app.js"
           grep -Fq 'data-ai-orb' "$temp/entry-gate.js"
           grep -Fq 'expeditionStepDestination' "$temp/expedition-ui.js"
           grep -Fq 'salvageReceiptMarkup' "$temp/salvage-ui.js"
           grep -Fq 'story-thread' "$temp/story-thread.js"
-          grep -Fxq '2d3443f7ee3cd9961ba210f3462e7bae0d70f3ce' "$temp/BETA_SOURCE_SHA.txt"
+          grep -Fxq '0ea213dc678bad36904c7547255fe77a7d3e2482' "$temp/BETA_SOURCE_SHA.txt"
           node -e "const fs=require('fs');const j=JSON.parse(fs.readFileSync(process.argv[1]));if(j.maxFloor!==35||j.weapons.length!==90)process.exit(1)" "$temp/experimental_weapon_profiles.json"
           echo "PASS: public v9.7 beta assets and pinned revision are live at $base/"
       - name: Smoke-test live isolated Orb login after Pages deployment
