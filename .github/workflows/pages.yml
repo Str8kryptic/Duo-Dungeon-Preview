@@ -59,7 +59,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          (cd orb-rebuild-source && node --check app.js && node --check login.js && node --check equipment.js && node --test tests/login-static.test.js tests/equipment-ui.test.js)
+          (cd orb-rebuild-source && node --check app.js && node --check login.js && node --check equipment-data.js && node --check equipment.js && node --test tests/login-static.test.js tests/equipment-ui.test.js tests/equipment-data.test.js)
           grep -q 'id="login-root"' orb-rebuild-source/index.html
           grep -q 'CONTINUE TO PROTOTYPE AS GUEST' orb-rebuild-source/login.js
       # Re-run deployment after the global backdrop replacement and cache-bust.
@@ -170,13 +170,14 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p orb-rebuild/assets
-          cp orb-rebuild-source/index.html orb-rebuild-source/styles.css orb-rebuild-source/app.js orb-rebuild-source/login.css orb-rebuild-source/login.js orb-rebuild-source/equipment.css orb-rebuild-source/equipment.js orb-rebuild/
+          cp orb-rebuild-source/index.html orb-rebuild-source/styles.css orb-rebuild-source/app.js orb-rebuild-source/login.css orb-rebuild-source/login.js orb-rebuild-source/equipment.css orb-rebuild-source/equipment-data.js orb-rebuild-source/equipment.js orb-rebuild/
           cp orb-rebuild-source/assets/*.svg orb-rebuild/assets/
           test -s orb-rebuild/index.html
           test -s orb-rebuild/assets/orb-login.svg
           test -s orb-rebuild/assets/area-armory.svg
           test -s orb-rebuild/assets/area-gates.svg
           test -s orb-rebuild/equipment.js
+          test -s orb-rebuild/equipment-data.js
           grep -q 'id="login-root"' orb-rebuild/index.html
       # Chapter One is an isolated, additive site. The legacy preview is never replaced.
       - name: Prepare Node 22 for Chapter One release verification
@@ -280,6 +281,9 @@ jobs:
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/assets/area-armory.svg" -o "$folder/armory.svg"
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/assets/area-gates.svg" -o "$folder/gates.svg"
           grep -Fq 'Tactical Dressing Deck' "$folder/equipment.js"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/equipment-data.js" -o "$folder/equipment-data.js"
+          grep -Fq 'No verified equipment source' "$folder/equipment-data.js"
+          grep -Fq 'HIDE ART CONCEPT PREVIEW' "$folder/equipment.js"
           grep -Fq '<svg' "$folder/armory.svg"
           grep -Fq '<svg' "$folder/gates.svg"
           grep -Fq '<svg' "$folder/orb-login.svg"
