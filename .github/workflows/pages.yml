@@ -247,38 +247,68 @@ jobs:
             rsync -a "$source_dir/assets/" chapter-one-alpha/assets/
             echo 'PASS: original full-art v9.4 staged under /chapter-one-alpha/.'
           fi
-      - name: Stage verified playable Lite Chapter One if full release is unavailable
+      - name: Stage verified playable Lite v9.5 with approved Warden art when available
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
         run: |
           set -euo pipefail
           repo='Str8kryptic/Duo-Dungeon'
-          if gh release view chapter-one-sci-fi-v9.4 --repo "$repo" --json assets --jq '.assets[].name' 2>/dev/null | grep -Eq '^Duo_Dungeon_Chapter_One_All_35_Floor_Art_Integrated_v9_4[.]zip([.]part01)?$'; then
-            echo 'Full release is available; keep full-quality runtime staging.'
+          full_assets="$(gh release view chapter-one-sci-fi-v9.4 --repo "$repo" --json assets --jq '.assets[].name' 2>/dev/null || true)"
+          if grep -Eq '^Duo_Dungeon_Chapter_One_All_35_Floor_Art_Integrated_v9_4[.]zip([.]part01)?$' <<< "$full_assets"; then
+            echo 'Full-art Chapter One staged by the preceding step; retain it.'
           else
             lite_tag='chapter-one-sci-fi-v9.4-lite'
-            lite_zip='Duo_Dungeon_Chapter_One_Playable_Lite_v9_4.zip'
             lite_assets="$(gh release view "$lite_tag" --repo "$repo" --json assets --jq '.assets[].name' 2>/dev/null || true)"
-            if ! grep -Fxq "$lite_zip" <<< "$lite_assets"; then
-              echo 'Playable Lite release exists without a downloadable Release asset; preserve framework viewer.'
+            v95='Duo_Dungeon_Chapter_One_Playable_Lite_v9_5_Warden_Integrated.zip'
+            v94='Duo_Dungeon_Chapter_One_Playable_Lite_v9_4.zip'
+            if grep -Fxq "$v95" <<< "$lite_assets"; then
+              lite_zip="$v95"
+              expected='2f40dc7ed9e5d59df108ba1d333fe224452119e53c68c8c2f13a3ea4dc92799c'
+              is_warden_v95=true
+            elif grep -Fxq "$v94" <<< "$lite_assets"; then
+              lite_zip="$v94"
+              expected='6ed291a091b19d13c1c132c14f5f59c208ef3ec4d8e07ce1d1925ce557c79df3'
+              is_warden_v95=false
             else
-              stage="$(mktemp -d)"
-              gh release download "$lite_tag" --repo "$repo" --pattern "$lite_zip" --dir "$stage"
-            echo "6ed291a091b19d13c1c132c14f5f59c208ef3ec4d8e07ce1d1925ce557c79df3  $stage/$lite_zip" | sha256sum -c -
+              echo 'No downloadable Chapter One Lite asset yet; preserve framework preview.'
+              exit 0
+            fi
+            stage="$(mktemp -d)"
+            gh release download "$lite_tag" --repo "$repo" --pattern "$lite_zip" --dir "$stage"
+            echo "$expected  $stage/$lite_zip" | sha256sum -c -
+            mkdir -p "$stage/app"
             unzip -q "$stage/$lite_zip" -d "$stage/app"
             test -f "$stage/app/src/app.js"
             test -f "$stage/app/data/asset_registry.json"
-            # Lite intentionally uses archived SVGs instead of production PNG masters.
-            # Run all gameplay and contract suites; full-raster provenance suites remain mandatory for the full release.
+            if [ "$is_warden_v95" = true ]; then
+              test -s "$stage/app/assets/enemies/enm_warden_enforcer.png"
+              test -s "$stage/app/assets/thumbnails/enemies/enm_warden_enforcer_128.png"
+              test -s "$stage/app/assets/thumbnails/enemies/enm_warden_enforcer_256.png"
+              python3 - "$stage/app" <<'PY'
+              import hashlib, json, pathlib, sys
+              root=pathlib.Path(sys.argv[1])
+              registry=json.loads((root/'data/asset_registry.json').read_text())
+              enemy=[a for a in registry if a.get('entityId')=='enm_warden_enforcer']
+              assert len(enemy)==1
+              a=enemy[0]
+              assert a['id']=='asset_enm_warden_enforcer' and a['path']=='assets/enemies/enm_warden_enforcer.png'
+              assert a['status']=='production_approved' and a['reviewApproved'] is True
+              assert hashlib.sha256((root/a['path']).read_bytes()).hexdigest()=='a6a4a03905e66f6207b8055f4ee468d0bac1516369a76ed6b2682aca350ab81a'
+              floors=json.loads((root/'data/floors.json').read_text())
+              assert floors[8]['enemyIds']==['enm_warden_enforcer'] and len(floors)==35
+              assert all(next(a for a in registry if a.get('entityId')==eid)['path'].endswith('.png') for floor in floors[:10] for eid in floor['enemyIds'])
+              print('PASS: approved original Floor 9 enforcer art, PNG enemies 1–10, unchanged floor IDs')
+              PY
+            fi
+            # Compatible Lite tests; production raster provenance still requires original full-art release.
             (cd "$stage/app" && node --test $(find tests -maxdepth 1 -name '*.test.js' ! -name 'art-production.test.js' ! -name 'floor-art-production.test.js' ! -name 'svg-raster-migration.test.js' | sort) && npm run validate && npm run qa:chapter-one)
             mkdir -p chapter-one-alpha
             cp "$stage/app/index.html" "$stage/app/styles.css" "$stage/app/package.json" chapter-one-alpha/
             rsync -a "$stage/app/src/" chapter-one-alpha/src/
             rsync -a "$stage/app/data/" chapter-one-alpha/data/
             rsync -a "$stage/app/assets/" chapter-one-alpha/assets/
-            echo 'PASS: exact playable Lite v9.4 installed under /chapter-one-alpha/, no legacy files replaced.'
-            fi
+            echo "PASS: validated $lite_zip staged under /chapter-one-alpha/ without replacing legacy preview."
           fi
       - name: Stage validated Chapter One Lite game for Floor 1–10 tutorial campaign
         shell: bash
