@@ -19,6 +19,8 @@ jobs:
           token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
       - name: Install Chromium driver
         run: npm install --no-save playwright-core@1.58.2
+      - name: Inspect campaign combat and defensive options
+        run: node tests/campaign-combat-source-probe.cjs
       - name: Accept real Floor 1–5 sequential campaign clearance
         env:
           ORB_MAX_FLOOR: "5"
