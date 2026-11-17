@@ -179,6 +179,7 @@ jobs:
           cp orb-rebuild-source/assets/*.svg orb-rebuild/assets/
           test -s orb-rebuild/index.html
           test -s orb-rebuild/assets/orb-login.svg
+          test -s orb-rebuild/assets/refuge-floor0.svg
           test -s orb-rebuild/assets/area-armory.svg
           test -s orb-rebuild/assets/area-gates.svg
           test -s orb-rebuild/equipment.js
@@ -315,6 +316,8 @@ jobs:
           grep -Fq '<svg' "$folder/armory.svg"
           grep -Fq '<svg' "$folder/gates.svg"
           grep -Fq '<svg' "$folder/orb-login.svg"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/assets/refuge-floor0.svg" -o "$folder/refuge.svg"
+          grep -Fq '<svg' "$folder/refuge.svg"
           echo "PASS: /orb-rebuild/ login, guest entry and Orb vector are live."
       - name: Smoke-test live Chapter One after Pages deployment
         if: success()
