@@ -419,14 +419,31 @@ jobs:
             curl --fail --silent --show-error --location --retry 8 --retry-delay 3 --retry-all-errors "$base/$file" -o "$temp/$(basename "$file")"
             test -s "$temp/$(basename "$file")"
           done
-          # Request the real public images; file presence in a git checkout
-          # alone is not sufficient to prove GitHub Pages deployed them.
-          for file in assets/refuge-floor0.svg assets/floors/flr_01_cryo_spillway.webp assets/floors/flr_18_fractured_plenum.webp assets/floors/flr_35_drowned_reactor_throne.webp; do
+          # Every chapter background must exist in the release and be reachable
+          # from the actual public Pages URL, not just the source checkout.
+          curl --fail --silent --show-error --location --retry 8 --retry-delay 3 --retry-all-errors "$base/data/asset_registry.json" -o "$temp/asset_registry.json"
+          node - "$temp/asset_registry.json" > "$temp/floor-images.txt" <<'NODE'
+          const fs=require('node:fs');
+          const registry=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+          const floors=registry.filter(x=>x.entityType==='floor');
+          if(floors.length!==35||new Set(floors.map(x=>x.path)).size!==35)throw Error('Expected exactly 35 distinct floor backgrounds');
+          for(const art of floors){
+            if(!/^assets\\/floors\\/flr_\\d{2}_[a-z0-9_]+\\.webp$/.test(art.path))throw Error('Invalid floor background path: '+art.path);
+            console.log(art.path);
+          }
+          NODE
+          curl --fail --silent --show-error --location --retry 8 --retry-delay 3 --retry-all-errors "$base/assets/refuge-floor0.svg" -o "$temp/refuge-floor0.svg"
+          test -s "$temp/refuge-floor0.svg"
+          grep -Fq '<svg' "$temp/refuge-floor0.svg"
+          checked=0
+          while IFS= read -r file; do
             curl --fail --silent --show-error --location --retry 8 --retry-delay 3 --retry-all-errors "$base/$file" -o "$temp/$(basename "$file")"
             test -s "$temp/$(basename "$file")"
-          done
-          grep -Fq '<svg' "$temp/refuge-floor0.svg"
-          file "$temp/"*.webp | grep -q 'Web/P image'
+            file "$temp/$(basename "$file")" | grep -q 'Web/P image'
+            checked=$((checked + 1))
+          done < "$temp/floor-images.txt"
+          test "$checked" -eq 35
+          echo "PASS: public Refuge and all 35 Chapter One floor backgrounds are reachable and valid WebP images."
           grep -Fq 'duo-orb.css' "$temp/index.html"
           grep -Fq 'assistant-orb.js' "$temp/index.html"
           grep -Fq 'DUO_ORB' "$temp/assistant-orb.js"
