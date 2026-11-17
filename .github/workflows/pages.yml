@@ -260,9 +260,16 @@ jobs:
           else
             lite_tag='chapter-one-sci-fi-v9.4-lite'
             lite_assets="$(gh release view "$lite_tag" --repo "$repo" --json assets --jq '.assets[].name' 2>/dev/null || true)"
+            v96='Duo_Dungeon_Chapter_One_Original_Floor_Backgrounds_Web_v9_6.zip'
             v95='Duo_Dungeon_Chapter_One_Playable_Lite_v9_5_Warden_Integrated.zip'
             v94='Duo_Dungeon_Chapter_One_Playable_Lite_v9_4.zip'
-            if grep -Fxq "$v95" <<< "$lite_assets"; then
+            if grep -Fxq "$v96" <<< "$lite_assets"; then
+              lite_zip="$v96"
+              expected='de5ff53115de2503a900d0c1b1d1d5d8af0d673b8dcffd8656d08b90e2c0d797'
+              is_warden_v95=true
+              original_floor_art_v96=true
+            elif grep -Fxq "$v95" <<< "$lite_assets"; then
+              original_floor_art_v96=false
               lite_zip="$v95"
               expected='2f40dc7ed9e5d59df108ba1d333fe224452119e53c68c8c2f13a3ea4dc92799c'
               is_warden_v95=true
@@ -270,6 +277,7 @@ jobs:
               lite_zip="$v94"
               expected='6ed291a091b19d13c1c132c14f5f59c208ef3ec4d8e07ce1d1925ce557c79df3'
               is_warden_v95=false
+              original_floor_art_v96=false
             else
               echo 'No downloadable Chapter One Lite asset yet; preserve framework preview.'
               exit 0
@@ -287,6 +295,9 @@ jobs:
               test -s "$stage/app/assets/thumbnails/enemies/enm_warden_enforcer_256.png"
               python3 .github/scripts/validate-chapter-one-warden-v95.py "$stage/app"
             fi
+            if [ "$original_floor_art_v96" = true ]; then
+              python3 .github/scripts/check-chapter-one-real-backgrounds-v96.py "$stage/app"
+            fi
             # Compatible Lite tests; production raster provenance still requires original full-art release.
             (cd "$stage/app" && node --test $(find tests -maxdepth 1 -name '*.test.js' ! -name 'art-production.test.js' ! -name 'floor-art-production.test.js' ! -name 'svg-raster-migration.test.js' | sort) && npm run validate && npm run qa:chapter-one)
             mkdir -p chapter-one-alpha
@@ -294,7 +305,11 @@ jobs:
             rsync -a "$stage/app/src/" chapter-one-alpha/src/
             rsync -a "$stage/app/data/" chapter-one-alpha/data/
             rsync -a "$stage/app/assets/" chapter-one-alpha/assets/
-            echo "PASS: validated $lite_zip staged under /chapter-one-alpha/ without replacing legacy preview."
+            # Reuse the existing clean-slate Refuge scene; never substitute old fantasy Haven art.
+            test -s chapter-one-alpha/assets/refuge-floor0.svg
+            # v9.4/v9.5 used the Floor 1 scene as Refuge's backdrop. Correct the display only.
+            python3 .github/scripts/patch-chapter-one-refuge-scene.py chapter-one-alpha/src/app.js
+            echo "PASS: validated $lite_zip and original Refuge background staged under /chapter-one-alpha/."
           fi
       - name: Stage validated Chapter One Lite game for Floor 1–10 tutorial campaign
         shell: bash
