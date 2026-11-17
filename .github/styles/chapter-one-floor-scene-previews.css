@@ -1,0 +1,10 @@
+
+/* Original artwork can be inspected without selecting an inaccessible floor.
+   Separate visual inspection from progression: never enable locked floor actions. */
+.floor-art-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:stretch;min-width:0}
+.floor-art-row>button[data-floor]{min-width:0;width:100%}
+.floor-art-row>.floor-preview{min-width:84px;max-width:112px;text-align:center;background:#274d57;border:1px solid #4f8992;color:#eaffff;font-size:12px;padding:10px;line-height:1.3}
+.floor-art-row>.floor-preview:hover{background:#37616e}
+.floor-art-row .entry{min-width:0}
+.floor-art-row .entry>span{min-width:0;overflow-wrap:anywhere}
+@media(max-width:520px){.floor-art-row{grid-template-columns:minmax(0,1fr) 90px}.floor-art-row>.floor-preview{font-size:11px;padding:8px}}
