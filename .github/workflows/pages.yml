@@ -419,6 +419,14 @@ jobs:
             curl --fail --silent --show-error --location --retry 8 --retry-delay 3 --retry-all-errors "$base/$file" -o "$temp/$(basename "$file")"
             test -s "$temp/$(basename "$file")"
           done
+          # Request the real public images; file presence in a git checkout
+          # alone is not sufficient to prove GitHub Pages deployed them.
+          for file in assets/refuge-floor0.svg assets/floors/flr_01_cryo_spillway.webp assets/floors/flr_18_neural_hive.webp assets/floors/flr_35_drowned_reactor_throne.webp; do
+            curl --fail --silent --show-error --location --retry 8 --retry-delay 3 --retry-all-errors "$base/$file" -o "$temp/$(basename "$file")"
+            test -s "$temp/$(basename "$file")"
+          done
+          grep -Fq '<svg' "$temp/refuge-floor0.svg"
+          file "$temp/"*.webp | grep -q 'Web/P image'
           grep -Fq 'duo-orb.css' "$temp/index.html"
           grep -Fq 'assistant-orb.js' "$temp/index.html"
           grep -Fq 'DUO_ORB' "$temp/assistant-orb.js"
