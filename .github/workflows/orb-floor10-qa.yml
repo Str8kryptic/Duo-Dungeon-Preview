@@ -21,6 +21,8 @@ jobs:
         run: npm install --no-save playwright-core@1.58.2
       - name: Accept real Floor 1 choices, reload, and objective
         run: node tests/campaign-floor1-regression.cjs
+      - name: Validate actual Floor 1 combat, rewards, clearance and saved unlock
+        run: node tests/campaign-floor1-clearance.cjs
       - name: Run live Floor 1–10 expedition navigation probe
         run: node tests/campaign-floor10-probe.cjs
 
