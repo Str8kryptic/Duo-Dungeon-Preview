@@ -59,9 +59,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          (cd orb-rebuild-source && node --check app.js && node --check login.js && node --check equipment-data.js && node --check equipment.js && node --test tests/login-static.test.js tests/equipment-ui.test.js tests/equipment-data.test.js)
+          (cd orb-rebuild-source && node --check app.js && node --check login.js && node --check orb-shell.js && node --check intro.js && node --check equipment-data.js && node --check equipment.js && node --test tests/login-static.test.js tests/equipment-ui.test.js tests/equipment-data.test.js)
           grep -q 'id="login-root"' orb-rebuild-source/index.html
-          grep -Fq 'START CHAPTER ONE / FLOOR 1–10' orb-rebuild-source/login.js
+          grep -Fq 'BEGIN DESCENT' orb-rebuild-source/login.js
+          grep -Fq 'id="campaign-runtime"' orb-rebuild-source/index.html
           node --check orb-rebuild-source/intro.js
           grep -Fq 'floor-ten-briefing' orb-rebuild-source/intro.html
       # Re-run deployment after the global backdrop replacement and cache-bust.
@@ -172,10 +173,13 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p orb-rebuild/assets
-          cp orb-rebuild-source/index.html orb-rebuild-source/styles.css orb-rebuild-source/app.js orb-rebuild-source/login.css orb-rebuild-source/login.js orb-rebuild-source/equipment.css orb-rebuild-source/equipment-data.js orb-rebuild-source/equipment.js orb-rebuild/
+          cp orb-rebuild-source/index.html orb-rebuild-source/styles.css orb-rebuild-source/app.js orb-rebuild-source/login.css orb-rebuild-source/login.js orb-rebuild-source/equipment.css orb-rebuild-source/equipment-data.js orb-rebuild-source/equipment.js orb-rebuild-source/orb-shell.js orb-rebuild-source/orb-shell.css orb-rebuild-source/phase0.html orb-rebuild/
           cp orb-rebuild-source/intro.html orb-rebuild-source/intro.css orb-rebuild-source/intro.js orb-rebuild/
           node --check orb-rebuild/intro.js
           test -s orb-rebuild/intro.html
+          test -s orb-rebuild/orb-shell.js
+          test -s orb-rebuild/phase0.html
+          grep -Fq 'id="campaign-runtime"' orb-rebuild/index.html
           cp orb-rebuild-source/assets/*.svg orb-rebuild/assets/
           test -s orb-rebuild/index.html
           test -s orb-rebuild/assets/orb-login.svg
@@ -297,7 +301,7 @@ jobs:
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/login.js" -o "$folder/login.js"
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/assets/orb-login.svg" -o "$folder/orb-login.svg"
           grep -Fq 'id="login-root"' "$folder/index.html"
-          grep -Fq 'OPEN PHASE 0 SYSTEMS PROTOTYPE' "$folder/login.js"
+          grep -Fq 'BEGIN DESCENT' "$folder/login.js"
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/equipment.js" -o "$folder/equipment.js"
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/assets/area-armory.svg" -o "$folder/armory.svg"
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/assets/area-gates.svg" -o "$folder/gates.svg"
@@ -311,7 +315,10 @@ jobs:
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/campaign/src/app.js" -o "$folder/campaign-app.js"
           grep -Fq 'floor-ten-briefing' "$folder/intro.html"
           grep -Fq 'Duct Warden' "$folder/intro.js"
-          grep -Fq 'START CHAPTER ONE / FLOOR 1–10' "$folder/login.js"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/orb-shell.js" -o "$folder/orb-shell.js"
+          grep -Fq 'game.src = "./campaign/"' "$folder/orb-shell.js"
+          grep -Fq 'id="campaign-runtime"' "$folder/index.html"
+          grep -Fq 'BEGIN DESCENT' "$folder/login.js"
           test -s "$folder/campaign-app.js"
           grep -Fq '<svg' "$folder/armory.svg"
           grep -Fq '<svg' "$folder/gates.svg"
