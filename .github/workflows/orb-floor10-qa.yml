@@ -9,7 +9,7 @@ permissions:
 jobs:
   diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 15
     steps:
       - name: Check out latest Orb development source
         uses: actions/checkout@v4
@@ -21,9 +21,9 @@ jobs:
         run: npm install --no-save playwright-core@1.58.2
       - name: Inspect campaign combat and defensive options
         run: node tests/campaign-combat-source-probe.cjs
-      - name: Accept real Floor 1–5 sequential campaign clearance
+      - name: Accept real Floor 1–9 sequential campaign clearance
         env:
-          ORB_MAX_FLOOR: "5"
+          ORB_MAX_FLOOR: "9"
         run: node tests/campaign-floors1-10-acceptance.cjs
       - name: Accept real Floor 1 choices, reload, and objective
         run: node tests/campaign-floor1-regression.cjs
