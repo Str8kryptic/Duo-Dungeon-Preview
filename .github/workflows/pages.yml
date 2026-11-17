@@ -309,7 +309,13 @@ jobs:
             test -s chapter-one-alpha/assets/refuge-floor0.svg
             # v9.4/v9.5 used the Floor 1 scene as Refuge's backdrop. Correct the display only.
             python3 .github/scripts/patch-chapter-one-refuge-scene.py chapter-one-alpha/src/app.js
-            echo "PASS: validated $lite_zip and original Refuge background staged under /chapter-one-alpha/."
+            # Keep locked-floor gameplay locked while letting players inspect every original illustration.
+            python3 .github/scripts/patch-chapter-one-floor-scene-previews.py chapter-one-alpha/src/app.js
+            cat .github/styles/chapter-one-floor-scene-previews.css >> chapter-one-alpha/styles.css
+            node --check chapter-one-alpha/src/app.js
+            grep -q 'data-art-preview' chapter-one-alpha/src/app.js
+            grep -q 'floor-art-row' chapter-one-alpha/styles.css
+            echo "PASS: validated $lite_zip, distinct Refuge background, and non-progressing Floor 1–35 art previews."
           fi
       - name: Stage validated Chapter One Lite game for Floor 1–10 tutorial campaign
         shell: bash
@@ -423,6 +429,12 @@ jobs:
           npm install --prefix "$RUNNER_TEMP/orb-browser" --no-save playwright-core@1.58.2
       # Browser QA waits for the campaign document URL, not the iframe's initial blank document.
       # It also waits for the rendered Refuge and Explore UI after registry initialization.
+      - name: Verify original scenes 1–35 visibly load and previews preserve floor locks
+        if: success()
+        shell: bash
+        env:
+          NODE_PATH: ${{ runner.temp }}/orb-browser/node_modules
+        run: node .github/scripts/check-chapter-one-floor-scene-browser.cjs
       - name: Verify actual live Orb tutorial and embedded campaign at three viewport sizes
         if: success()
         shell: bash
