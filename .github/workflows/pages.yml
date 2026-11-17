@@ -51,7 +51,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: Str8kryptic/Duo-Dungeon
-          ref: feature/orb-v2-login-entry
+          ref: feature/orb-v2-equipment-pages-art
           token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
           path: orb-rebuild-source
       - name: Verify isolated Orb login and gameplay prototype
@@ -59,7 +59,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          (cd orb-rebuild-source && node --check app.js && node --check login.js && node --test tests/login-static.test.js)
+          (cd orb-rebuild-source && node --check app.js && node --check login.js && node --check equipment.js && node --test tests/login-static.test.js tests/equipment-ui.test.js)
           grep -q 'id="login-root"' orb-rebuild-source/index.html
           grep -q 'CONTINUE TO PROTOTYPE AS GUEST' orb-rebuild-source/login.js
       # Re-run deployment after the global backdrop replacement and cache-bust.
@@ -162,7 +162,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: Str8kryptic/Duo-Dungeon
-          ref: feature/orb-v2-login-entry
+          ref: feature/orb-v2-equipment-pages-art
           token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
           path: orb-rebuild-source
       - name: Stage isolated Orb login and guest game under /orb-rebuild/
@@ -170,10 +170,13 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p orb-rebuild/assets
-          cp orb-rebuild-source/index.html orb-rebuild-source/styles.css orb-rebuild-source/app.js orb-rebuild-source/login.css orb-rebuild-source/login.js orb-rebuild/
-          cp orb-rebuild-source/assets/orb-login.svg orb-rebuild/assets/
+          cp orb-rebuild-source/index.html orb-rebuild-source/styles.css orb-rebuild-source/app.js orb-rebuild-source/login.css orb-rebuild-source/login.js orb-rebuild-source/equipment.css orb-rebuild-source/equipment.js orb-rebuild/
+          cp orb-rebuild-source/assets/*.svg orb-rebuild/assets/
           test -s orb-rebuild/index.html
           test -s orb-rebuild/assets/orb-login.svg
+          test -s orb-rebuild/assets/area-armory.svg
+          test -s orb-rebuild/assets/area-gates.svg
+          test -s orb-rebuild/equipment.js
           grep -q 'id="login-root"' orb-rebuild/index.html
       # Chapter One is an isolated, additive site. The legacy preview is never replaced.
       - name: Prepare Node 22 for Chapter One release verification
@@ -273,6 +276,12 @@ jobs:
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/assets/orb-login.svg" -o "$folder/orb-login.svg"
           grep -Fq 'id="login-root"' "$folder/index.html"
           grep -Fq 'CONTINUE TO PROTOTYPE AS GUEST' "$folder/login.js"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/equipment.js" -o "$folder/equipment.js"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/assets/area-armory.svg" -o "$folder/armory.svg"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/assets/area-gates.svg" -o "$folder/gates.svg"
+          grep -Fq 'Tactical Dressing Deck' "$folder/equipment.js"
+          grep -Fq '<svg' "$folder/armory.svg"
+          grep -Fq '<svg' "$folder/gates.svg"
           grep -Fq '<svg' "$folder/orb-login.svg"
           echo "PASS: /orb-rebuild/ login, guest entry and Orb vector are live."
       - name: Smoke-test live Chapter One after Pages deployment
