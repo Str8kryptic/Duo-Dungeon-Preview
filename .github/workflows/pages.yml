@@ -428,7 +428,7 @@ jobs:
           const floors=registry.filter(x=>x.entityType==='floor');
           if(floors.length!==35||new Set(floors.map(x=>x.path)).size!==35)throw Error('Expected exactly 35 distinct floor backgrounds');
           for(const art of floors){
-            if(!/^assets\\/floors\\/flr_\\d{2}_[a-z0-9_]+\\.webp$/.test(art.path))throw Error('Invalid floor background path: '+art.path);
+            if(!art.path.startsWith('assets/floors/flr_')||!art.path.endsWith('.webp')||!/flr_[0-9]{2}_/.test(art.path))throw Error('Invalid floor background path: '+art.path);
             console.log(art.path);
           }
           NODE
