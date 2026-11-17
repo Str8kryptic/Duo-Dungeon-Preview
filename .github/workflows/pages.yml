@@ -26,7 +26,8 @@ permissions:
 
 concurrency:
   group: preview-pages
-  cancel-in-progress: true
+  # Do not terminate site artifact upload/deployment when a new Preview run arrives.
+  cancel-in-progress: false
 
 jobs:
   verify:
