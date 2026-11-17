@@ -171,6 +171,9 @@ jobs:
           set -euo pipefail
           mkdir -p orb-rebuild/assets
           cp orb-rebuild-source/index.html orb-rebuild-source/styles.css orb-rebuild-source/app.js orb-rebuild-source/login.css orb-rebuild-source/login.js orb-rebuild-source/equipment.css orb-rebuild-source/equipment-data.js orb-rebuild-source/equipment.js orb-rebuild/
+          cp orb-rebuild-source/intro.html orb-rebuild-source/intro.css orb-rebuild-source/intro.js orb-rebuild/
+          node --check orb-rebuild/intro.js
+          test -s orb-rebuild/intro.html
           cp orb-rebuild-source/assets/*.svg orb-rebuild/assets/
           test -s orb-rebuild/index.html
           test -s orb-rebuild/assets/orb-login.svg
@@ -254,6 +257,21 @@ jobs:
             echo 'PASS: exact playable Lite v9.4 installed under /chapter-one-alpha/, no legacy files replaced.'
             fi
           fi
+      - name: Stage validated Chapter One Lite game for Floor 1–10 tutorial campaign
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The audited Chapter One runtime retains its original 35-floor data.
+          # This preview milestone assesses the Refuge, tutorial and Floors 1–10.
+          # Do not truncate canonical floor records or substitute a mock combat engine.
+          test -s chapter-one-alpha/src/app.js
+          test -s chapter-one-alpha/data/asset_registry.json
+          test -s chapter-one-alpha/index.html
+          mkdir -p orb-rebuild/campaign
+          rsync -a chapter-one-alpha/ orb-rebuild/campaign/
+          test -s orb-rebuild/campaign/src/app.js
+          test -s orb-rebuild/campaign/data/asset_registry.json
+          echo 'PASS: verified Chapter One runtime available at /orb-rebuild/campaign/ for Floor 1–10 milestone.'
       - name: Configure Pages
         uses: actions/configure-pages@v6
         with:
@@ -276,7 +294,7 @@ jobs:
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/login.js" -o "$folder/login.js"
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/assets/orb-login.svg" -o "$folder/orb-login.svg"
           grep -Fq 'id="login-root"' "$folder/index.html"
-          grep -Fq 'CONTINUE TO PROTOTYPE AS GUEST' "$folder/login.js"
+          grep -Fq 'OPEN PHASE 0 SYSTEMS PROTOTYPE' "$folder/login.js"
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/equipment.js" -o "$folder/equipment.js"
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/assets/area-armory.svg" -o "$folder/armory.svg"
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/assets/area-gates.svg" -o "$folder/gates.svg"
@@ -284,6 +302,14 @@ jobs:
           curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/equipment-data.js" -o "$folder/equipment-data.js"
           grep -Fq 'getSnapshot:normalize' "$folder/equipment-data.js"
           grep -Fq 'HIDE ART CONCEPT PREVIEW' "$folder/equipment.js"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/intro.html" -o "$folder/intro.html"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/intro.js" -o "$folder/intro.js"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/campaign/" -o "$folder/campaign.html"
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 3 "$base/campaign/src/app.js" -o "$folder/campaign-app.js"
+          grep -Fq 'floor-ten-briefing' "$folder/intro.html"
+          grep -Fq 'Duct Warden' "$folder/intro.js"
+          grep -Fq 'START CHAPTER ONE / FLOOR 1–10' "$folder/login.js"
+          test -s "$folder/campaign-app.js"
           grep -Fq '<svg' "$folder/armory.svg"
           grep -Fq '<svg' "$folder/gates.svg"
           grep -Fq '<svg' "$folder/orb-login.svg"
