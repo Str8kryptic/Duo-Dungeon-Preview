@@ -364,6 +364,34 @@ jobs:
           test -s orb-rebuild/campaign/src/app.js
           test -s orb-rebuild/campaign/data/asset_registry.json
           echo 'PASS: verified Chapter One runtime available at /orb-rebuild/campaign/ for Floor 1–10 milestone.'
+      # Current sci-fi Chapter One: isolated from the legacy root and pinned beta.
+      # This is the actual Duo Dungeon development branch, not the promotion snapshot.
+      - name: Checkout current sci-fi Development game
+        uses: actions/checkout@v4
+        with:
+          repository: Str8kryptic/Duo-Dungeon
+          ref: development
+          token: ${{ secrets.PRODUCTION_SYNC_TOKEN }}
+          path: current-scifi-source
+          persist-credentials: false
+      - name: Publish latest sci-fi Development under /sci-fi-dev/
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s current-scifi-source/index.html
+          test -s current-scifi-source/color-bible.css
+          test -s current-scifi-source/ui-consolidation.css
+          grep -Fq 'ui-consolidation.css' current-scifi-source/index.html
+          grep -Fq 'compactLoadout()' current-scifi-source/src/app.js
+          grep -Fq 'dockDuoForTutorial()' current-scifi-source/src/app.js
+          node --check current-scifi-source/src/app.js
+          mkdir -p sci-fi-dev
+          cp current-scifi-source/index.html current-scifi-source/*.css sci-fi-dev/
+          cp -R current-scifi-source/src current-scifi-source/data current-scifi-source/assets sci-fi-dev/
+          git -C current-scifi-source rev-parse HEAD > sci-fi-dev/BUILD_SHA.txt
+          echo 'Sci-fi Duo Dungeon Development: color bible, compact forge/gear, Duo tutorial motion' > sci-fi-dev/BUILD_INFO.txt
+          rm -rf current-scifi-source
+          echo 'PASS: current merged development staged at /sci-fi-dev/'
       # Isolated public beta. Pin the exact commit that passed the full
       # Chapter One v9.7 game/browser/package verification workflow.
       - name: Checkout pinned v9.7 beta source (sparse, read only)
